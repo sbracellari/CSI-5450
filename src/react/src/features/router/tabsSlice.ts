@@ -10,7 +10,7 @@ const initialState: TabState = {
     tab: 0
 };
 
-export const headerSlice = createSlice({
+export const tabsSlice = createSlice({
     name: 'tabs',
     initialState,
     reducers: {
@@ -20,6 +20,6 @@ export const headerSlice = createSlice({
         }
     }
 });
-export const { handleSelect } = headerSlice.actions;
-export default headerSlice.reducer;
+export const { handleSelect } = tabsSlice.actions;
+export default tabsSlice.reducer;
 

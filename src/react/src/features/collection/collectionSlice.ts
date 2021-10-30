@@ -7,6 +7,7 @@ export interface CollectionState {
     status: 'idle' | 'loading' | 'failed';
 }
 export interface Artwork {
+    id: string,
     title: string,
     creationDate: string,
     medium: string,
@@ -67,6 +68,7 @@ export const collectionSlice = createSlice({
 
                 data.forEach((artwork: any) => {
                     let art: Artwork = {
+                        id: artwork.id,
                         title: artwork.title,
                         creationDate: artwork.creation_date,
                         medium: artwork.medium,

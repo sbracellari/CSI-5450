@@ -1,10 +1,10 @@
-import { Header } from './features/header/Header';
+import { Router } from './features/router/Router';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Header />
+        <Router />
       </header>
     </div>
   );

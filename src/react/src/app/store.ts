@@ -1,12 +1,12 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import counterReducer from '../features/counter/counterSlice';
 import collectionReducer from '../features/collection/collectionSlice';
-import headerReducer from '../features/header/headerSlice';
+import tabsReducer from '../features/router/tabsSlice';
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
-    tabs: headerReducer,
+    tabs: tabsReducer,
     collection: collectionReducer
   },
 });
