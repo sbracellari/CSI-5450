@@ -12,7 +12,7 @@ export function Collection() {
       {collection.map((artwork, index) => {
         return (
           <Grid item xs={11}>
-            <Card key={index} variant="outlined" style={{ paddingBottom: 2 }}>
+            <Card key={index} variant="outlined" sx={{ pb: 2 }}>
               <CardMedia
                 component="img"
                 sx={{ width: 200 }}
