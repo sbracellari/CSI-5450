@@ -1,41 +1,48 @@
 
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { Box, Card, CardContent, CardMedia, IconButton, Typography } from "@mui/material";
+import { useAppSelector } from '../../app/hooks';
+import { Box, Button, Card, CardActions, CardContent, CardMedia, Chip, Grid, IconButton, Typography } from "@mui/material";
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
-export function Collection(){
-    const collection = useAppSelector((state) => state.collection.collection);
-    
-return(
-    <div>
-        {collection.map((artwork,index) => {
-           return( 
-            <Card key={index} sx={{ display: 'flex' }} variant="outlined" style={{paddingBottom: 2}}>
-                <CardMedia
-                  component="img"
-                  sx={{ width: 200 }}
-                  image="../../../public/logo512.png"
-                />
+export function Collection() {
+  const collection = useAppSelector((state) => state.collection.collection);
 
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <CardContent sx={{ flex: '1 0 auto' }}>
-                <Typography component="div" variant="h6">
-                    {artwork.title} 
-                </Typography>
-                <Typography variant="subtitle1" color="text.secondary" component="div">
+  return (
+    <Grid container spacing={2} justifyContent="center" >
+      {collection.map((artwork, index) => {
+        return (
+          <Grid item xs={11}>
+            <Card key={index} variant="outlined" style={{ paddingBottom: 2 }}>
+              <CardMedia
+                component="img"
+                sx={{ width: 200 }}
+                image="../../../public/logo512.png"
+              />
+              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                <CardContent >
+                  <Typography component="div" variant="h6">
+                    {artwork.title}
+                  </Typography>
+                  <Typography variant="subtitle1" color="text.secondary" component="div">
                     {artwork.creator.fullName} - {artwork.creationDate}
-                </Typography>
-              </CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
-                <Typography variant="subtitle2" color="text.secondary" component="div">
-                    Meduim: {artwork.medium}
-                </Typography>
-                <Typography variant="subtitle2" color="text.secondary" component="div">
-                    Classification: {artwork.classification}
-                </Typography>
+                  </Typography>
+                </CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1, gap: 2 }}>
+                  <Chip color="info" label={artwork.medium} />
+                  <Chip color="secondary" label={artwork.classification} />
+                </Box>
               </Box>
-            </Box>
-          </Card>
-                )})}
-    </div>
-    )
+              <CardActions>
+                <IconButton aria-label="add to favorites">
+                  <FavoriteIcon />
+                </IconButton>
+                <Button size="small" aria-label="view details">Details</Button>
+                <Button size="small" aria-label="add to tour">Add to tour</Button>
+              </CardActions>
+
+            </Card>
+          </Grid>
+        )
+      })}
+    </Grid>
+  )
 }
