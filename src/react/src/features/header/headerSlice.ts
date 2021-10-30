@@ -18,7 +18,7 @@ export const headerSlice = createSlice({
             console.log(action.payload);
             state.tab = action.payload;
         }
-    }  
+    }
 });
 export const { handleSelect } = headerSlice.actions;
 export default headerSlice.reducer;
