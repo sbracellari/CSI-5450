@@ -2,6 +2,7 @@
 import { useAppSelector } from '../../app/hooks';
 import { Box, Button, Card, CardActions, CardContent, CardMedia, Chip, Grid, IconButton, Typography } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { Link } from 'react-router-dom';
 
 export function Collection() {
   const collection = useAppSelector((state) => state.collection.collection);
@@ -35,10 +36,9 @@ export function Collection() {
                 <IconButton aria-label="add to favorites">
                   <FavoriteIcon />
                 </IconButton>
-                <Button size="small" aria-label="view details">Details</Button>
-                <Button size="small" aria-label="add to tour">Add to tour</Button>
+                <Button size="small" aria-label="view details" component={Link} to={`/details?id=${artwork.id}`}>Details</Button>
+                <Button size="small" aria-label="add to tour" >Add to tour</Button>
               </CardActions>
-
             </Card>
           </Grid>
         )
