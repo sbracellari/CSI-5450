@@ -52,9 +52,6 @@ export const collectionSlice = createSlice({
     name: 'collection',
     initialState,
     reducers: {
-        view: (state, action: PayloadAction<Artwork>) => {
-            // state.detail = action.payload;
-        }
     },
     extraReducers: (builder) => {
         builder
@@ -96,5 +93,4 @@ export const collectionSlice = createSlice({
     }
 });
 
-export const { view } = collectionSlice.actions;
 export default collectionSlice.reducer;
