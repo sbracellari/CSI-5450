@@ -1,9 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Artwork } from './collectionSlice';
-
-export interface DetailState {
-    detail?: Artwork,
-}
+import { Artwork, DetailState } from '../../app/types';
 
 const initialState: DetailState = {
     detail: undefined,

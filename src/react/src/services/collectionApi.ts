@@ -1,4 +1,4 @@
-const data = [
+export const data = [
   {
     "title": "Keith Haring",
     "creation_date": "1984",
@@ -299,12 +299,5 @@ const data = [
       }
     ]
   },
-
 ];
 
-export function fetchCollection() {
-  return new Promise<{ data: any }>((resolve) =>
-    setTimeout(() => resolve({ data }), 500)
-  );
-
-}

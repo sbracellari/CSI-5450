@@ -1,39 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { fetchCollection } from './collectionApi';
-//@TODO: should probably export all object intercaces into a file later
+import { CollectionState, Artwork } from '../../app/types';
+import { fetchCollection } from '../../services/api';
 
-export interface CollectionState {
-    collection: Artwork[],
-    status: 'idle' | 'loading' | 'failed';
-}
-export interface Artwork {
-    id: string,
-    title: string,
-    creationDate: string,
-    medium: string,
-    dateAquired: string,
-    provenanceText: string,
-    imageUrl: string,
-    classification: string,
-    location: Location,
-    creator: Creator
-}
-
-export interface Creator {
-    fullName: string,
-    //citedName: string,
-    //role: string,
-    //nationality: string,
-    //birthDate: string,
-    //deathDate: string,
-    //birthPlace: string,
-    //deathPlace: string,
-}
-
-export interface Location {
-    departament: string,
-    physicalLocation: string
-}
 //@TODO: type this state and slice it even more
 const initialState: CollectionState = {
     status: 'idle',

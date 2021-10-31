@@ -1,4 +1,4 @@
-import { Artwork as ArtworkType } from "./collectionSlice";
+import { Artwork as ArtworkType } from "../../app/types";
 import { Box, Button, Card, CardActions, CardContent, CardMedia, Chip, IconButton, Typography } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { Link } from 'react-router-dom';
