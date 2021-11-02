@@ -136,8 +136,8 @@ CREATE TABLE IF NOT EXISTS `art_tour_db`.`artwork_has_creator` (
   CONSTRAINT `fk_artwork_has_creator_creator1`
     FOREIGN KEY (`creator_artist_id`)
     REFERENCES `art_tour_db`.`creator` (`artist_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE 
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_artwork_has_creator_creator1_idx` ON `art_tour_db`.`artwork_has_creator` (`creator_artist_id` ASC);
@@ -161,8 +161,8 @@ CREATE TABLE IF NOT EXISTS `art_tour_db`.`tour_has_artwork` (
   CONSTRAINT `fk_tour_has_artwork_artwork1`
     FOREIGN KEY (`artwork_id`)
     REFERENCES `art_tour_db`.`artwork` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE 
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_tour_has_artwork_artwork1_idx` ON `art_tour_db`.`tour_has_artwork` (`artwork_id` ASC);
@@ -202,8 +202,8 @@ CREATE TABLE IF NOT EXISTS `art_tour_db`.`consumer_favorites_artwork` (
   CONSTRAINT `fk_consumer_has_artwork_artwork1`
     FOREIGN KEY (`artwork_id`)
     REFERENCES `art_tour_db`.`artwork` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_consumer_has_artwork_artwork1_idx` ON `art_tour_db`.`consumer_favorites_artwork` (`artwork_id` ASC);
@@ -226,8 +226,8 @@ CREATE TABLE IF NOT EXISTS `art_tour_db`.`consumer_favorites_tour` (
   CONSTRAINT `fk_consumer_has_tour_tour1`
     FOREIGN KEY (`tour_id`)
     REFERENCES `art_tour_db`.`tour` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_consumer_has_tour_tour1_idx` ON `art_tour_db`.`consumer_favorites_tour` (`tour_id` ASC);
@@ -250,8 +250,8 @@ CREATE TABLE IF NOT EXISTS `art_tour_db`.`consumer_favorites_creator` (
   CONSTRAINT `fk_consumer_has_creator_creator1`
     FOREIGN KEY (`creator_artist_id`)
     REFERENCES `art_tour_db`.`creator` (`artist_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_consumer_has_creator_creator1_idx` ON `art_tour_db`.`consumer_favorites_creator` (`creator_artist_id` ASC);
