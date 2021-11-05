@@ -1,14 +1,7 @@
 import axios, { AxiosRequestHeaders } from "axios";
+import { RegisterUser, User } from "../app/types";
 
 const API_URL = "http://localhost:8080";
-
-export interface User {
-    username: string,
-    password: string,
-}
-export interface RegisterUser extends User {
-    email: string,
-}
 
 const register = (user: RegisterUser) => {
     return axios.post(API_URL + "signup", user);
@@ -16,10 +9,12 @@ const register = (user: RegisterUser) => {
 
 const login = (user: User) => {
     return axios.post(API_URL + "signin", user).then((response) => {
+        console.log("login api",response);
         if (response.data.accessToken) {
             // @todo: should probably persist this in state too
             localStorage.setItem("user", JSON.stringify(response.data));
         }
+        return response.data;
     });
 }
 
