@@ -3,9 +3,11 @@ import counterReducer from '../features/counter/counterSlice';
 import collectionReducer from '../features/collection/collectionSlice';
 import detailReducer from '../features/collection/detailSlice';
 import tabsReducer from '../features/router/tabsSlice';
+import authReducer from '../features/auth/authSlice';
 
 export const store = configureStore({
   reducer: {
+    auth: authReducer,
     counter: counterReducer,
     tabs: tabsReducer,
     collection: collectionReducer,

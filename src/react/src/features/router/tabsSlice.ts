@@ -1,10 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-export interface TabState {
-    tab: number,
-    path: string,
-};
-
+import { TabState } from '../../app/types';
 
 export const tabToIndex: { [key: number]: string } = {
     0: 'collection',
