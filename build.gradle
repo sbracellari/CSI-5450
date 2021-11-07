@@ -3,6 +3,8 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id 'war'
+	id 'io.franzbecker.gradle-lombok' version '5.0.0'
+
 }
 
 group = 'edu.oakland'
