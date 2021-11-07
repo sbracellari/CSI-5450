@@ -15,7 +15,7 @@ USE `art_tour_db` ;
 DROP TABLE IF EXISTS `art_tour_db`.`creator` ;
 
 CREATE TABLE IF NOT EXISTS `art_tour_db`.`creator` (
-  `artist_id` VARCHAR(750) NOT NULL,
+  `creator_id` VARCHAR(750) NOT NULL,
   `full_name` TEXT NOT NULL,
   `cited_name` TEXT NOT NULL,
   `role` TEXT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `art_tour_db`.`creator` (
   `death_date` TEXT NULL,
   `birth_place` TEXT NULL,
   `death_place` TEXT NULL,
-  PRIMARY KEY (`artist_id`))
+  PRIMARY KEY (`creator_id`))
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
@@ -33,10 +33,10 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `art_tour_db`.`location` ;
 
 CREATE TABLE IF NOT EXISTS `art_tour_db`.`location` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `location_id` INT NOT NULL AUTO_INCREMENT,
   `department` VARCHAR(50) NULL,
   `physical_location` VARCHAR(50) NULL,
-  PRIMARY KEY (`id`))
+  PRIMARY KEY (`location_id`))
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
@@ -45,11 +45,10 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `art_tour_db`.`artwork` ;
 
 CREATE TABLE IF NOT EXISTS `art_tour_db`.`artwork` (
+  `artwork_id` VARCHAR(50) NOT NULL,
   `title` VARCHAR(500) NOT NULL DEFAULT 'Unknown',
   `creation_date` TEXT NULL,
-  `medium` TEXT NULL,
-  `accession_number` VARCHAR(100) NOT NULL,
-  `id` VARCHAR(50) NOT NULL,
+  `medium` VARCHAR(500) NULL,
   `credit_line` TEXT NOT NULL,
   `date_acquired` TEXT NOT NULL,
   `item_width` DOUBLE NULL,
@@ -60,10 +59,10 @@ CREATE TABLE IF NOT EXISTS `art_tour_db`.`artwork` (
   `image_url` TEXT NULL,
   `classification` VARCHAR(50) NULL,
   `location_id` INT NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`artwork_id`),
   CONSTRAINT `fk_artwork_location1`
     FOREIGN KEY (`location_id`)
-    REFERENCES `art_tour_db`.`location` (`id`)
+    REFERENCES `art_tour_db`.`location` (`location_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
@@ -76,12 +75,11 @@ CREATE INDEX `fk_artwork_location1_idx` ON `art_tour_db`.`artwork` (`location_id
 DROP TABLE IF EXISTS `art_tour_db`.`user` ;
 
 CREATE TABLE IF NOT EXISTS `art_tour_db`.`user` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(100) NOT NULL,
   `fname` VARCHAR(45) NOT NULL,
   `lname` VARCHAR(45) NOT NULL,
-  `email` VARCHAR(100) NOT NULL,
   `password` VARCHAR(20) NOT NULL,
-  PRIMARY KEY (`id`))
+  PRIMARY KEY (`email`))
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
@@ -90,16 +88,16 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `art_tour_db`.`consumer` ;
 
 CREATE TABLE IF NOT EXISTS `art_tour_db`.`consumer` (
-  `user_id` INT NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`user_id`),
+  `email` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`email`),
   CONSTRAINT `fk_consumer_user1`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `art_tour_db`.`user` (`id`)
+    FOREIGN KEY (`email`)
+    REFERENCES `art_tour_db`.`user` (`email`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_consumer_user1_idx` ON `art_tour_db`.`consumer` (`user_id` ASC);
+CREATE INDEX `fk_consumer_user1_idx` ON `art_tour_db`.`consumer` (`email` ASC);
 
 -- -----------------------------------------------------
 -- Table `art_tour_db`.`tour`
@@ -107,17 +105,17 @@ CREATE INDEX `fk_consumer_user1_idx` ON `art_tour_db`.`consumer` (`user_id` ASC)
 DROP TABLE IF EXISTS `art_tour_db`.`tour` ;
 
 CREATE TABLE IF NOT EXISTS `art_tour_db`.`tour` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `consumer_user_id` INT NOT NULL,
-  PRIMARY KEY (`id`),
+  `tour_id` INT NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`tour_id`),
   CONSTRAINT `fk_tour_consumer1`
-    FOREIGN KEY (`consumer_user_id`)
-    REFERENCES `art_tour_db`.`consumer` (`user_id`)
+    FOREIGN KEY (`email`)
+    REFERENCES `art_tour_db`.`consumer` (`email`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_tour_consumer1_idx` ON `art_tour_db`.`tour` (`consumer_user_id` ASC);
+CREATE INDEX `fk_tour_consumer1_idx` ON `art_tour_db`.`tour` (`email` ASC);
 
 -- -----------------------------------------------------
 -- Table `art_tour_db`.`artwork_has_creator`
@@ -126,21 +124,21 @@ DROP TABLE IF EXISTS `art_tour_db`.`artwork_has_creator` ;
 
 CREATE TABLE IF NOT EXISTS `art_tour_db`.`artwork_has_creator` (
   `artwork_id` VARCHAR(50) NOT NULL,
-  `creator_artist_id` VARCHAR(750) NOT NULL,
-  PRIMARY KEY (`artwork_id`, `creator_artist_id`),
+  `creator_id` VARCHAR(750) NOT NULL,
+  PRIMARY KEY (`artwork_id`, `creator_id`),
   CONSTRAINT `fk_artwork_has_creator_artwork`
     FOREIGN KEY (`artwork_id`)
-    REFERENCES `art_tour_db`.`artwork` (`id`)
+    REFERENCES `art_tour_db`.`artwork` (`artwork_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_artwork_has_creator_creator1`
-    FOREIGN KEY (`creator_artist_id`)
-    REFERENCES `art_tour_db`.`creator` (`artist_id`)
-    ON DELETE CASCADE 
-    ON UPDATE CASCADE)
+    FOREIGN KEY (`creator_id`)
+    REFERENCES `art_tour_db`.`creator` (`creator_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_artwork_has_creator_creator1_idx` ON `art_tour_db`.`artwork_has_creator` (`creator_artist_id` ASC);
+CREATE INDEX `fk_artwork_has_creator_creator1_idx` ON `art_tour_db`.`artwork_has_creator` (`creator_id` ASC);
 CREATE INDEX `fk_artwork_has_creator_artwork_idx` ON `art_tour_db`.`artwork_has_creator` (`artwork_id` ASC);
 
 -- -----------------------------------------------------
@@ -155,14 +153,14 @@ CREATE TABLE IF NOT EXISTS `art_tour_db`.`tour_has_artwork` (
   PRIMARY KEY (`tour_id`, `artwork_id`),
   CONSTRAINT `fk_tour_has_artwork_tour1`
     FOREIGN KEY (`tour_id`)
-    REFERENCES `art_tour_db`.`tour` (`id`)
+    REFERENCES `art_tour_db`.`tour` (`tour_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_tour_has_artwork_artwork1`
     FOREIGN KEY (`artwork_id`)
-    REFERENCES `art_tour_db`.`artwork` (`id`)
-    ON DELETE CASCADE 
-    ON UPDATE CASCADE)
+    REFERENCES `art_tour_db`.`artwork` (`artwork_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_tour_has_artwork_artwork1_idx` ON `art_tour_db`.`tour_has_artwork` (`artwork_id` ASC);
@@ -174,16 +172,16 @@ CREATE INDEX `fk_tour_has_artwork_tour1_idx` ON `art_tour_db`.`tour_has_artwork`
 DROP TABLE IF EXISTS `art_tour_db`.`admin` ;
 
 CREATE TABLE IF NOT EXISTS `art_tour_db`.`admin` (
-  `user_id` INT NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`user_id`),
+  `email` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`email`),
   CONSTRAINT `fk_admin_user1`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `art_tour_db`.`user` (`id`)
+    FOREIGN KEY (`email`)
+    REFERENCES `art_tour_db`.`user` (`email`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_admin_user1_idx` ON `art_tour_db`.`admin` (`user_id` ASC);
+CREATE INDEX `fk_admin_user1_idx` ON `art_tour_db`.`admin` (`email` ASC);
 
 -- -----------------------------------------------------
 -- Table `art_tour_db`.`consumer_favorites_artwork`
@@ -191,23 +189,23 @@ CREATE INDEX `fk_admin_user1_idx` ON `art_tour_db`.`admin` (`user_id` ASC);
 DROP TABLE IF EXISTS `art_tour_db`.`consumer_favorites_artwork` ;
 
 CREATE TABLE IF NOT EXISTS `art_tour_db`.`consumer_favorites_artwork` (
-  `consumer_user_id` INT NOT NULL,
+  `email` VARCHAR(100) NOT NULL,
   `artwork_id` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`consumer_user_id`, `artwork_id`),
+  PRIMARY KEY (`email`, `artwork_id`),
   CONSTRAINT `fk_consumer_has_artwork_consumer1`
-    FOREIGN KEY (`consumer_user_id`)
-    REFERENCES `art_tour_db`.`consumer` (`user_id`)
+    FOREIGN KEY (`email`)
+    REFERENCES `art_tour_db`.`consumer` (`email`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_consumer_has_artwork_artwork1`
     FOREIGN KEY (`artwork_id`)
-    REFERENCES `art_tour_db`.`artwork` (`id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
+    REFERENCES `art_tour_db`.`artwork` (`artwork_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_consumer_has_artwork_artwork1_idx` ON `art_tour_db`.`consumer_favorites_artwork` (`artwork_id` ASC);
-CREATE INDEX `fk_consumer_has_artwork_consumer1_idx` ON `art_tour_db`.`consumer_favorites_artwork` (`consumer_user_id` ASC);
+CREATE INDEX `fk_consumer_has_artwork_consumer1_idx` ON `art_tour_db`.`consumer_favorites_artwork` (`email` ASC);
 
 -- -----------------------------------------------------
 -- Table `art_tour_db`.`consumer_favorites_tour`
@@ -215,23 +213,23 @@ CREATE INDEX `fk_consumer_has_artwork_consumer1_idx` ON `art_tour_db`.`consumer_
 DROP TABLE IF EXISTS `art_tour_db`.`consumer_favorites_tour` ;
 
 CREATE TABLE IF NOT EXISTS `art_tour_db`.`consumer_favorites_tour` (
-  `consumer_user_id` INT NOT NULL,
+  `email` VARCHAR(100) NOT NULL,
   `tour_id` INT NOT NULL,
-  PRIMARY KEY (`consumer_user_id`, `tour_id`),
+  PRIMARY KEY (`email`, `tour_id`),
   CONSTRAINT `fk_consumer_has_tour_consumer1`
-    FOREIGN KEY (`consumer_user_id`)
-    REFERENCES `art_tour_db`.`consumer` (`user_id`)
+    FOREIGN KEY (`email`)
+    REFERENCES `art_tour_db`.`consumer` (`email`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_consumer_has_tour_tour1`
     FOREIGN KEY (`tour_id`)
-    REFERENCES `art_tour_db`.`tour` (`id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
+    REFERENCES `art_tour_db`.`tour` (`tour_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_consumer_has_tour_tour1_idx` ON `art_tour_db`.`consumer_favorites_tour` (`tour_id` ASC);
-CREATE INDEX `fk_consumer_has_tour_consumer1_idx` ON `art_tour_db`.`consumer_favorites_tour` (`consumer_user_id` ASC);
+CREATE INDEX `fk_consumer_has_tour_consumer1_idx` ON `art_tour_db`.`consumer_favorites_tour` (`email` ASC);
 
 -- -----------------------------------------------------
 -- Table `art_tour_db`.`consumer_favorites_creator`
@@ -239,20 +237,20 @@ CREATE INDEX `fk_consumer_has_tour_consumer1_idx` ON `art_tour_db`.`consumer_fav
 DROP TABLE IF EXISTS `art_tour_db`.`consumer_favorites_creator` ;
 
 CREATE TABLE IF NOT EXISTS `art_tour_db`.`consumer_favorites_creator` (
-  `consumer_user_id` INT NOT NULL,
-  `creator_artist_id` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`consumer_user_id`, `creator_artist_id`),
+  `email` VARCHAR(100) NOT NULL,
+  `creator_id` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`email`, `creator_id`),
   CONSTRAINT `fk_consumer_has_creator_consumer1`
-    FOREIGN KEY (`consumer_user_id`)
-    REFERENCES `art_tour_db`.`consumer` (`user_id`)
+    FOREIGN KEY (`email`)
+    REFERENCES `art_tour_db`.`consumer` (`email`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_consumer_has_creator_creator1`
-    FOREIGN KEY (`creator_artist_id`)
-    REFERENCES `art_tour_db`.`creator` (`artist_id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
+    FOREIGN KEY (`creator_id`)
+    REFERENCES `art_tour_db`.`creator` (`creator_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_consumer_has_creator_creator1_idx` ON `art_tour_db`.`consumer_favorites_creator` (`creator_artist_id` ASC);
-CREATE INDEX `fk_consumer_has_creator_consumer1_idx` ON `art_tour_db`.`consumer_favorites_creator` (`consumer_user_id` ASC);
+CREATE INDEX `fk_consumer_has_creator_creator1_idx` ON `art_tour_db`.`consumer_favorites_creator` (`creator_id` ASC);
+CREATE INDEX `fk_consumer_has_creator_consumer1_idx` ON `art_tour_db`.`consumer_favorites_creator` (`email` ASC);
