@@ -34,22 +34,22 @@ public class Artwork {
             artwork.setProvenanceText(rs.getString("classification"));
             artwork.setCreator(
                 new Creator(
-                    rs.getString('artist_id'),
-                    rs.getString('full_name'),
-                    rs.getString('cited_name'),
-                    rs.getString('role'),
-                    rs.getString('nationality'),
-                    rs.getString('birth_date'),
-                    rs.getString('death_date'),
-                    rs.getString('birth_place'),
-                    rs.getString('death_place')
+                    rs.getString("artist_id"),
+                    rs.getString("full_name"),
+                    rs.getString("cited_name"),
+                    rs.getString("role"),
+                    rs.getString("nationality"),
+                    rs.getString("birth_date"),
+                    rs.getString("death_date"),
+                    rs.getString("birth_place"),
+                    rs.getString("death_place")
                 )
             );
             artwork.setLocation(
                 new Location(
-                    rs.getString('id'),
-                    rs.getString('departament'),
-                    rs.getString('physical_location')
+                    rs.getString("id"),
+                    rs.getString("departament"),
+                    rs.getString("physical_location")
                 )
             );
         return artwork;
