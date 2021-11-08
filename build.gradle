@@ -3,12 +3,10 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id 'war'
-	id 'io.franzbecker.gradle-lombok' version '5.0.0'
-
 }
 
 group = 'edu.oakland'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 sourceCompatibility = '11'
 
 configurations {
@@ -21,29 +19,15 @@ repositories {
 	mavenCentral()
 }
 
-ext {
-	set('springCloudGcpVersion', "2.0.4")
-	set('springCloudVersion', "2020.0.4")
-}
-
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'com.google.cloud:spring-cloud-gcp-starter-pubsub'
-	implementation 'com.google.cloud:spring-cloud-gcp-starter-storage'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.3.12'
-}
-
-dependencyManagement {
-	imports {
-		mavenBom "com.google.cloud:spring-cloud-gcp-dependencies:${springCloudGcpVersion}"
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-	}
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.5.6'
+	runtimeOnly 'org.springframework.cloud:spring-cloud-gcp-starter-sql-mysql:1.2.5.RELEASE' 
 }
 
 test {
