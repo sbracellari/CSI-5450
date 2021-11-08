@@ -1,5 +1,9 @@
 package edu.oakland.arttour.model;
 
+import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor

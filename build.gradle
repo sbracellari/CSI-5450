@@ -36,6 +36,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.3.12'
 }
 
 dependencyManagement {

@@ -32,7 +32,7 @@ public class Artwork {
             artwork.setMedium(rs.getString("medium"));
             artwork.setCreditLine(rs.getString("credit_line"));
             artwork.setDateAquired(rs.getString("date_acquired"));
-            artwork.provenanceText(rs.getString("provenance_text"));
+            artwork.setProvenanceText(rs.getString("provenance_text"));
             artwork.setProvenanceText(rs.getString("classification"));
             artwork.setCreator(
                 new Creator(
