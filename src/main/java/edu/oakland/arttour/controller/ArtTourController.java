@@ -52,7 +52,7 @@ public class ArtTourController {
   public List<Artwork> getCollection() {
         List collectionsList = new ArrayList<Artwork>();
         Creator creator = new Creator(
-                                    "artistId",
+                                    1,
                                     "fullName",
                                     "citedName",
                                     "role",
@@ -63,19 +63,22 @@ public class ArtTourController {
                                     "deathPlace"
                                     );
         Location location = new Location(
-                                    "locationId",
+                                    1,
                                     "departament",
                                     "physicalLocation"
                                     );
         Artwork collection1 = new Artwork(
-                                    "id",
+                                    "artworkId",
                                     "title",
                                     "creationDate",
                                     "medium",
                                     "creditLine",
                                     "dateAquired",
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
                                     "provenanceText",
-                                    "imageUrl",
                                     "classification",
                                     creator,
                                     location
@@ -86,8 +89,8 @@ public class ArtTourController {
   }
 
   // test endpoint to ensure database is connected. will remove later
-  @GetMapping("/getTuples")
-	public List<Map<String,Object>> getTuples() {
-		return dao.getCollection();
-	}
+  // @GetMapping("/getTuples")
+	// public List<Map<String,Object>> getTuples() {
+	// 	return dao.getCollection();
+	// }
 }

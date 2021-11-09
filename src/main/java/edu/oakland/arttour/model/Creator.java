@@ -1,14 +1,14 @@
 package edu.oakland.arttour.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class Creator {
-    private String artistId;
+    private int creatorId;
     private String fullName;
     private String citedName;
     private String role;
