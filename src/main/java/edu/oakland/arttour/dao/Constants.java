@@ -2,7 +2,7 @@ package edu.oakland.arttour.dao;
 
 public class Constants {
 
-  ////////// queries //////////
+  ////////// reports //////////
   public static final String GET_COLLECTION =
     new String(
         " SELECT                                     " +
@@ -15,7 +15,7 @@ public class Constants {
         " LIMIT 500                                  "
     ).replaceAll("\\s+", " ");
 
-  ////////// reports //////////
+  ////////// queries //////////
   public static final String GET_FILTERED_COLLECTION =
     new String(
         " SELECT                                     " +
@@ -30,6 +30,58 @@ public class Constants {
         " LIMIT 500                                  "
     ).replaceAll("\\s+", " ");
 
+  public static final String GET_ARTWORK =
+    new String(
+        " SELECT                                     " +
+	    "     *                                      " +
+        " FROM                                       " + 
+	    "     artwork a                              " +
+        "     NATURAL JOIN artwork_has_creator ac    " +
+        "     NATURAL JOIN creator c                 " +
+        "     NATURAL JOIN location l                " +
+        " WHERE                                      " +
+        "     artwork_id = ?                         " 
+    ).replaceAll("\\s+", " ");
+
+  public static final String GET_CREATOR =
+    new String(
+        " SELECT                  " +
+	    "     *                   " +
+        " FROM                    " + 
+	    "     creator c           " +
+        "     c.creator_id = ?    " 
+    ).replaceAll("\\s+", " ");
+
+  public static final String GET_ARTWORK_IDS = 
+    new String(
+        " SELECT                    " +
+        "     t.artwork_id          " +
+        " FROM                      " +
+        "     tour_has_artwork t    " +
+        " WHERE                     " + 
+        "     t.tour_id = ?         "
+    ).replaceAll("\\s+", " ");
+
+  public static final String GET_TOUR_IDS = 
+    new String(
+        " SELECT             " +
+        "     t.tour_id      " +
+        " FROM               " +
+        "     tour t         " +
+        " WHERE              " + 
+        "     t.email = ?    "
+    ).replaceAll("\\s+", " ");
+
+  public static final String GET_FAVORITE_TOUR_IDS = 
+    new String(
+        " SELECT                           " +
+        "     c.tour_id                    " +
+        " FROM                             " +
+        "     consumer_favorites_tour c    " +
+        " WHERE                            " +
+        "     c.email = ?                  "
+    ).replaceAll("\\s+", " ");
+
   public static final String GET_TOURS =
     new String(
         " SELECT                                  " +
@@ -38,38 +90,27 @@ public class Constants {
 	    "     tour t                              " +
         "     NATURAL JOIN tour_has_artwork ta    " +
         " WHERE                                   " +
-	    "     ta.email = ?                        " 
+	    "     t.email = ?                         " 
     ).replaceAll("\\s+", " ");
 
-
-  public static final String GET_ARTWORK_FAVORITES = 
+  public static final String GET_FAVORITE_ARTWORK_IDS = 
     new String(
-        " SELECT                                  " +
-        "     *                                   " +
-        " FROM                                    " +
-        "     consumer_favorites_artwork c        " +
-        " WHERE                                   " +
-        "     c.email = ?                         " 
+        " SELECT                              " +
+        "     c.artwork_id                    " +
+        " FROM                                " +
+        "     consumer_favorites_artwork c    " +
+        " WHERE                               " +
+        "     c.email = ?                     " 
     ).replaceAll("\\s+", " ");
   
-  public static final String GET_CREATOR_FAVORITES = 
+  public static final String GET_FAVORITE_CREATOR_IDS = 
     new String(
-        " SELECT                                  " +
-        "     *                                   " +
-        " FROM                                    " +
-        "     consumer_favorites_creator c        " +
-        " WHERE                                   " +
-        "     c.email = ?                         " 
-    ).replaceAll("\\s+", " ");
-
-  public static final String GET_TOUR_FAVORITES = 
-    new String(
-        " SELECT                                  " +
-        "     *                                   " +
-        " FROM                                    " +
-        "     consumer_favorites_tour c           " +
-        " WHERE                                   " +
-        "     c.email = ?                         " 
+        " SELECT                              " +
+        "     c.creator_id                    " +
+        " FROM                                " +
+        "     consumer_favorites_creator c    " +
+        " WHERE                               " +
+        "     c.email = ?                     " 
     ).replaceAll("\\s+", " ");
 
   ////////// procedures //////////

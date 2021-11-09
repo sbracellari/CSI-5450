@@ -40,26 +40,8 @@ public class Artwork {
             artwork.setItemDiameter(rs.getDouble("item_diameter"));
             artwork.setProvenanceText(rs.getString("provenance_text"));
             artwork.setProvenanceText(rs.getString("classification"));
-            artwork.setCreator(
-                new Creator(
-                    rs.getInt("creator_id"),
-                    rs.getString("full_name"),
-                    rs.getString("cited_name"),
-                    rs.getString("role"),
-                    rs.getString("nationality"),
-                    rs.getString("birth_date"),
-                    rs.getString("death_date"),
-                    rs.getString("birth_place"),
-                    rs.getString("death_place")
-                )
-            );
-            artwork.setLocation(
-                new Location(
-                    rs.getInt("location_id"),
-                    rs.getString("department"),
-                    rs.getString("physical_location")
-                )
-            );
+            artwork.setCreator(Creator.mapper.mapRow(rs, rowNum));
+            artwork.setLocation(Location.mapper.mapRow(rs, rowNum));
         return artwork;
     };
 }

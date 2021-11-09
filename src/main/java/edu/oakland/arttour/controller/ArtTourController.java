@@ -1,6 +1,7 @@
 package edu.oakland.arttour.controller;
 
 import edu.oakland.arttour.model.*;
+import edu.oakland.arttour.service.ArtTourService;
 import edu.oakland.arttour.dao.ArtTourDAO;
 import java.io.IOException;
 import java.util.HashMap;
@@ -29,7 +30,7 @@ public class ArtTourController {
 
   private final Logger log = LoggerFactory.getLogger("arttour");
   @Autowired private ArtTourDAO dao;
-
+  @Autowired private ArtTourService service;
 
   @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Illegal Arguments given")
   @ExceptionHandler({IllegalArgumentException.class, DataAccessException.class})
@@ -50,47 +51,13 @@ public class ArtTourController {
 
   @GetMapping("collection")
   public List<Artwork> getCollection() {
-        List collectionsList = new ArrayList<Artwork>();
-        Creator creator = new Creator(
-                                    1,
-                                    "fullName",
-                                    "citedName",
-                                    "role",
-                                    "nationality",
-                                    "birthDate",
-                                    "deathDate",
-                                    "birthPlace",
-                                    "deathPlace"
-                                    );
-        Location location = new Location(
-                                    1,
-                                    "departament",
-                                    "physicalLocation"
-                                    );
-        Artwork collection1 = new Artwork(
-                                    "artworkId",
-                                    "title",
-                                    "creationDate",
-                                    "medium",
-                                    "creditLine",
-                                    "dateAquired",
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    "provenanceText",
-                                    "classification",
-                                    creator,
-                                    location
-                                    );
-        collectionsList.add(collection1);
-        return collectionsList;
-
+    return dao.getCollection(); 
   }
 
-  // test endpoint to ensure database is connected. will remove later
-  // @GetMapping("/getTuples")
-	// public List<Map<String,Object>> getTuples() {
-	// 	return dao.getCollection();
-	// }
+  // @TODO filtered collection
+  // @GetMapping("filtered-collection")
+  // public List<Artwork> getFilteredCollection() {}
+
+  // @GetMapping("favorites")
+  // public List<Favorite> getUserFavorites(String email)
 }

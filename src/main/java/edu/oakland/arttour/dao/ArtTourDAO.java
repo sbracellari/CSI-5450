@@ -1,7 +1,7 @@
 package edu.oakland.arttour.dao;
 
 import edu.oakland.arttour.model.Artwork;
-import edu.oakland.arttour.model.Tour;
+import edu.oakland.arttour.model.Creator;
 
 import java.util.List;
 
@@ -28,13 +28,33 @@ public class ArtTourDAO {
   // {artistId, classification, medium}, Artwork.mapper);
   // }
 
-  public List<Tour> getTours(String email) throws DataAccessException {
-    return jdbcTemplate.query(Constants.GET_TOURS, Tour.mapper, new Object[] { email });
+  public List<Integer> getFavoriteTourIds(String email) throws DataAccessException {
+    return jdbcTemplate.queryForList(Constants.GET_FAVORITE_TOUR_IDS, Integer.class, email);
   }
 
-  // @TODO getArtworkFavorites() -- need model
-  // @TODO getCreatorFavorites() -- need model
-  // @TODO getTourFavorites() -- need model
+  public List<Integer> getTourIds(String email) throws DataAccessException {
+    return jdbcTemplate.queryForList(Constants.GET_TOUR_IDS, Integer.class, email);
+  }
+
+  public List<String> getArtworkIds(int tourId) throws DataAccessException {
+    return jdbcTemplate.queryForList(Constants.GET_ARTWORK_IDS, String.class, tourId);
+  }
+
+  public Artwork getArtwork(String artworkId) throws DataAccessException {
+    return jdbcTemplate.queryForObject(Constants.GET_ARTWORK, Artwork.mapper, artworkId);
+  }
+
+  public Creator getCreator(int creatorId) throws DataAccessException {
+    return jdbcTemplate.queryForObject(Constants.GET_CREATOR, Creator.mapper, creatorId);
+  }
+
+  public List<String> getFavoriteArtworkIds(String email) throws DataAccessException {
+    return jdbcTemplate.queryForList(Constants.GET_FAVORITE_ARTWORK_IDS, String.class, email);
+  }
+
+  public List<Integer> getFavoriteCreatorIds(String email) throws DataAccessException {
+    return jdbcTemplate.queryForList(Constants.GET_FAVORITE_CREATOR_IDS, Integer.class, email);
+  }
 
   public void addArtwork(
         String artworkId, 
