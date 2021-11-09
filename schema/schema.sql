@@ -300,7 +300,7 @@ DELIMITER ;
 
 
 -- -----------------------------------------------------
--- Procedure `add_artwork_and_artist`
+-- Procedure `add_artwork_and_creator`
 -- -----------------------------------------------------
 DELIMITER //
 
@@ -385,6 +385,81 @@ DELIMITER ;
 
 
 -- -----------------------------------------------------
+-- Procedure `delete_artwork`
+-- ----------------------------------------------------- 
+DELIMITER //
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_artwork`(IN artwork_id VARCHAR(50))
+BEGIN
+
+DELETE FROM artwork a WHERE a.artwork_id = artwork_id;
+
+END
+
+DELIMITER ;
+
+
+-- -----------------------------------------------------
+-- Procedure `delete_creator`
+-- ----------------------------------------------------- 
+DELIMITER //
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_creator`(IN creator_id INT)
+BEGIN
+
+DELETE FROM creator c WHERE c.creator_id = creator_id;
+
+END
+
+DELIMITER ;
+
+
+-- -----------------------------------------------------
+-- Procedure `delete_favorite_artwork`
+-- -----------------------------------------------------
+DELIMITER //
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_favorite_artwork`(IN email VARCHAR(100), artwork_id VARCHAR(50))
+BEGIN
+
+DELETE FROM consumer_favorites_artwork c WHERE c.email = email AND c.artwork_id = artwork_id;
+
+END
+
+DELIMITER ;
+
+
+-- -----------------------------------------------------
+-- Procedure `delete_favorite_creator`
+-- -----------------------------------------------------
+DELIMITER //
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_favorite_creator`(IN email VARCHAR(100), creator_id INT)
+BEGIN
+
+DELETE FROM consumer_favorites_creator c WHERE c.email = email AND c.creator_id = creator_id;
+
+END
+
+DELIMITER ;
+
+
+-- -----------------------------------------------------
+-- Procedure `delete_favorite_tour`
+-- -----------------------------------------------------
+DELIMITER //
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_favorite_tour`(IN email VARCHAR(100), tour_id INT)
+BEGIN
+
+DELETE FROM consumer_favorites_tour c WHERE c.email = email AND c.tour_id = tour_id;
+
+END
+
+DELIMITER ;
+
+
+-- -----------------------------------------------------
 -- Procedure `delete_from_tour`
 -- ----------------------------------------------------- 
 DELIMITER //
@@ -393,6 +468,25 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_from_tour`(IN tour_id INT)
 BEGIN
 
 DELETE FROM tour_has_artwork t WHERE t.tour_id = tour_id;
+
+END
+
+DELIMITER ;
+
+
+-- -----------------------------------------------------
+-- Procedure `delete_location`
+-- -----------------------------------------------------
+DELIMITER //
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_location`(IN location_id INT)
+BEGIN
+
+UPDATE artwork a SET a.location_id = 
+	(SELECT l.location_id FROM location l WHERE l.department = 'Unknown' AND l.physical_location = 'Unknown') 
+WHERE a.location_id = location_id;
+
+DELETE FROM location l WHERE l.location_id = location_id;
 
 END
 
@@ -468,100 +562,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `favorite_tour`(IN email VARCHAR(100
 BEGIN
 
 INSERT INTO consumer_favorites_tour VALUES (email, tour_id);
-
-END
-
-DELIMITER ;
-
-
--- -----------------------------------------------------
--- Procedure `remove_artwork`
--- ----------------------------------------------------- 
-DELIMITER //
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `remove_artwork`(IN artwork_id VARCHAR(50))
-BEGIN
-
-DELETE FROM artwork a WHERE a.artwork_id = artwork_id;
-
-END
-
-DELIMITER ;
-
-
--- -----------------------------------------------------
--- Procedure `remove_creator`
--- ----------------------------------------------------- 
-DELIMITER //
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `remove_creator`(IN creator_id INT)
-BEGIN
-
-DELETE FROM creator c WHERE c.creator_id = creator_id;
-
-END
-
-DELIMITER ;
-
-
--- -----------------------------------------------------
--- Procedure `remove_favorite_artwork`
--- -----------------------------------------------------
-DELIMITER //
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `remove_favorite_artwork`(IN email VARCHAR(100), artwork_id VARCHAR(50))
-BEGIN
-
-DELETE FROM consumer_favorites_artwork c WHERE c.email = email AND c.artwork_id = artwork_id;
-
-END
-
-DELIMITER ;
-
-
--- -----------------------------------------------------
--- Procedure `remove_favorite_creator`
--- -----------------------------------------------------
-DELIMITER //
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `remove_favorite_creator`(IN email VARCHAR(100), creator_id INT)
-BEGIN
-
-DELETE FROM consumer_favorites_creator c WHERE c.email = email AND c.creator_id = creator_id;
-
-END
-
-DELIMITER ;
-
-
--- -----------------------------------------------------
--- Procedure `remove_favorite_tour`
--- -----------------------------------------------------
-DELIMITER //
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `remove_favorite_tour`(IN email VARCHAR(100), tour_id INT)
-BEGIN
-
-DELETE FROM consumer_favorites_tour c WHERE c.email = email AND c.tour_id = tour_id;
-
-END
-
-DELIMITER ;
-
-
--- -----------------------------------------------------
--- Procedure `remove_location`
--- -----------------------------------------------------
-DELIMITER //
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `remove_location`(IN location_id INT)
-BEGIN
-
-UPDATE artwork a SET a.location_id = 
-	(SELECT l.location_id FROM location l WHERE l.department = 'Unknown' AND l.physical_location = 'Unknown') 
-WHERE a.location_id = location_id;
-
-DELETE FROM location l WHERE l.location_id = location_id;
 
 END
 
@@ -720,37 +720,3 @@ END IF;
 END
 
 DELIMITER ;
-
-
--- -----------------------------------------------------
--- QUERIES
--- -----------------------------------------------------
-
--- Retrieve a specified number of artworks, creator, location (collection) with a specified column
-SELECT 
-	* 
-FROM 
-	artwork a NATURAL JOIN artwork_has_creator ac NATURAL JOIN creator c NATURAL JOIN location l
-WHERE a.`medium` = 'glass'
-LIMIT 500;
-
-
--- Retrieve tour(s) for specified user 
-SELECT 
-	*
-FROM
-	tour t NATURAL JOIN tour_has_artwork ta
-WHERE
-	ta.email = 'example@email.dmain';
-
--- -----------------------------------------------------
--- REPORTS
--- -----------------------------------------------------
-
--- Retrieve a specified number of artworks, creator, location (collection)
-
-SELECT 
-	* 
-FROM 
-	artwork a NATURAL JOIN artwork_has_creator ac NATURAL JOIN creator c NATURAL JOIN location l
-LIMIT 500;
