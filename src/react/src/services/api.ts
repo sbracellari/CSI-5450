@@ -1,5 +1,5 @@
 
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { Artwork } from "../app/types";
 import auth from "./auth";
 //@todo: export API in a config
@@ -9,8 +9,6 @@ const apiClient = axios.create({
     baseURL: API_URL,
     headers: {
         "Content-type": "application/json",
-        "Access-Control-Allow-Origin": API_URL,
-    
     },
 });
 
@@ -18,8 +16,9 @@ const getAdmin = () => axios.get(API_URL + "admin", { headers: auth.authHeader()
 const getUser = () => axios.get(API_URL + "user", { headers: auth.authHeader() });
 const fetchCollection = async () => {
     try {
-        const response = await apiClient.get("/collection");
+        const response: AxiosResponse<Artwork[]> = await apiClient.get<Artwork[]>("collection");
         console.log(response);
+        return response.data;
     } catch (e) {
         console.log(e);
     }
