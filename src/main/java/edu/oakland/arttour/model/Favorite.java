@@ -1,6 +1,7 @@
 package edu.oakland.arttour.model;
 
 import lombok.Data;
+import java.util.List;
 
 import org.springframework.jdbc.core.RowMapper;
 
