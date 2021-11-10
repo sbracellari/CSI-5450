@@ -1,35 +1,62 @@
-
 export interface CollectionState {
     collection: Artwork[],
     status: 'idle' | 'loading' | 'failed';
 }
+
 export interface Artwork {
-    id: string,
+    artworkId: string,
     title: string,
     creationDate: string,
     medium: string,
-    dateAquired: string,
+    creditLine: string,
+    dateAcquired?: string,
+    itemWidth?: number,
+    itemHeight?: number,
+    itemDepth?: number,
+    itemDiameter?: number,
     provenanceText: string,
-    imageUrl: string,
     classification: string,
     location: Location,
     creator: Creator
 }
 
 export interface Creator {
+    creatorId: number,
     fullName: string,
-    //citedName: string,
-    //role: string,
-    //nationality: string,
-    //birthDate: string,
-    //deathDate: string,
-    //birthPlace: string,
-    //deathPlace: string,
+    citedName: string,
+    role: string,
+    nationality: string,
+    birthDate: string,
+    deathDate: string,
+    birthPlace: string,
+    deathPlace: string,
 }
 
 export interface Location {
-    departament: string,
+    locationId: number,
+    department: string,
     physicalLocation: string
+}
+
+export interface Tour {
+    tourId: number,
+    title: string,
+    email: string,
+    artworks: Artwork[]
+}
+
+export interface Favorites {
+    email: string,
+    creators: Creator[],
+    artworks: Artwork[],
+    tours: Tour[]
+}
+
+export interface User {
+    fname: string,
+    lname: string,
+    email: string,
+    password: string,
 }
 export interface DetailState {
     detail?: Artwork,
@@ -39,19 +66,12 @@ export interface TabState {
     path: string,
 }
 
-export interface User {
-    username: string,
-    password: string,
-}
+export type LoginUser = Partial<Pick<User, "fname" | "lname">> & Pick<User, "email" | "password">;
 
-export interface RegisterUser extends User {
-    email: string,
-}
 export interface UserState {
     isLoggedIn: boolean,
     isAdmin: boolean,
     user: User | null,
     message: any,
     status: 'idle' | 'loading' | 'failed';
-
 }
