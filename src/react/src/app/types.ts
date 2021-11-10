@@ -39,10 +39,10 @@ export interface Location {
 }
 
 export interface Tour {
-    tourId: string,
+    tourId: number,
     title: string,
     email: string,
-    items: Artwork[]
+    artworks: Artwork[]
 }
 
 export interface Favorites {
