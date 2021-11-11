@@ -31,7 +31,6 @@ public class ArtTourController {
   private final Logger log = LoggerFactory.getLogger("arttour");
   @Autowired private ArtTourDAO dao;
 
-
   @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Illegal Arguments given")
   @ExceptionHandler({IllegalArgumentException.class, DataAccessException.class})
   public void illegalArgumentError(Exception e) {
@@ -49,47 +48,8 @@ public class ArtTourController {
     return true;
   }
 
-  @CrossOrigin
-  @GetMapping("collection")
-  public List<Artwork> getCollection() {
-        List collectionsList = new ArrayList<Artwork>();
-        Creator creator = new Creator(
-                                    "artistId",
-                                    "fullName",
-                                    "citedName",
-                                    "role",
-                                    "nationality",
-                                    "birthDate",
-                                    "deathDate",
-                                    "birthPlace",
-                                    "deathPlace"
-                                    );
-        Location location = new Location(
-                                    "locationId",
-                                    "departament",
-                                    "physicalLocation"
-                                    );
-        Artwork collection1 = new Artwork(
-                                    "id",
-                                    "title",
-                                    "creationDate",
-                                    "medium",
-                                    "creditLine",
-                                    "dateAquired",
-                                    "provenanceText",
-                                    "imageUrl",
-                                    "classification",
-                                    creator,
-                                    location
-                                    );
-        collectionsList.add(collection1);
-        return collectionsList;
+  // @CrossOrigin
+  // @GetMapping("collection")
+  // public List<Artwork> getCollection() {}
 
-  }
-
-  // test endpoint to ensure database is connected. will remove later
-  @GetMapping("/getTuples")
-	public List<Map<String,Object>> getTuples() {
-		return dao.getCollection();
-	}
 }
