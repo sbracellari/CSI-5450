@@ -22,7 +22,7 @@ public class ArtTourService {
     return dao.login(email, password);
   }
 
-  public boolean registerUser(Map<String, String> user, String userType) {
+  public boolean registerUser(Map<String, String> user) {
     String email = user.get("email");
     String fName = user.get("fName");
     String lName = user.get("lName");
@@ -35,15 +35,7 @@ public class ArtTourService {
     }
 
     dao.registerUser(email, fName, lName, password);
-
-    if (userType.equals("consumer")) {
-      dao.addConsumer(email);
-    } else if (userType.equals("admin")) {
-      dao.addAdmin(email);
-    } else {
-      return false;
-    }
-
+    dao.addConsumer(email);
     return true; // registration successful
   }
 
@@ -180,6 +172,25 @@ public class ArtTourService {
     List<Integer> tourIds = dao.getTourIds(email);
     List<Tour> tours = getToursForEmail(email, tourIds);
     return tours;
+  }
+
+  public List<Tour> getPublicTours() {
+    List<String> adminEmails = dao.getAdminEmails();
+    List<Tour> publicTours = new ArrayList<Tour>();
+    adminEmails.stream()
+        .forEach(
+            email -> {
+              List<Integer> tourIds = dao.getTourIds(email);
+              List<Tour> tours = getToursForEmail(email, tourIds);
+
+              tours.stream()
+                  .forEach(
+                      tour -> {
+                        publicTours.add(tour);
+                      });
+            });
+
+    return publicTours;
   }
 
   private List<Tour> getFavoriteToursForUser(String email) {

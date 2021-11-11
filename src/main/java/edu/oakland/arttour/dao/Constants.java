@@ -3,6 +3,10 @@ package edu.oakland.arttour.dao;
 public class Constants {
 
   ////////// reports //////////
+  public static final String GET_ADMIN_EMAILS =
+      new String(" SELECT * FROM admin")
+          .replaceAll("\\s+", " ");
+
   public static final String GET_COLLECTION =
       new String(
               " SELECT                                     "
@@ -25,6 +29,7 @@ public class Constants {
 
   ////////// queries //////////
   public static final String GET_FILTERED_COLLECTION =
+  // not sure if dynamically passing a column name will work.
       new String(
               " SELECT                                     "
                   + "     *                                      "
@@ -35,8 +40,7 @@ public class Constants {
                   + "     NATURAL JOIN location l                "
                   + " WHERE                                      "
                   + "     ? = ?                                  "
-                  + // not sure if dynamically passing a column name will work.
-                  " LIMIT 500                                  ")
+                + " LIMIT 500                                    ")
           .replaceAll("\\s+", " ");
 
   public static final String IS_ADMIN =
@@ -62,22 +66,6 @@ public class Constants {
                   + " SELECT                  "
                   + "     0                   "
                   + " LIMIT 1                 ")
-          .replaceAll("\\s+", " ");
-
-  public static final String ADD_CONSUMER =
-      new String(
-              " INSERT               "
-                  + "     INTO consumer    "
-                  + " VALUES               "
-                  + "     (?)              ")
-          .replaceAll("\\s+", " ");
-
-  public static final String ADD_ADMIN =
-      new String(
-              " INSERT            "
-                  + "     INTO admin    "
-                  + " VALUES            "
-                  + "     (?)           ")
           .replaceAll("\\s+", " ");
 
   public static final String USER_EXISTS =
@@ -189,11 +177,17 @@ public class Constants {
           .replaceAll("\\s+", " ");
 
   ////////// procedures //////////
+  public static final String ADD_ADMIN =
+      new String("CALL add_admin(?)").replaceAll("\\s+", " ");
+
   public static final String ADD_ARTWORK =
       new String("CALL add_artwork(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)").replaceAll("\\s+", " ");
 
   public static final String ADD_ARTWORK_AND_CREATOR =
       new String("CALL add_artwork_and_creator(?, ?)").replaceAll("\\s+", " ");
+
+  public static final String ADD_CONSUMER =
+      new String("CALL add_consumer(?)").replaceAll("\\s+", " ");
 
   public static final String ADD_CREATOR =
       new String("CALL add_creator(?, ?, ?, ?, ?, ?, ?, ?, ?)").replaceAll("\\s+", " ");
