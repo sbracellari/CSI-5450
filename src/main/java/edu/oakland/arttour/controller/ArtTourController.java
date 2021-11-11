@@ -1,8 +1,12 @@
 package edu.oakland.arttour.controller;
 
-import edu.oakland.arttour.model.*;
+import edu.oakland.arttour.model.Artwork;
+import edu.oakland.arttour.model.Location;
+import edu.oakland.arttour.model.Tour;
+import edu.oakland.arttour.model.Favorite;
 import edu.oakland.arttour.service.ArtTourService;
 import edu.oakland.arttour.dao.ArtTourDAO;
+
 import java.util.List;
 import java.util.Map;
 

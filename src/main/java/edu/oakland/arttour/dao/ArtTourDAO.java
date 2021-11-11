@@ -234,7 +234,4 @@ public class ArtTourDAO {
   public void updateUser(String email, String fName, String lName, String password) {
     jdbcTemplate.update(Constants.UPDATE_USER, new Object[] { email, fName, lName, password });
   }
-
-  // @TODO login() -- need to use SimpleJdbcCall
-  // @TODO register() -- need to use SimpleJdbcCall
 }
