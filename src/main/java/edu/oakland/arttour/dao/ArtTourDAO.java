@@ -2,6 +2,7 @@ package edu.oakland.arttour.dao;
 
 import edu.oakland.arttour.model.Artwork;
 import edu.oakland.arttour.model.Creator;
+import edu.oakland.arttour.model.Location;
 
 import java.util.List;
 
@@ -18,6 +19,30 @@ public class ArtTourDAO {
 
   public List<Artwork> getCollection() throws DataAccessException {
     return jdbcTemplate.query(Constants.GET_COLLECTION, Artwork.mapper);
+  }
+
+  public Integer isAdmin(String email) throws DataAccessException {
+    return Integer.parseInt(jdbcTemplate.queryForObject(Constants.IS_ADMIN, String.class, email));  
+  }
+
+  public Integer userExists(String email) throws DataAccessException {
+    return Integer.parseInt(jdbcTemplate.queryForObject(Constants.USER_EXISTS, String.class, email));
+  }
+
+  public void registerUser(String email, String fName, String lName, String password) {
+    jdbcTemplate.update(Constants.REGISTER_USER, new Object[] { email, fName, lName, password });
+  }
+
+  public Integer login(String email, String password) throws DataAccessException{
+    return Integer.parseInt(jdbcTemplate.queryForObject(Constants.LOGIN, String.class, new Object[] { email, password }));
+  }
+
+  public void addConsumer(String email) {
+    jdbcTemplate.update(Constants.ADD_CONSUMER, email);  
+  }
+
+  public void addAdmin(String email) {
+    jdbcTemplate.update(Constants.ADD_ADMIN, email);  
   }
 
   // @todo: make params optional so we can filter with some of them not all
@@ -46,6 +71,10 @@ public class ArtTourDAO {
 
   public Creator getCreator(int creatorId) throws DataAccessException {
     return jdbcTemplate.queryForObject(Constants.GET_CREATOR, Creator.mapper, creatorId);
+  }
+
+  public List<Location> getAllLocations() {
+    return jdbcTemplate.query(Constants.GET_ALL_LOCATIONS, Location.mapper);
   }
 
   public List<String> getFavoriteArtworkIds(String email) throws DataAccessException {
@@ -103,7 +132,7 @@ public class ArtTourDAO {
     jdbcTemplate.update(Constants.ADD_TO_TOUR, new Object[] { tourId, artworkId });
   }
 
-  public void createTour(String email, String tourName) {
+  public void createTour(String tourName, String email) {
     jdbcTemplate.update(Constants.CREATE_TOUR, new Object[] { email, tourName });
   }
 
@@ -127,8 +156,12 @@ public class ArtTourDAO {
     jdbcTemplate.update(Constants.DELETE_FAVORITE_TOUR, new Object[] { email, tourId });
   }
 
-  public void deleteFromTour(int tourID) {
-    jdbcTemplate.update(Constants.DELETE_FROM_TOUR, tourID);
+  public void deleteFromTour(int tourId, String artworkId) {
+    jdbcTemplate.update(Constants.DELETE_FROM_TOUR, new Object[] { tourId, artworkId });
+  }
+
+  public String getTourName(int tourId) {
+    return jdbcTemplate.queryForObject(Constants.GET_TOUR_NAME, String.class, tourId);
   }
 
   public void deleteLocation(int locationId) {
@@ -156,6 +189,7 @@ public class ArtTourDAO {
   }
 
   public void updateArtwork( 
+        String artworkId,
         String title, 
         String creationDate, 
         String medium, 
@@ -167,15 +201,15 @@ public class ArtTourDAO {
         Double itemDiameter,
         String provenanceText,
         String classification,
-        int locationId,
-        String artworkId
+        int locationId
   ) {
     jdbcTemplate.update(Constants.UPDATE_ARTWORK, 
-        new Object[] { title, creationDate, medium, creditLine, dateAcquired, itemWidth, 
-                      itemHeight, itemDepth, itemDiameter, provenanceText, classification, locationId, artworkId });
+        new Object[] { artworkId, title, creationDate, medium, creditLine, dateAcquired, itemWidth, 
+                      itemHeight, itemDepth, itemDiameter, provenanceText, classification, locationId });
   }
 
   public void updateCreator(
+        int creatorId,
         String fullName,
         String citedName,
         String role,
@@ -183,23 +217,22 @@ public class ArtTourDAO {
         String birthDate,
         String deathDate,
         String birthPlace,
-        String deathPlace,
-        int creatorId
+        String deathPlace
   ) {
     jdbcTemplate.update(Constants.UPDATE_CREATOR, 
-        new Object[] { fullName, citedName, role, nationality, birthDate, deathDate, birthPlace, deathPlace, creatorId });
+        new Object[] { creatorId, fullName, citedName, role, nationality, birthDate, deathDate, birthPlace, deathPlace });
   }
 
-  public void updateLocation(String department, String physicalLocation, int locationId) {
-    jdbcTemplate.update(Constants.UPDATE_LOCATION, new Object[] { department, physicalLocation, locationId });
+  public void updateLocation(Integer locationId, String department, String physicalLocation) {
+    jdbcTemplate.update(Constants.UPDATE_LOCATION, new Object[] { locationId, department, physicalLocation });
   }
 
   public void updateTour(String tourName, int tourId) {
-    jdbcTemplate.update(Constants.UPDATE_TOUR, new Object[] { tourName, tourId });
+    jdbcTemplate.update(Constants.UPDATE_TOUR, new Object[] { tourId, tourName });
   }
 
-  public void updateUser(String fName, String lName, String password, String email) {
-    jdbcTemplate.update(Constants.UPDATE_USER, new Object[] { fName, lName, password, email });
+  public void updateUser(String email, String fName, String lName, String password) {
+    jdbcTemplate.update(Constants.UPDATE_USER, new Object[] { email, fName, lName, password });
   }
 
   // @TODO login() -- need to use SimpleJdbcCall

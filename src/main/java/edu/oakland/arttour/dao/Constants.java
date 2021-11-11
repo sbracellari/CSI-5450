@@ -6,22 +6,31 @@ public class Constants {
   public static final String GET_COLLECTION =
     new String(
         " SELECT                                     " +
-	    "     *                                      " +
+	      "     *                                      " +
         " FROM                                       " + 
-	    "     artwork a                              " +
+	      "     artwork a                              " +
         "     NATURAL JOIN artwork_has_creator ac    " +
         "     NATURAL JOIN creator c                 " +
         "     NATURAL JOIN location l                " +
         " LIMIT 500                                  "
     ).replaceAll("\\s+", " ");
+  
+  public static final String GET_ALL_LOCATIONS = 
+  new String(
+        " SELECT                                     " +
+	      "     *                                      " +
+        " FROM                                       " + 
+	      "     location                               "
+    ).replaceAll("\\s+", " ");
+
 
   ////////// queries //////////
   public static final String GET_FILTERED_COLLECTION =
     new String(
         " SELECT                                     " +
-	    "     *                                      " +
+	      "     *                                      " +
         " FROM                                       " + 
-	    "     artwork a                              " +
+	      "     artwork a                              " +
         "     NATURAL JOIN artwork_has_creator ac    " +
         "     NATURAL JOIN creator c                 " +
         "     NATURAL JOIN location l                " +
@@ -30,12 +39,67 @@ public class Constants {
         " LIMIT 500                                  "
     ).replaceAll("\\s+", " ");
 
+  public static final String IS_ADMIN =
+    new String(
+        " SELECT                          " +
+        "     IF(email=?, TRUE, FALSE)    " +
+        " AS                              " +
+        "     is_admin                    " +
+        " FROM                            " +
+        "     admin                       "
+    ).replaceAll("\\s+", " ");
+
+  public static final String LOGIN = 
+    new String(
+        " SELECT                  " +
+        "     1                   " + 
+        " FROM                    " + 
+        "     user                " + 
+        " WHERE                   " + 
+        "     email = ?           " +
+        "     AND password = ?    " +
+        " UNION ALL               " +
+        " SELECT                  " + 
+        "     0                   " +
+        " LIMIT 1                 "
+    ).replaceAll("\\s+", " ");
+
+  public static final String ADD_CONSUMER = 
+    new String(
+        " INSERT               " +
+        "     INTO consumer    " + 
+        " VALUES               " + 
+        "     (?)              " 
+    ).replaceAll("\\s+", " ");
+
+  public static final String ADD_ADMIN = 
+    new String(
+        " INSERT            " +
+        "     INTO admin    " + 
+        " VALUES            " + 
+        "     (?)           " 
+    ).replaceAll("\\s+", " ");
+
+  public static final String USER_EXISTS =
+    new String(
+        " SELECT           " +
+        "     1            " + 
+        " FROM             " + 
+        "     user         " + 
+        " WHERE            " + 
+        "     email = ?    " +
+        " UNION ALL        " +
+        " SELECT           " + 
+        "     0            " +
+        " LIMIT 1          "
+    ).replaceAll("\\s+", " ");
+
   public static final String GET_ARTWORK =
     new String(
         " SELECT                                     " +
-	    "     *                                      " +
+	      "     *                                      " +
         " FROM                                       " + 
-	    "     artwork a                              " +
+	      "     artwork a                              " +
         "     NATURAL JOIN artwork_has_creator ac    " +
         "     NATURAL JOIN creator c                 " +
         "     NATURAL JOIN location l                " +
@@ -46,9 +110,10 @@ public class Constants {
   public static final String GET_CREATOR =
     new String(
         " SELECT                  " +
-	    "     *                   " +
+	      "     *                   " +
         " FROM                    " + 
-	    "     creator c           " +
+	      "     creator c           " +
+        " WHERE                   " +
         "     c.creator_id = ?    " 
     ).replaceAll("\\s+", " ");
 
@@ -85,12 +150,22 @@ public class Constants {
   public static final String GET_TOURS =
     new String(
         " SELECT                                  " +
-	    "     *                                   " +
+	      "     *                                   " +
         " FROM                                    " +
-	    "     tour t                              " +
+	      "     tour t                              " +
         "     NATURAL JOIN tour_has_artwork ta    " +
         " WHERE                                   " +
-	    "     t.email = ?                         " 
+	      "     t.email = ?                         " 
+    ).replaceAll("\\s+", " ");
+
+  public static final String GET_TOUR_NAME =
+    new String(
+        " SELECT               " +
+	      "     t.tour_name      " +
+        " FROM                 " +
+	      "     tour t           " +
+        " WHERE                " +
+	      "     t.tour_id = ?    " 
     ).replaceAll("\\s+", " ");
 
   public static final String GET_FAVORITE_ARTWORK_IDS = 
@@ -130,7 +205,7 @@ public class Constants {
     new String("CALL add_to_tour(?, ?)").replaceAll("\\s+", " ");
 
   public static final String CREATE_TOUR = 
-    new String("CALL add_to_tour(?, ?)").replaceAll("\\s+", " ");
+    new String("CALL create_tour(?, ?)").replaceAll("\\s+", " ");
 
   public static final String DELETE_ARTWORK = 
     new String("CALL delete_artwork(?)").replaceAll("\\s+", " ");
@@ -148,7 +223,7 @@ public class Constants {
     new String("CALL delete_favorite_tour(?, ?)").replaceAll("\\s+", " ");
 
   public static final String DELETE_FROM_TOUR = 
-    new String("CALL delete_from_tour(?)").replaceAll("\\s+", " ");
+    new String("CALL delete_from_tour(?, ?)").replaceAll("\\s+", " ");
 
   public static final String DELETE_LOCATION =
     new String("CALL delete_location(?)").replaceAll("\\s+", " ");
@@ -168,6 +243,9 @@ public class Constants {
   public static final String FAVORITE_TOUR = 
     new String("CALL favorite_tour(?, ?)").replaceAll("\\s+", " ");
 
+    public static final String REGISTER_USER = 
+    new String("CALL register_user(?, ?, ?, ?)").replaceAll("\\s+", " ");
+
   public static final String UPDATE_ARTWORK =
     new String("CALL update_artwork(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)").replaceAll("\\s+", " ");
 
@@ -182,11 +260,4 @@ public class Constants {
 
   public static final String UPDATE_USER =
     new String("CALL update_user(?, ?, ?, ?)").replaceAll("\\s+", " ");
-
-  ////////// functions //////////
-  public static final String LOGIN =
-    new String("SELECT login(?, ?) AS user_exists").replaceAll("\\s+", " ");
-
-  public static final String REGISTER =
-    new String("SELECT register(?, ?, ?, ?) AS user_created").replaceAll("\\s+", " ");
 }
