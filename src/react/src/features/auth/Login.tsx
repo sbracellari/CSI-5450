@@ -1,4 +1,3 @@
-import FormControl from '@mui/material/FormControl';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { Redirect } from 'react-router-dom';
 import { Box, Button, TextField, Alert, Typography } from '@mui/material';
@@ -9,20 +8,14 @@ export function Login() {
     const dispatch = useAppDispatch();
     const { isLoggedIn, message, status } = useAppSelector(state => state.auth);
 
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    //@todo: find a way to combine username and password into an object
     //@todo: add validation and error handling
     //@todo: add remember me and fogot password?
-    const handleUsername = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        setUsername(event.target.value);
-    };
-    const handlePassword = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        setPassword(event.target.value);
-    };
+    const handleInput = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>, setState: React.Dispatch<React.SetStateAction<string>>) => setState(event.target.value);
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        dispatch(login({ username, password }));
+        dispatch(login({ email, password }));
     };
 
     if (isLoggedIn) {
@@ -42,13 +35,14 @@ export function Login() {
                 Sign in
             </Typography>
             <TextField
-                id="username"
-                label="Username"
-                placeholder="Please enter your username"
-                value={username}
-                onChange={(e) => handleUsername(e)}
+                id="email"
+                label="Email"
+                placeholder="Please enter your email"
+                value={email}
+                onChange={(e) => handleInput(e, setEmail)}
                 margin="normal"
                 required
+                type="email"
                 error={status === 'failed'}
             />
             <TextField
@@ -57,7 +51,7 @@ export function Login() {
                 placeholder="Please enter your password"
                 value={password}
                 type="password"
-                onChange={(e) => handlePassword(e)}
+                onChange={(e) => handleInput(e, setPassword)}
                 margin="normal"
                 required
                 error={status === 'failed'}

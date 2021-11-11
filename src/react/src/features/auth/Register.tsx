@@ -1,4 +1,3 @@
-import FormControl from '@mui/material/FormControl';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { Redirect } from 'react-router-dom';
 import { Box, Button, TextField, Alert } from '@mui/material';
@@ -9,25 +8,17 @@ export function Register() {
     const dispatch = useAppDispatch();
     const { isLoggedIn, message, status } = useAppSelector(state => state.auth);
 
-    const [username, setUsername] = useState('');
+    const [fname, setFname] = useState('');
+    const [lname, setLname] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
 
-    //@todo: find a way to combine username, email and password into an object
     //@todo: add validation and error handling
-    const handleUsername = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        setUsername(event.target.value);
-    };
-    const handlePassword = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        setPassword(event.target.value);
-    };
-    const handleEmail = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        setEmail(event.target.value);
-    };
+    const handleInput = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>, setState: React.Dispatch<React.SetStateAction<string>>) => setState(event.target.value);
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         //why is event.currentTarget undefined?
-        dispatch(register({ username, email, password }));
+        dispatch(register({ fname, lname, email, password }));
     };
 
     if (isLoggedIn) {
@@ -36,17 +27,26 @@ export function Register() {
 
     return (
         <Box component="form" autoComplete="off" onSubmit={handleSubmit}
-        sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            mt: 4
-        }}>
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                mt: 4
+            }}>
             <TextField
-                label="Username"
-                placeholder="Please enter your username"
-                value={username}
-                onChange={(e) => handleUsername(e)}
+                label="First Name"
+                placeholder="Please enter your first name"
+                value={fname}
+                onChange={(e) => handleInput(e, setFname)}
+                margin="normal"
+                required
+                error={status === 'failed'}
+            />
+            <TextField
+                label="Last Name"
+                placeholder="Please enter your last name"
+                value={lname}
+                onChange={(e) => handleInput(e, setLname)}
                 margin="normal"
                 required
                 error={status === 'failed'}
@@ -56,7 +56,7 @@ export function Register() {
                 placeholder="Please enter your email"
                 value={email}
                 type="email"
-                onChange={(e) => handleEmail(e)}
+                onChange={(e) => handleInput(e, setEmail)}
                 margin="normal"
                 required
                 error={status === 'failed'}
@@ -66,7 +66,7 @@ export function Register() {
                 placeholder="Please enter your password"
                 value={password}
                 type="password"
-                onChange={(e) => handlePassword(e)}
+                onChange={(e) => handleInput(e, setPassword)}
                 margin="normal"
                 required
                 error={status === 'failed'}

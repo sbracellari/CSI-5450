@@ -1,15 +1,15 @@
 import axios, { AxiosRequestHeaders } from "axios";
-import { RegisterUser, User } from "../app/types";
+import { LoginUser, User } from "../app/types";
 
-const API_URL = "http://localhost:8080";
+const API_URL = "http://localhost:8080/v1";
 
-const register = (user: RegisterUser) => {
+const register = (user: User) => {
     return axios.post(API_URL + "signup", user);
 }
 
-const login = (user: User) => {
+const login = (user: LoginUser) => {
     return axios.post(API_URL + "signin", user).then((response) => {
-        console.log("login api",response);
+        console.log("login api", response);
         if (response.data.accessToken) {
             // @todo: should probably persist this in state too
             localStorage.setItem("user", JSON.stringify(response.data));

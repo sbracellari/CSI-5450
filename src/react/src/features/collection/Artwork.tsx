@@ -37,7 +37,7 @@ export function Artwork(props: ArtworkProps) {
                     <FavoriteIcon />
                 </IconButton>
                 <Button size="small" aria-label="view details"
-                    component={Link} to={`/details?id=${artwork.id}`}
+                    component={Link} to={`/details?id=${artwork.artworkId}`}
                     onClick={() => dispatch(view(artwork))}
                 >Details</Button>
                 <Button size="small" aria-label="add to tour" >Add to tour</Button>

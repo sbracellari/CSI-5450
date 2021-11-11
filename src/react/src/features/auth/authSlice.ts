@@ -1,5 +1,5 @@
 import authService from '../../services/auth';
-import { RegisterUser, User, UserState } from '../../app/types';
+import { User, UserState, LoginUser } from '../../app/types';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 const localUser = localStorage.getItem('user');
@@ -8,7 +8,7 @@ const user = localUser ? JSON.parse(localUser) : null;
 
 export const register = createAsyncThunk(
     'auth/register',
-    async (user: RegisterUser) => {
+    async (user: User) => {
         // @todo: might need try catch block
         const response = await authService.register(user);
         console.log(response.data.message);
@@ -18,7 +18,7 @@ export const register = createAsyncThunk(
 
 export const login = createAsyncThunk(
     'auth/login',
-    async (user: User) => {
+    async (user: LoginUser) => {
         const response = await authService.login(user);
         return response.data;
     }
