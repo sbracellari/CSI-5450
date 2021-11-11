@@ -267,6 +267,20 @@ CREATE INDEX `fk_consumer_has_creator_consumer1_idx` ON `art_tour_db`.`consumer_
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
+-- Procedure `add_admin`
+-- -----------------------------------------------------
+DELIMITER //
+
+CREATE PROCEDURE `add_admin`(IN email VARCHAR(100))
+BEGIN
+
+INSERT INTO admin VALUES (email);
+
+END //
+
+DELIMITER ;
+
+-- -----------------------------------------------------
 -- Procedure `add_artwork`
 -- -----------------------------------------------------
 DELIMITER //
@@ -304,6 +318,21 @@ CREATE PROCEDURE `add_artwork_and_creator`(IN artwork_id VARCHAR(100), creator_i
 BEGIN
 
 INSERT INTO artwork_has_creator VALUES (artwork_id, creator_id);
+
+END //
+
+DELIMITER ;
+
+
+-- -----------------------------------------------------
+-- Procedure `add_consumer`
+-- -----------------------------------------------------
+DELIMITER //
+
+CREATE PROCEDURE `add_consumer`(IN email VARCHAR(100))
+BEGIN
+
+INSERT INTO consumer VALUES (email);
 
 END //
 
