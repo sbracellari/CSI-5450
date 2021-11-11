@@ -182,6 +182,21 @@ public class ArtTourService {
     return tours;
   }
 
+  public List<Tour> getPublicTours() {
+    List<String> adminEmails = dao.getAdminEmails();
+    List<Tour> publicTours = new ArrayList<Tour>();
+    adminEmails.stream().forEach(email -> {
+      List<Integer> tourIds = dao.getTourIds(email);
+      List<Tour> tours = getToursForEmail(email, tourIds);
+
+      tours.stream().forEach(tour -> {
+        publicTours.add(tour);
+      });
+    });
+
+    return publicTours;
+  }
+
   private List<Tour> getFavoriteToursForUser(String email) {
     List<Integer> favoriteTourIds = dao.getFavoriteTourIds(email);
     List<Tour> tours = getToursForEmail(email, favoriteTourIds);

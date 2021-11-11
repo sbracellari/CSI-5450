@@ -29,6 +29,10 @@ public class ArtTourDAO {
         jdbcTemplate.queryForObject(Constants.USER_EXISTS, String.class, email));
   }
 
+  public List<String> getAdminEmails() throws DataAccessException {
+    return jdbcTemplate.queryForList(Constants.GET_ADMIN_EMAILS);
+  }
+
   public void registerUser(String email, String fName, String lName, String password) {
     jdbcTemplate.update(Constants.REGISTER_USER, new Object[] {email, fName, lName, password});
   }

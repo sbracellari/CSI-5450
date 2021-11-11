@@ -58,6 +58,11 @@ public class ArtTourController {
     return dao.getCollection();
   }
 
+  @GetMapping("tours")
+  public List<Tour> getPublicTours() {
+    return service.getPublicTours();
+  }
+
   // @TODO filtered collection
   // @GetMapping("filtered-collection")
   // public List<Artwork> getFilteredCollection() {}
