@@ -30,7 +30,7 @@ public class ArtTourDAO {
   }
 
   public List<String> getAdminEmails() throws DataAccessException {
-    return jdbcTemplate.queryForList(Constants.GET_ADMIN_EMAILS);
+    return jdbcTemplate.queryForList(Constants.GET_ADMIN_EMAILS, String.class);
   }
 
   public void registerUser(String email, String fName, String lName, String password) {

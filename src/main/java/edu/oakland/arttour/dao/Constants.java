@@ -4,11 +4,7 @@ public class Constants {
 
   ////////// reports //////////
   public static final String GET_ADMIN_EMAILS =
-      new String(
-              " SELECT             "
-                  + "     *        "
-                  + " FROM         "
-                  + "     admin    ")
+      new String(" SELECT * FROM admin")
           .replaceAll("\\s+", " ");
   public static final String GET_COLLECTION =
       new String(

@@ -193,10 +193,9 @@ public class ArtTourController {
   }
 
   ////////// general user //////////
-  @PostMapping("user/register/{userType}")
-  public boolean registerUser(
-      @RequestBody Map<String, String> user, @PathVariable String userType) {
-    return service.registerUser(user, userType);
+  @PostMapping("user/register")
+  public boolean registerUser(@RequestBody Map<String, String> user) {
+    return service.registerUser(user);
   }
 
   @GetMapping("user/{email}/login")
