@@ -2,14 +2,23 @@ package edu.oakland.arttour.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.jdbc.core.RowMapper;
 
 @Data
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class Location {
-    private String locationId;
-    private String departament;
-    private String physicalLocation;
+  private int locationId;
+  private String department;
+  private String physicalLocation;
+
+  public static RowMapper<Location> mapper =
+      (rs, rowNum) -> {
+        Location location = new Location();
+        location.setLocationId(rs.getInt("location_id"));
+        location.setDepartment(rs.getString("department"));
+        location.setPhysicalLocation(rs.getString("physical_location"));
+        return location;
+      };
 }
