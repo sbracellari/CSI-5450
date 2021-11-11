@@ -1,11 +1,12 @@
 package edu.oakland.arttour.model;
 
-import lombok.Data;
 import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class Favorite {
-    private List<Artwork> favoriteArtworks;
-    private List<Creator> favoriteCreators;
-    private List<Tour> favoriteTours;
+  private List<Artwork> favoriteArtworks;
+  private List<Creator> favoriteCreators;
+  private List<Tour> favoriteTours;
 }

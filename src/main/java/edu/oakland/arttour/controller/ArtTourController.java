@@ -1,11 +1,11 @@
 package edu.oakland.arttour.controller;
 
+import edu.oakland.arttour.dao.ArtTourDAO;
 import edu.oakland.arttour.model.Artwork;
+import edu.oakland.arttour.model.Favorite;
 import edu.oakland.arttour.model.Location;
 import edu.oakland.arttour.model.Tour;
-import edu.oakland.arttour.model.Favorite;
 import edu.oakland.arttour.service.ArtTourService;
-import edu.oakland.arttour.dao.ArtTourDAO;
 
 import java.util.List;
 import java.util.Map;
@@ -15,16 +15,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestBody;
-
 
 @RestController
 @RequestMapping("/v1")
@@ -56,7 +55,7 @@ public class ArtTourController {
   @CrossOrigin
   @GetMapping("collection")
   public List<Artwork> getCollection() {
-    return dao.getCollection(); 
+    return dao.getCollection();
   }
 
   // @TODO filtered collection
@@ -92,7 +91,7 @@ public class ArtTourController {
     service.updateCreator(creator);
   }
 
-  @PostMapping("location/update") 
+  @PostMapping("location/update")
   public void updateLocation(@RequestBody Map<Object, Object> location) {
     service.updateLocation(location);
   }
@@ -108,12 +107,12 @@ public class ArtTourController {
     dao.deleteCreator(creatorId);
   }
 
-  @PostMapping("location/{locationId}/removal") 
+  @PostMapping("location/{locationId}/removal")
   public void deleteLocation(@PathVariable int locationId) {
     dao.deleteLocation(locationId);
   }
 
-  @PostMapping("tour/{tourId}/removal") 
+  @PostMapping("tour/{tourId}/removal")
   public void deleteTour(@PathVariable int tourId) {
     dao.deleteTour(tourId);
   }
@@ -177,7 +176,7 @@ public class ArtTourController {
     dao.deleteFromTour(tourId, artworkId);
   }
 
-  @PostMapping("tour/{tourId}/update") 
+  @PostMapping("tour/{tourId}/update")
   public void updateTour(@RequestBody String tourName, @PathVariable int tourId) {
     dao.updateTour(tourName, tourId);
   }
@@ -190,7 +189,8 @@ public class ArtTourController {
 
   ////////// general user //////////
   @PostMapping("user/register/{userType}")
-  public boolean registerUser(@RequestBody Map<String, String> user, @PathVariable String userType) {
+  public boolean registerUser(
+      @RequestBody Map<String, String> user, @PathVariable String userType) {
     return service.registerUser(user, userType);
   }
 
