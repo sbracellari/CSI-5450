@@ -2,10 +2,6 @@
 -- Schema art_tour_db
 -- -----------------------------------------------------
 DROP SCHEMA IF EXISTS `art_tour_db` ;
-
--- -----------------------------------------------------
--- Schema art_tour_db
--- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `art_tour_db` DEFAULT CHARACTER SET utf8 ;
 USE `art_tour_db` ;
 
@@ -271,11 +267,25 @@ CREATE INDEX `fk_consumer_has_creator_consumer1_idx` ON `art_tour_db`.`consumer_
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
+-- Procedure `add_admin`
+-- -----------------------------------------------------
+DELIMITER //
+
+CREATE PROCEDURE `add_admin`(IN email VARCHAR(100))
+BEGIN
+
+INSERT INTO admin VALUES (email);
+
+END //
+
+DELIMITER ;
+
+-- -----------------------------------------------------
 -- Procedure `add_artwork`
 -- -----------------------------------------------------
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `add_artwork`(IN artwork_id VARCHAR(50), title TEXT, creation_date TEXT, `medium` VARCHAR(500), credit_line TEXT, date_acquired TEXT, item_width DOUBLE, item_height DOUBLE, item_depth DOUBLE, item_diameter DOUBLE, provenance_text TEXT, classification VARCHAR(50), location_id INT)
+CREATE PROCEDURE `add_artwork`(IN artwork_id VARCHAR(50), title TEXT, creation_date TEXT, `medium` VARCHAR(500), credit_line TEXT, date_acquired TEXT, item_width DOUBLE, item_height DOUBLE, item_depth DOUBLE, item_diameter DOUBLE, provenance_text TEXT, classification VARCHAR(50), location_id INT)
 BEGIN
 
 INSERT INTO artwork VALUES (
@@ -294,7 +304,7 @@ INSERT INTO artwork VALUES (
     location_id
 );
 
-END
+END //
 
 DELIMITER ;
 
@@ -304,12 +314,27 @@ DELIMITER ;
 -- -----------------------------------------------------
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `add_artwork_and_creator`(IN artwork_id VARCHAR(100), creator_id INT)
+CREATE PROCEDURE `add_artwork_and_creator`(IN artwork_id VARCHAR(100), creator_id INT)
 BEGIN
 
 INSERT INTO artwork_has_creator VALUES (artwork_id, creator_id);
 
-END
+END //
+
+DELIMITER ;
+
+
+-- -----------------------------------------------------
+-- Procedure `add_consumer`
+-- -----------------------------------------------------
+DELIMITER //
+
+CREATE PROCEDURE `add_consumer`(IN email VARCHAR(100))
+BEGIN
+
+INSERT INTO consumer VALUES (email);
+
+END //
 
 DELIMITER ;
 
@@ -319,7 +344,7 @@ DELIMITER ;
 -- -----------------------------------------------------
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `add_creator`(creator_id INT, full_name TEXT, cited_name TEXT, `role` TEXT, nationality VARCHAR(150), birth_date TEXT, death_date TEXT, birth_place TEXT, death_place TEXT)
+CREATE PROCEDURE `add_creator`(creator_id INT, full_name TEXT, cited_name TEXT, `role` TEXT, nationality VARCHAR(150), birth_date TEXT, death_date TEXT, birth_place TEXT, death_place TEXT)
 BEGIN
 
 INSERT INTO creator VALUES (
@@ -334,7 +359,7 @@ INSERT INTO creator VALUES (
     death_place
 );
 
-END
+END //
 
 DELIMITER ;
 
@@ -344,12 +369,12 @@ DELIMITER ;
 -- -----------------------------------------------------
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `add_location`(IN department VARCHAR(50), physical_location VARCHAR(50))
+CREATE PROCEDURE `add_location`(IN department VARCHAR(50), physical_location VARCHAR(50))
 BEGIN
 
 INSERT INTO location VALUES (NULL, department, physical_location);
 
-END
+END //
 
 DELIMITER ;
 
@@ -359,12 +384,12 @@ DELIMITER ;
 -- -----------------------------------------------------
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `add_to_tour`(IN tour_id INT, artwork_id VARCHAR(50))
+CREATE PROCEDURE `add_to_tour`(IN tour_id INT, artwork_id VARCHAR(50))
 BEGIN
 
 INSERT INTO tour_has_artwork VALUES (tour_id, artwork_id);
 
-END
+END //
 
 DELIMITER ;
 
@@ -374,12 +399,12 @@ DELIMITER ;
 -- -----------------------------------------------------
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `create_tour`(IN email VARCHAR(100), tour_name VARCHAR(100))
+CREATE PROCEDURE `create_tour`(IN email VARCHAR(100), tour_name VARCHAR(100))
 BEGIN
 
 INSERT INTO tour VALUES (NULL, tour_name, email);
 
-END
+END //
 
 DELIMITER ;
 
@@ -389,12 +414,12 @@ DELIMITER ;
 -- ----------------------------------------------------- 
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_artwork`(IN artwork_id VARCHAR(50))
+CREATE PROCEDURE `delete_artwork`(IN id VARCHAR(50))
 BEGIN
 
-DELETE FROM artwork a WHERE a.artwork_id = artwork_id;
+DELETE FROM artwork WHERE artwork_id = id;
 
-END
+END //
 
 DELIMITER ;
 
@@ -404,12 +429,12 @@ DELIMITER ;
 -- ----------------------------------------------------- 
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_creator`(IN creator_id INT)
+CREATE PROCEDURE `delete_creator`(IN id INT)
 BEGIN
 
-DELETE FROM creator c WHERE c.creator_id = creator_id;
+DELETE FROM creator WHERE creator_id = id;
 
-END
+END //
 
 DELIMITER ;
 
@@ -419,12 +444,12 @@ DELIMITER ;
 -- -----------------------------------------------------
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_favorite_artwork`(IN email VARCHAR(100), artwork_id VARCHAR(50))
+CREATE PROCEDURE `delete_favorite_artwork`(IN e VARCHAR(100), id VARCHAR(50))
 BEGIN
 
-DELETE FROM consumer_favorites_artwork c WHERE c.email = email AND c.artwork_id = artwork_id;
+DELETE FROM consumer_favorites_artwork WHERE email = e AND artwork_id = id;
 
-END
+END //
 
 DELIMITER ;
 
@@ -434,12 +459,12 @@ DELIMITER ;
 -- -----------------------------------------------------
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_favorite_creator`(IN email VARCHAR(100), creator_id INT)
+CREATE PROCEDURE `delete_favorite_creator`(IN e VARCHAR(100), id INT)
 BEGIN
 
-DELETE FROM consumer_favorites_creator c WHERE c.email = email AND c.creator_id = creator_id;
+DELETE FROM consumer_favorites_creator WHERE email = e AND creator_id = id;
 
-END
+END //
 
 DELIMITER ;
 
@@ -449,12 +474,12 @@ DELIMITER ;
 -- -----------------------------------------------------
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_favorite_tour`(IN email VARCHAR(100), tour_id INT)
+CREATE PROCEDURE `delete_favorite_tour`(IN e VARCHAR(100), id INT)
 BEGIN
 
-DELETE FROM consumer_favorites_tour c WHERE c.email = email AND c.tour_id = tour_id;
+DELETE FROM consumer_favorites_tour WHERE email = e AND tour_id = id;
 
-END
+END //
 
 DELIMITER ;
 
@@ -464,12 +489,12 @@ DELIMITER ;
 -- ----------------------------------------------------- 
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_from_tour`(IN tour_id INT)
+CREATE PROCEDURE `delete_from_tour`(IN id INT, IN aid VARCHAR(50))
 BEGIN
 
-DELETE FROM tour_has_artwork t WHERE t.tour_id = tour_id;
+DELETE FROM tour_has_artwork WHERE tour_id = id AND artwork_id = aid;
 
-END
+END //
 
 DELIMITER ;
 
@@ -479,16 +504,16 @@ DELIMITER ;
 -- -----------------------------------------------------
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_location`(IN location_id INT)
+CREATE PROCEDURE `delete_location`(IN id INT)
 BEGIN
 
-UPDATE artwork a SET a.location_id = 
+UPDATE artwork SET location_id = 
 	(SELECT l.location_id FROM location l WHERE l.department = 'Unknown' AND l.physical_location = 'Unknown') 
-WHERE a.location_id = location_id;
+WHERE location_id = id;
 
-DELETE FROM location l WHERE l.location_id = location_id;
+DELETE FROM location WHERE location_id = id;
 
-END
+END //
 
 DELIMITER ;
 
@@ -498,12 +523,12 @@ DELIMITER ;
 -- -----------------------------------------------------
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_tour`(IN tour_id INT)
+CREATE PROCEDURE `delete_tour`(IN id INT)
 BEGIN
 
-DELETE FROM tour t WHERE t.tour_id = tour_id;
+DELETE FROM tour WHERE tour_id = id;
 
-END
+END //
 
 DELIMITER ;
 
@@ -513,12 +538,12 @@ DELIMITER ;
 -- -----------------------------------------------------
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_user`(IN email VARCHAR(100))
+CREATE PROCEDURE `delete_user`(IN e VARCHAR(100))
 BEGIN
 
-DELETE FROM `user` u WHERE u.email = email;
+DELETE FROM `user` WHERE email = e;
 
-END
+END //
 
 DELIMITER ;
 
@@ -528,12 +553,12 @@ DELIMITER ;
 -- -----------------------------------------------------
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `favorite_artwork`(IN email VARCHAR(100), artwork_id VARCHAR(50))
+CREATE PROCEDURE `favorite_artwork`(IN email VARCHAR(100), artwork_id VARCHAR(50))
 BEGIN
 
 INSERT INTO consumer_favorites_artwork VALUES (email, artwork_id);
 
-END
+END //
 
 DELIMITER ;
 
@@ -543,12 +568,12 @@ DELIMITER ;
 -- ----------------------------------------------------- 
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `favorite_creator`(IN email VARCHAR(100), creator_id INT)
+CREATE PROCEDURE `favorite_creator`(IN email VARCHAR(100), creator_id INT)
 BEGIN
 
 INSERT INTO consumer_favorites_creator VALUES (email, creator_id);
 
-END
+END //
 
 DELIMITER ;
 
@@ -558,12 +583,27 @@ DELIMITER ;
 -- ----------------------------------------------------- 
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `favorite_tour`(IN email VARCHAR(100), tour_id INT)
+CREATE PROCEDURE `favorite_tour`(IN email VARCHAR(100), tour_id INT)
 BEGIN
 
 INSERT INTO consumer_favorites_tour VALUES (email, tour_id);
 
-END
+END //
+
+DELIMITER ;
+
+
+-- -----------------------------------------------------
+-- Procedure `register_user`
+-- ----------------------------------------------------- 
+DELIMITER //
+
+CREATE PROCEDURE `register_user`(IN email VARCHAR(100), fname VARCHAR(45), lname VARCHAR(45), `password` VARCHAR(100))
+BEGIN
+
+INSERT INTO `user` VALUES (email, fname, lname, `password`);
+
+END //
 
 DELIMITER ;
 
@@ -573,7 +613,7 @@ DELIMITER ;
 -- -----------------------------------------------------
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `update_artwork`(IN artwork_id VARCHAR(50), title TEXT, creation_date TEXT, `medium` VARCHAR(500), credit_line TEXT, date_acquired TEXT, item_width DOUBLE, item_height DOUBLE, item_depth DOUBLE, item_diameter DOUBLE, provenance_text TEXT, classification VARCHAR(50), location_id INT)
+CREATE PROCEDURE `update_artwork`(IN artwork_id VARCHAR(50), title TEXT, creation_date TEXT, `medium` VARCHAR(500), credit_line TEXT, date_acquired TEXT, item_width DOUBLE, item_height DOUBLE, item_depth DOUBLE, item_diameter DOUBLE, provenance_text TEXT, classification VARCHAR(50), location_id INT)
 BEGIN
 
 UPDATE artwork a SET
@@ -591,7 +631,7 @@ UPDATE artwork a SET
     a.location_id = location_id
 WHERE a.artwork_id = artwork_id;
 
-END
+END //
 
 DELIMITER ;
 
@@ -601,7 +641,7 @@ DELIMITER ;
 -- -----------------------------------------------------
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `update_creator`(creator_id INT, full_name TEXT, cited_name TEXT, `role` TEXT, nationality VARCHAR(150), birth_date TEXT, death_date TEXT, birth_place TEXT, death_place TEXT)
+CREATE PROCEDURE `update_creator`(creator_id INT, full_name TEXT, cited_name TEXT, `role` TEXT, nationality VARCHAR(150), birth_date TEXT, death_date TEXT, birth_place TEXT, death_place TEXT)
 BEGIN
 
 UPDATE creator c SET 
@@ -615,7 +655,7 @@ UPDATE creator c SET
     c.death_place = death_place
 WHERE c.creator_id = creator_id;
 
-END
+END //
 
 DELIMITER ;
 
@@ -625,12 +665,12 @@ DELIMITER ;
 -- -----------------------------------------------------
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `update_location`(IN location_id INT, department VARCHAR(50), physical_location VARCHAR(50))
+CREATE PROCEDURE `update_location`(IN location_id INT, department VARCHAR(50), physical_location VARCHAR(50))
 BEGIN
 
 UPDATE location l SET l.department = department, l.physical_location = physical_location WHERE l.location_id = location_id;
 
-END
+END //
 
 DELIMITER ;
 
@@ -640,12 +680,12 @@ DELIMITER ;
 -- ----------------------------------------------------- 
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `update_tour`(IN tour_id INT, tour_name VARCHAR(100))
+CREATE PROCEDURE `update_tour`(IN tour_id INT, tour_name VARCHAR(100))
 BEGIN
 
 UPDATE tour t SET t.tour_name = tour_name WHERE t.tour_id = tour_id;
 
-END
+END //
 
 DELIMITER ;
 
@@ -655,7 +695,7 @@ DELIMITER ;
 -- -----------------------------------------------------
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `update_user`(IN email VARCHAR(100), fname VARCHAR(45), lname VARCHAR(45), `password` VARCHAR(100))
+CREATE PROCEDURE `update_user`(IN email VARCHAR(100), fname VARCHAR(45), lname VARCHAR(45), `password` VARCHAR(100))
 BEGIN
 
 UPDATE `user` u SET 
@@ -664,59 +704,8 @@ UPDATE `user` u SET
     u.`password` = `password`
 WHERE u.email = email;
 
-END
+END //
 
 DELIMITER ;
 
-
--- -----------------------------------------------------
--- FUNCTIONS
--- -----------------------------------------------------
-
--- -----------------------------------------------------
--- Function `login`
--- -----------------------------------------------------
 DELIMITER //
-
-CREATE DEFINER=`root`@`localhost` FUNCTION `login`(email VARCHAR(100), `password` VARCHAR(100)) RETURNS int
-    DETERMINISTIC
-BEGIN
-
-DECLARE user_exists INT;
-
-SET user_exists = (SELECT COUNT(*) FROM `user` u WHERE u.email = email AND u.`password` = `password`);
-
-IF user_exists = 0 THEN
-	RETURN 0;
-ELSE 
-	RETURN 1;
-END IF;
-
-END
-
-DELIMITER ;
-
-
--- -----------------------------------------------------
--- Function `register`
--- -----------------------------------------------------
-DELIMITER //
-
-CREATE DEFINER=`root`@`localhost` FUNCTION `register`(email VARCHAR(100), fname VARCHAR(45), lname VARCHAR(45), `password` VARCHAR(100)) RETURNS int
-    DETERMINISTIC
-BEGIN
-
-DECLARE user_exists INT;
-
-SET user_exists = (SELECT COUNT(*) FROM `user` u WHERE u.email = email);
-
-IF user_exists = 0 THEN
-	INSERT INTO user VALUES (email, fname, lname, `password`);
-    RETURN 1;
-ELSE
-	RETURN 0;
-END IF;
-
-END
-
-DELIMITER ;
