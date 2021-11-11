@@ -6,6 +6,7 @@ public class Constants {
   public static final String GET_ADMIN_EMAILS =
       new String(" SELECT * FROM admin")
           .replaceAll("\\s+", " ");
+
   public static final String GET_COLLECTION =
       new String(
               " SELECT                                     "
@@ -28,6 +29,7 @@ public class Constants {
 
   ////////// queries //////////
   public static final String GET_FILTERED_COLLECTION =
+  // not sure if dynamically passing a column name will work.
       new String(
               " SELECT                                     "
                   + "     *                                      "
@@ -38,8 +40,7 @@ public class Constants {
                   + "     NATURAL JOIN location l                "
                   + " WHERE                                      "
                   + "     ? = ?                                  "
-                  + // not sure if dynamically passing a column name will work.
-                  " LIMIT 500                                  ")
+                  + " LIMIT 500                                  ")
           .replaceAll("\\s+", " ");
 
   public static final String IS_ADMIN =
