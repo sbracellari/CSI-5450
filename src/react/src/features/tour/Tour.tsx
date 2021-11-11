@@ -4,6 +4,7 @@ import { useAppDispatch } from "../../app/hooks";
 import { useState } from "react";
 import SwipeableViews from 'react-swipeable-views';
 import { PlayCircle, KeyboardArrowLeft, KeyboardArrowRight, RoomOutlined, MoreVert, PhotoLibraryOutlined } from "@mui/icons-material";
+import { Link, useHistory } from "react-router-dom";
 
 interface TourProps {
     tour: TourType;
@@ -26,6 +27,9 @@ export function Tour(props: TourProps) {
     const handleStepChange = (step: any) => {
         setActiveStep(step);
     };
+    const history = useHistory();
+    const handleRouting = () => history.push(`/tour/tourId=${tour.tourId}`);
+
     //@todo: need to fix some weird padding betwin the swipe and the text
     return (
         <Box sx={{ maxWidth: 400, mt: 2 }} >
@@ -63,8 +67,10 @@ export function Tour(props: TourProps) {
                                         src={"./art.png"}
                                     />
                                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                                        <IconButton>
+                                        <IconButton component={Link} to={`/tour/tourId/${tour.tourId}`}
+                                            onClick={() => handleRouting()/*dispatch(view(artwork))*/}>
                                             <PlayCircle />
+
                                         </IconButton>
                                     </Box>
                                     <Typography component="div" variant="h6">
