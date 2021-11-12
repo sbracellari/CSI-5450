@@ -56,6 +56,7 @@ export function Tour(props: TourProps) {
                     enableMouseEvents>
                     {tour.artworks.map((artwork, index) => {
                         const onView = artwork.location.physicalLocation !== 'Not on View';
+                        const unknown = artwork.location.physicalLocation !== 'Unknown';
                         return (
                             <Grid key={`tour_${index}_${artwork.title}`}>
                                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -79,7 +80,7 @@ export function Tour(props: TourProps) {
                                     <Typography variant="subtitle1" color="text.primary" component="div">
                                         {artwork.creator.fullName} - {artwork.creationDate}
                                     </Typography>
-                                    {onView &&
+                                    {(onView && unknown) &&
                                         <Box component="div" sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                             <RoomOutlined />
                                             <Box sx={{ display: 'flex', flexDirection: 'column' }}>

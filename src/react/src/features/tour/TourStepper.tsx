@@ -22,7 +22,6 @@ export function TourStepper(props: TourProps) {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
-    const params = useParams();
     const { tourId } = useParams<{ tourId?: string }>();
     const tours = data;
     const tour = tourId && tours.find(tour => tour.tourId === (parseInt(tourId, 10)));
@@ -31,7 +30,7 @@ export function TourStepper(props: TourProps) {
         return <div>An error occured</div>;
     }
     return (
-        <Box sx={{ maxWidth: 400, mt: 2, display: 'flex', alignContent: "center" }} >
+        <Box sx={{ maxWidth: 400, mt: 2, ml: 2 }} >
             <Stepper activeStep={activeStep} orientation="vertical">
                 {tour.artworks.map((artwork, index) => (
                     <Step key={`viewing_artwork_${artwork.artworkId}`}>
