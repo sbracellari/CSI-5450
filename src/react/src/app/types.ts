@@ -1,50 +1,54 @@
 export interface CollectionState {
-    collection: Artwork[],
+    collection: Artwork[] | undefined,
     status: 'idle' | 'loading' | 'failed';
 }
 
 export interface Artwork {
     artworkId: string,
-    title: string,
-    creationDate: string,
-    medium: string,
-    creditLine: string,
-    dateAcquired?: string,
-    itemWidth?: number,
-    itemHeight?: number,
-    itemDepth?: number,
-    itemDiameter?: number,
-    provenanceText: string,
-    classification: string,
+    title: string | null,
+    creationDate: string | null,
+    medium: string | null,
+    creditLine: string | null,
+    dateAcquired?: string | null,
+    itemWidth?: number | null,
+    itemHeight?: number | null,
+    itemDepth?: number | null,
+    itemDiameter?: number | null,
+    provenanceText: string | null,
+    classification: string | null,
     location: Location,
     creator: Creator
 }
 
 export interface Creator {
-    creatorId: number,
-    fullName: string,
-    citedName: string,
-    role: string,
-    nationality: string,
-    birthDate: string,
-    deathDate: string,
-    birthPlace: string,
-    deathPlace: string,
+    creatorId: number| null,
+    fullName: string| null,
+    citedName: string| null,
+    role: string| null,
+    nationality: string| null,
+    birthDate: string| null,
+    deathDate: string| null,
+    birthPlace: string| null,
+    deathPlace: string| null,
 }
 
 export interface Location {
-    locationId: number,
-    department: string,
-    physicalLocation: string
+    locationId: number | null,
+    department: string | null,
+    physicalLocation: string | null,
 }
 
 export interface Tour {
-    tourId: number,
-    title: string,
-    email: string,
+    tourId: number | null,
+    tourName: string | null,
+    email: string | null,
     artworks: Artwork[]
 }
 
+export interface ToursCollectionState {
+    tours: Tour[],
+    status: 'idle' | 'loading' | 'failed';
+}
 export interface Favorites {
     email: string,
     creators: Creator[],
