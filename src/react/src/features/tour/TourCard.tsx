@@ -1,16 +1,14 @@
-import { Artwork, Tour as TourType } from "../../app/types";
-import { Box, IconButton, Typography, Grid} from "@mui/material";
-import { PlayCircle, RoomOutlined } from "@mui/icons-material";
+import { Artwork } from "../../app/types";
+import { Box, Typography, Grid} from "@mui/material";
+import { RoomOutlined } from "@mui/icons-material";
 
 interface TourCardProps {
     artwork: Artwork;
 }
 export function TourCard(props: TourCardProps) {
     const { artwork } = props;
-    //@todo: start a tour
-    //@todo: need to fix some weird padding betwin the swipe and the text
-    const onView = artwork.location.physicalLocation !== 'Not on View';
-
+    //@todo: add more details for each card
+    const onView = artwork.location.physicalLocation !== 'Not on View' || 'Unknown';
     return (
         <Grid >
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
