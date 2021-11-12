@@ -9,6 +9,7 @@ import { Login } from '../auth/Login';
 import { Register } from '../auth/Register';
 import { Tours } from '../tour/Tours';
 import { TourStepper } from '../tour/TourStepper';
+import { Admin } from '../admin/Admin';
 
 export function Router() {
     const { tab: tabValue, path } = useAppSelector((state) => state.tabs);
@@ -35,6 +36,7 @@ export function Router() {
                 <Route exact path="/tour" component={Tours} />
                 <Route path="/tour/:tourId" component={TourStepper} />
                 <Route exact path="/favorites" />
+                <Route exact path="/admin" component={Admin} />
                 <Route path='/details' component={Detail} />
                 <Route path='/account/login' component={Login} />
                 <Route path='/account/register' component={Register} />
