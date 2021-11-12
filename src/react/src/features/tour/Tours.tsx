@@ -1,19 +1,16 @@
 import { Grid } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { getPublicTours } from "../../services/api";
 import { Tour } from "./Tour";
-
+import { data } from "../../services/tourApi";
 export function Tours() {
-    //@todo: get the actual trour collection
-    const { collection, status } = useAppSelector((state) => state.collection);
-    const dispatch = useAppDispatch();
-
-    // this will be an array of arrays
-    // array of tours including array or artworks
-
-    const tours = [
-        { tourId: 1, title: 'Tour title 1', email: '', artworks: collection },
-        { tourId: 2, title: 'Tour title 2', email: '', artworks: collection }];
-
+    const tours = data;
+    const error = false;
+    const isLoading = false;
+    //const { data: tours, error, isLoading } = getPublicTours();
+    if (!tours || error) {
+        return (<div> An error occured</div>);
+    }
     return (
         <Grid container spacing={1} alignContent="center" flexDirection="column" >
             {tours.map((tour, index) => {
