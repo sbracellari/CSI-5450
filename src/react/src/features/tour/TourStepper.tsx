@@ -1,13 +1,17 @@
 import { Tour as TourType } from "../../app/types";
-import { Box, Button, Typography, Paper, Step, StepContent, StepLabel, Stepper } from "@mui/material";
+import { Box, Button, Typography, Paper, Step, StepContent, StepLabel, Stepper, Grid } from "@mui/material";
 import { useState } from "react";
 import { Tour } from "./Tour";
 import { useParams } from "react-router-dom";
+import { data } from "../../services/tourApi";
+import { TourCard } from "./TourCard";
+
 interface TourProps {
     tour: TourType;
 }
-export function TourStepper() {
-    //@todo: start a tour
+export function TourStepper(props: TourProps) {
+    //@todo: block tour if user doesn't have access
+    //@todo: add modal to add tour to favorites if user enjoyed it
     const [activeStep, setActiveStep] = useState(0);
 
     const handleNext = () => {
@@ -18,14 +22,16 @@ export function TourStepper() {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
-    const handleStepChange = (step: any) => {
-        setActiveStep(step);
-    };
-    let params = useParams();
-
-    //@todo: need to fix some weird padding betwin the swipe and the text
+    const params = useParams();
+    const { tourId } = useParams<{ tourId?: string }>();
+    const tours = data;
+    const tour = tourId && tours.find(tour => tour.tourId === (parseInt(tourId, 10)));
+    console.log(tours, tourId);
+    if (!tour) {
+        return <div>An error occured</div>;
+    }
     return (
-        <Box sx={{ maxWidth: 400, mt: 2 }} >
+        <Box sx={{ maxWidth: 400, mt: 2, display: 'flex', alignContent: "center" }} >
             <Stepper activeStep={activeStep} orientation="vertical">
                 {tour.artworks.map((artwork, index) => (
                     <Step key={`viewing_artwork_${artwork.artworkId}`}>
@@ -33,11 +39,14 @@ export function TourStepper() {
                             optional={
                                 index === tour.artworks.length - 1 ? (
                                     <Typography variant="caption">Last artwork</Typography>
-                                ) : null
-                            }
+                                ) : null}
                         >
                             {index + 1}
                         </StepLabel>
+                        <Paper sx={{ p: 2, maxWidth: 400 }}
+                            elevation={1}>
+                            <TourCard artwork={artwork} key={`tour_${index}_in_progress_${artwork.title}`} />
+                        </Paper>
                         <StepContent>
                             <Box sx={{ mb: 2 }}>
                                 <Button
@@ -59,18 +68,6 @@ export function TourStepper() {
                     </Step>
                 ))}
             </Stepper>
-            <Paper
-                sx={{
-                    p: 2,
-                }}
-                elevation={1}>
-                {/* {tour.artworks.map((artwork, index) => {
-                        const onView = artwork.location.physicalLocation !== 'Not on View';
-                        return (
-                            <TourCard artwork={artwork} key={`tour_${index}_in_progress_${artwork.title}`} />
-                        )
-                    })} */}
-            </Paper>
         </Box>
     )
 };

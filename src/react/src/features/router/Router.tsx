@@ -33,7 +33,7 @@ export function Router() {
                 </Route>
                 <Route exact path="/collection" component={Collection} />
                 <Route exact path="/tour" component={Tours} />
-                <Route path="/tour:tourId" component={TourStepper} />
+                <Route path="/tour/:tourId" component={TourStepper} />
                 <Route exact path="/favorites" />
                 <Route path='/details' component={Detail} />
                 <Route path='/account/login' component={Login} />

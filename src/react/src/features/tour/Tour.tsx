@@ -28,7 +28,7 @@ export function Tour(props: TourProps) {
         setActiveStep(step);
     };
     const history = useHistory();
-    const handleRouting = () => history.push(`/tour/tourId=${tour.tourId}`);
+    const handleRouting = () => history.push(`/tour/${tour.tourId}`);
 
     //@todo: need to fix some weird padding betwin the swipe and the text
     return (
@@ -40,7 +40,7 @@ export function Tour(props: TourProps) {
                 elevation={1}>
                 <Box component="div" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Typography component="div" variant="h6" >
-                        {tour.title}
+                        {tour.tourName}
                     </Typography>
                     {DropdownButton()}
                 </Box>
@@ -67,7 +67,7 @@ export function Tour(props: TourProps) {
                                         src={"./art.png"}
                                     />
                                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                                        <IconButton component={Link} to={`/tour/tourId/${tour.tourId}`}
+                                        <IconButton component={Link} to={`/tour/${tour.tourId}`}
                                             onClick={() => handleRouting()/*dispatch(view(artwork))*/}>
                                             <PlayCircle />
 
