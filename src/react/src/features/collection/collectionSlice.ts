@@ -28,8 +28,7 @@ export const collectionSlice = createSlice({
             })
             .addCase(getCollection.fulfilled, (state, action) => {
                 //@todo: why can the action.payload be undefined?
-                let data = action.payload || [];
-                state.collection = data;
+                state.collection = action.payload;
                 state.status = 'idle';
 
             })

@@ -7,6 +7,8 @@ import { BrowserRouter, Route, Link, Switch, Redirect } from 'react-router-dom';
 import { Detail } from '../collection/Detail';
 import { Login } from '../auth/Login';
 import { Register } from '../auth/Register';
+import { Tours } from '../tour/Tours';
+import { TourStepper } from '../tour/TourStepper';
 
 export function Router() {
     const { tab: tabValue, path } = useAppSelector((state) => state.tabs);
@@ -30,7 +32,8 @@ export function Router() {
                     <Redirect to="/collection" />
                 </Route>
                 <Route exact path="/collection" component={Collection} />
-                <Route exact path="/tour" />
+                <Route exact path="/tour" component={Tours} />
+                <Route path="/tour/:tourId" component={TourStepper} />
                 <Route exact path="/favorites" />
                 <Route path='/details' component={Detail} />
                 <Route path='/account/login' component={Login} />
