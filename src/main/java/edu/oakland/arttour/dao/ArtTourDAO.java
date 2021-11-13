@@ -20,13 +20,12 @@ public class ArtTourDAO {
     return jdbcTemplate.query(Constants.GET_COLLECTION, Artwork.mapper);
   }
 
-  public Integer isAdmin(String email) throws DataAccessException {
-    return Integer.parseInt(jdbcTemplate.queryForObject(Constants.IS_ADMIN, String.class, email));
+  public void checkAdmin(String email) throws DataAccessException {
+    jdbcTemplate.queryForObject(Constants.CHECK_ADMIN, String.class, email);
   }
 
-  public Integer userExists(String email) throws DataAccessException {
-    return Integer.parseInt(
-        jdbcTemplate.queryForObject(Constants.USER_EXISTS, String.class, email));
+  public String userExists(String email) throws DataAccessException {
+    return jdbcTemplate.queryForObject(Constants.USER_EXISTS, String.class, email);
   }
 
   public List<String> getAdminEmails() throws DataAccessException {
@@ -37,9 +36,8 @@ public class ArtTourDAO {
     jdbcTemplate.update(Constants.REGISTER_USER, new Object[] {email, fName, lName, password});
   }
 
-  public Integer login(String email, String password) throws DataAccessException {
-    return Integer.parseInt(
-        jdbcTemplate.queryForObject(Constants.LOGIN, String.class, new Object[] {email, password}));
+  public String login(String email) throws DataAccessException {
+    return jdbcTemplate.queryForObject(Constants.LOGIN, String.class, email);
   }
 
   public void addConsumer(String email) {

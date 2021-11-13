@@ -4,10 +4,15 @@ import edu.oakland.arttour.dao.ArtTourDAO;
 import edu.oakland.arttour.model.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,28 +20,62 @@ public class ArtTourService {
 
   @Autowired private ArtTourDAO dao;
 
-  public Integer login(Map<String, String> userCreds) {
-    String email = userCreds.get("email");
-    String password = userCreds.get("password");
+  @Value("${org.apereo.portal.soffit.jwt.signatureKey}")
+  private String SECRET;
 
-    return dao.login(email, password);
+  public Map<String, String> login(String email) {
+    Map<String, String> loginInfo = new HashMap<>();
+    try {
+      String password = dao.login(email);
+      String jws =
+          Jwts.builder()
+              .setIssuer("Soffit")
+              .claim("email", email)
+              .signWith(SignatureAlgorithm.HS256, SECRET)
+              .compact();
+      loginInfo.put("token", jws);
+      loginInfo.put("password", password);
+
+      return loginInfo;
+    } catch (EmptyResultDataAccessException e) {
+      return loginInfo;
+    }
   }
 
-  public boolean registerUser(Map<String, String> user) {
+  public void checkAdmin(String email) throws EmptyResultDataAccessException {
+    dao.checkAdmin(email);
+  }
+
+  private String checkUser(String email) {
+    try {
+      return dao.userExists(email);
+    } catch (EmptyResultDataAccessException e) {
+      return null;
+    }
+  }
+
+  public Map<String, String> registerUser(Map<String, String> user) {
     String email = user.get("email");
     String fName = user.get("fName");
     String lName = user.get("lName");
     String password = user.get("password");
 
-    Integer userExists = dao.userExists(email);
+    Map<String, String> token = new HashMap<>();
+    if (checkUser(email) == null) {
+      dao.registerUser(email, fName, lName, password);
+      dao.addConsumer(email);
 
-    if (userExists == 1) {
-      return false; // registration not successful because the email already exists in the database
+      String jws =
+          Jwts.builder()
+              .setIssuer("Soffit")
+              .claim("email", email)
+              .signWith(SignatureAlgorithm.HS256, SECRET)
+              .compact();
+      token.put("token", jws);
+      return token;
     }
-
-    dao.registerUser(email, fName, lName, password);
-    dao.addConsumer(email);
-    return true; // registration successful
+    token.put("token", null);
+    return token;
   }
 
   public void addLocation(Map<String, String> location) {
@@ -159,8 +198,7 @@ public class ArtTourService {
     dao.updateLocation(locationId, department, physicalLocation);
   }
 
-  public void updateUser(Map<String, String> user) {
-    String email = user.get("email");
+  public void updateUser(String email, Map<String, String> user) {
     String fName = user.get("fName");
     String lName = user.get("lName");
     String password = user.get("password");
