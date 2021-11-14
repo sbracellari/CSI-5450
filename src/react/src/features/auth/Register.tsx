@@ -74,6 +74,7 @@ export function Register() {
             <Button
                 type="submit"
                 variant="contained"
+                onClick={() => handleSubmit}
             >
                 Sign Up
             </Button>

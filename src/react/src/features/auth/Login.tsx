@@ -59,6 +59,7 @@ export function Login() {
             <Button
                 type="submit"
                 variant="contained"
+                onClick={() => handleSubmit}
             >
                 Sign In
             </Button>

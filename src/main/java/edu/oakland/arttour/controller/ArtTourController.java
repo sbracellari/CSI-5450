@@ -69,6 +69,7 @@ public class ArtTourController {
   public List<Artwork> getCollection() {
     return dao.getCollection();
   }
+  
   @CrossOrigin
   @GetMapping("tours")
   public List<Tour> getPublicTours() {
@@ -92,6 +93,7 @@ public class ArtTourController {
     service.checkAdmin(email);
     service.addArtwork(artwork);
   }
+
   @CrossOrigin
   @PostMapping("location/addition")
   public void addLocation(HttpServletRequest request, @RequestBody Map<String, String> location)
