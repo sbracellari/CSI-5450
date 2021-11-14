@@ -41,11 +41,12 @@ dependencies {
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.5.6'
-	// runtimeOnly 'org.springframework.cloud:spring-cloud-gcp-starter-sql-mysql:1.2.5.RELEASE' 
+	runtimeOnly 'org.springframework.cloud:spring-cloud-gcp-starter-sql-mysql:1.2.5.RELEASE' 
 	implementation 'com.auth0:java-jwt:3.18.2'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
-	implementation 'mysql:mysql-connector-java:8.0.27'
+	// implementation 'mysql:mysql-connector-java:8.0.27'
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:3.0.1'
+	implementation 'javax.xml.bind:jaxb-api:2.3.1'
 }
 
 test {
