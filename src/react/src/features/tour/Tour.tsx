@@ -78,7 +78,7 @@ export function Tour(props: TourProps) {
                                         {artwork.title}
                                     </Typography>
                                     <Typography variant="subtitle1" color="text.primary" component="div">
-                                        {artwork.creator.fullName} - {artwork.creationDate}
+                                        {artwork.creator.fullName}
                                     </Typography>
                                     {(onView && unknown) &&
                                         <Box component="div" sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>

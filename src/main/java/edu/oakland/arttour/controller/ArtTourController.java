@@ -69,12 +69,13 @@ public class ArtTourController {
   public List<Artwork> getCollection() {
     return dao.getCollection();
   }
-
+  @CrossOrigin
   @GetMapping("tours")
   public List<Tour> getPublicTours() {
     return service.getPublicTours();
   }
 
+  @CrossOrigin
   @GetMapping("locations")
   public List<Location> getAllLocations() {
     return dao.getAllLocations();
@@ -83,6 +84,7 @@ public class ArtTourController {
   /////////// general insert/update/delete //////////
 
   ///// inserts /////
+  @CrossOrigin
   @PostMapping("artwork/creator/addition")
   public void addArtwork(HttpServletRequest request, @RequestBody Map<Object, Object> artwork)
       throws SoffitAuthException {
@@ -90,7 +92,7 @@ public class ArtTourController {
     service.checkAdmin(email);
     service.addArtwork(artwork);
   }
-
+  @CrossOrigin
   @PostMapping("location/addition")
   public void addLocation(HttpServletRequest request, @RequestBody Map<String, String> location)
       throws SoffitAuthException {
@@ -100,6 +102,7 @@ public class ArtTourController {
   }
 
   ///// updates /////
+  @CrossOrigin
   @PostMapping("artwork/update")
   public void updateArtwork(HttpServletRequest request, @RequestBody Map<Object, Object> artwork)
       throws SoffitAuthException {
@@ -108,6 +111,7 @@ public class ArtTourController {
     service.updateArtwork(artwork);
   }
 
+  @CrossOrigin
   @PostMapping("creator/update")
   public void updateCreator(HttpServletRequest request, @RequestBody Map<Object, Object> creator)
       throws SoffitAuthException {
@@ -116,6 +120,7 @@ public class ArtTourController {
     service.updateCreator(creator);
   }
 
+  @CrossOrigin
   @PostMapping("location/update")
   public void updateLocation(HttpServletRequest request, @RequestBody Map<Object, Object> location)
       throws SoffitAuthException {
@@ -125,6 +130,7 @@ public class ArtTourController {
   }
 
   ///// deletes /////
+  @CrossOrigin
   @PostMapping("artwork/{artworkId}/removal")
   public void deleteArtwork(HttpServletRequest request, @PathVariable String artworkId)
       throws SoffitAuthException {
@@ -133,6 +139,7 @@ public class ArtTourController {
     dao.deleteArtwork(artworkId);
   }
 
+  @CrossOrigin
   @PostMapping("creator/{creatorId}/removal")
   public void deleteCreator(HttpServletRequest request, @PathVariable int creatorId)
       throws SoffitAuthException {
@@ -141,6 +148,7 @@ public class ArtTourController {
     dao.deleteCreator(creatorId);
   }
 
+  @CrossOrigin
   @PostMapping("location/{locationId}/removal")
   public void deleteLocation(HttpServletRequest request, @PathVariable int locationId)
       throws SoffitAuthException {
@@ -149,6 +157,7 @@ public class ArtTourController {
     dao.deleteLocation(locationId);
   }
 
+  @CrossOrigin
   @PostMapping("tour/{tourId}/removal")
   public void deleteTour(HttpServletRequest request, @PathVariable int tourId)
       throws SoffitAuthException {
@@ -160,12 +169,14 @@ public class ArtTourController {
   ////////// consumer specific actions //////////
 
   ///// favorites /////
+  @CrossOrigin
   @GetMapping("consumer/favorites")
   public Favorite getUserFavorites(HttpServletRequest request) throws SoffitAuthException {
     String email = authorizer.getClaimFromJWT(request, "email").asString();
     return service.getFavoritesForUser(email);
   }
 
+  @CrossOrigin
   @PostMapping("consumer/favorites/artwork/{artworkId}")
   public void favoriteArtwork(HttpServletRequest request, @PathVariable String artworkId)
       throws SoffitAuthException {
@@ -173,6 +184,7 @@ public class ArtTourController {
     dao.favoriteArtwork(email, artworkId);
   }
 
+  @CrossOrigin
   @PostMapping("consumer/favorites/creator/{creatorId}")
   public void favoriteCreator(HttpServletRequest request, @PathVariable int creatorId)
       throws SoffitAuthException {
@@ -180,6 +192,7 @@ public class ArtTourController {
     dao.favoriteCreator(email, creatorId);
   }
 
+  @CrossOrigin
   @PostMapping("consumer/favorites/tour/{tourId}")
   public void favoriteTour(HttpServletRequest request, @PathVariable int tourId)
       throws SoffitAuthException {
@@ -187,6 +200,7 @@ public class ArtTourController {
     dao.favoriteTour(email, tourId);
   }
 
+  @CrossOrigin
   @PostMapping("consumer/favorites/artwork/{artworkId}/removal")
   public void deleteFavoriteArtwork(HttpServletRequest request, @PathVariable String artworkId)
       throws SoffitAuthException {
@@ -194,6 +208,7 @@ public class ArtTourController {
     dao.deleteFavoriteArtwork(email, artworkId);
   }
 
+  @CrossOrigin
   @PostMapping("consumer/favorites/creator/{creatorId}/removal")
   public void deleteFavoriteCreator(HttpServletRequest request, @PathVariable int creatorId)
       throws SoffitAuthException {
@@ -201,6 +216,7 @@ public class ArtTourController {
     dao.deleteFavoriteCreator(email, creatorId);
   }
 
+  @CrossOrigin
   @PostMapping("consumer/favorites/tour/{tourId}/removal")
   public void deleteFavoriteTour(HttpServletRequest request, @PathVariable int tourId)
       throws SoffitAuthException {
@@ -209,12 +225,14 @@ public class ArtTourController {
   }
 
   ///// tours /////
+  @CrossOrigin
   @GetMapping("consumer/tours")
   public List<Tour> getToursForUser(HttpServletRequest request) throws SoffitAuthException {
     String email = authorizer.getClaimFromJWT(request, "email").asString();
     return service.getToursForUser(email);
   }
 
+  @CrossOrigin
   @PostMapping("consumer/tour/creation")
   public void createTour(HttpServletRequest request, @RequestBody String tourName)
       throws SoffitAuthException {
@@ -222,6 +240,7 @@ public class ArtTourController {
     dao.createTour(tourName, email);
   }
 
+  @CrossOrigin
   @PostMapping("tour/{tourId}/artwork/{artworkId}/add")
   public void addToTour(
       HttpServletRequest request, @PathVariable int tourId, @PathVariable String artworkId)
@@ -231,6 +250,7 @@ public class ArtTourController {
     dao.addToTour(tourId, artworkId);
   }
 
+  @CrossOrigin
   @PostMapping("tour/{tourId}/artwork/{artworkId}/removal")
   public void deleteFromTour(
       HttpServletRequest request, @PathVariable int tourId, @PathVariable String artworkId)
@@ -240,6 +260,7 @@ public class ArtTourController {
     dao.deleteFromTour(tourId, artworkId);
   }
 
+  @CrossOrigin
   @PostMapping("tour/{tourId}/update")
   public void updateTour(
       HttpServletRequest request, @RequestBody String tourName, @PathVariable int tourId)
@@ -250,16 +271,19 @@ public class ArtTourController {
   }
 
   ////////// general user //////////
+  @CrossOrigin
   @PostMapping("user/register")
   public Map<String, String> registerUser(@RequestBody Map<String, String> user) {
     return service.registerUser(user);
   }
 
+  @CrossOrigin
   @GetMapping("user/{email}/login")
   public Map<String, String> login(@PathVariable String email) {
     return service.login(email);
   }
 
+  @CrossOrigin
   @PostMapping("user/{userEmail}/removal")
   public void deleteUser(HttpServletRequest request, @PathVariable String userEmail)
       throws SoffitAuthException {
@@ -268,6 +292,7 @@ public class ArtTourController {
     dao.deleteUser(userEmail);
   }
 
+  @CrossOrigin
   @PostMapping("user/update")
   public void updateUser(HttpServletRequest request, @RequestBody Map<String, String> userInfo)
       throws SoffitAuthException {

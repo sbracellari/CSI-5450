@@ -1,15 +1,22 @@
-import { Grid } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { getPublicTours } from "../../services/api";
-import { Tour } from "./Tour";
+import { Box, Grid, CircularProgress } from "@mui/material";
 import { data } from "../../services/tourApi";
+import { Tour } from "./Tour";
 export function Tours() {
-    const tours = data;
-    const error = false;
-    const isLoading = false;
-    //const { data: tours, error, isLoading } = getPublicTours();
-    if (!tours || error) {
-        return (<div> An error occured</div>);
+    //const { data: tours, isError, isLoading, isFetching } = getPublicTours();
+    const { data: tours, isError, isLoading, isFetching } = { data, isLoading: false, isError: false, isFetching: false }
+
+    if (isFetching || isLoading) {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <CircularProgress />
+            </Box>);
+    }
+    if (!tours || isError) {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                An error occured.
+            </Box>);
     }
     return (
         <Grid container spacing={1} alignContent="center" flexDirection="column" >

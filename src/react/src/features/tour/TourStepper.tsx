@@ -1,19 +1,18 @@
 import { Tour as TourType } from "../../app/types";
-import { Box, Button, Typography, Paper, Step, StepContent, StepLabel, Stepper, Grid } from "@mui/material";
+import { Box, Button, Typography, Paper, Step, StepContent, StepLabel, Stepper } from "@mui/material";
 import { useState } from "react";
-import { Tour } from "./Tour";
 import { useParams } from "react-router-dom";
 import { data } from "../../services/tourApi";
 import { TourCard } from "./TourCard";
+import { getPublicTours } from "../../services/api";
 
-interface TourProps {
-    tour: TourType;
-}
-export function TourStepper(props: TourProps) {
+export function TourStepper() {
     //@todo: block tour if user doesn't have access
     //@todo: add modal to add tour to favorites if user enjoyed it
+    //@todo: check if user is logged ina and add the other tours as well
+    const { data: tours, isLoading, isError, error, isSuccess } = getPublicTours();
+    
     const [activeStep, setActiveStep] = useState(0);
-
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
@@ -23,9 +22,9 @@ export function TourStepper(props: TourProps) {
     };
 
     const { tourId } = useParams<{ tourId?: string }>();
-    const tours = data;
-    const tour = tourId && tours.find(tour => tour.tourId === (parseInt(tourId, 10)));
-    console.log(tours, tourId);
+    const tour = tourId && tours?.find(tour => tour.tourId === (parseInt(tourId, 10)));
+  
+    //@todo: add proper loading and error indicators
     if (!tour) {
         return <div>An error occured</div>;
     }
