@@ -5,6 +5,10 @@ DROP SCHEMA IF EXISTS `art_tour_db` ;
 CREATE SCHEMA IF NOT EXISTS `art_tour_db` DEFAULT CHARACTER SET utf8 ;
 USE `art_tour_db` ;
 
+CREATE USER 'root@localhost' IDENTIFIED BY 'root';
+GRANT ALL PRIVILEGES ON * . * TO 'root'@'localhost';
+FLUSH PRIVILEGES;
+
 -- -----------------------------------------------------
 -- Table `art_tour_db`.`creator`
 -- -----------------------------------------------------
