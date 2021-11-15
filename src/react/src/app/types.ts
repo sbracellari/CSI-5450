@@ -49,8 +49,7 @@ export interface ToursCollectionState {
     tours: Tour[],
     status: 'idle' | 'loading' | 'failed';
 }
-export interface Favorites {
-    email: string,
+export interface Favorite {
     creators: Creator[],
     artworks: Artwork[],
     tours: Tour[]

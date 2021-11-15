@@ -1,19 +1,22 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import counterReducer from '../features/counter/counterSlice';
-import collectionReducer from '../features/collection/collectionSlice';
-import detailReducer from '../features/collection/detailSlice';
 import tabsReducer from '../features/router/tabsSlice';
 import authReducer from '../features/auth/authSlice';
+import { api } from '../services/api';
+import { setupListeners } from '@reduxjs/toolkit/query'
 
 export const store = configureStore({
   reducer: {
+    [api.reducerPath]: api.reducer,
     auth: authReducer,
     counter: counterReducer,
-    tabs: tabsReducer,
-    collection: collectionReducer,
-    detail: detailReducer
+    tabs: tabsReducer, //this could be component state instead of redux
   },
+  middleware: (getDefaultMiddleware) =>
+  getDefaultMiddleware().concat(api.middleware),
 });
+
+setupListeners(store.dispatch);
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;

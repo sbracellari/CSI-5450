@@ -6,10 +6,14 @@ import edu.oakland.arttour.model.Favorite;
 import edu.oakland.arttour.model.Location;
 import edu.oakland.arttour.model.Tour;
 import edu.oakland.arttour.service.ArtTourService;
+import edu.oakland.soffit.auth.AuthService;
+import edu.oakland.soffit.auth.SoffitAuthException;
 
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +36,14 @@ public class ArtTourController {
   private final Logger log = LoggerFactory.getLogger("arttour");
   @Autowired private ArtTourDAO dao;
   @Autowired private ArtTourService service;
+  @Autowired private AuthService authorizer;
+
+  @ResponseStatus(value = HttpStatus.UNAUTHORIZED, reason = "Invalid JWT")
+  @ExceptionHandler(JWTVerificationException.class)
+  public void verificationError(Exception e) {
+    log.error("Throwing Invalid JWT Error");
+    log.error("", e);
+  }
 
   @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Illegal Arguments given")
   @ExceptionHandler({IllegalArgumentException.class, DataAccessException.class})
@@ -57,16 +69,13 @@ public class ArtTourController {
   public List<Artwork> getCollection() {
     return dao.getCollection();
   }
-
+  @CrossOrigin
   @GetMapping("tours")
   public List<Tour> getPublicTours() {
     return service.getPublicTours();
   }
 
-  // @TODO filtered collection
-  // @GetMapping("filtered-collection")
-  // public List<Artwork> getFilteredCollection() {}
-
+  @CrossOrigin
   @GetMapping("locations")
   public List<Location> getAllLocations() {
     return dao.getAllLocations();
@@ -75,141 +84,219 @@ public class ArtTourController {
   /////////// general insert/update/delete //////////
 
   ///// inserts /////
+  @CrossOrigin
   @PostMapping("artwork/creator/addition")
-  public void addArtwork(@RequestBody Map<Object, Object> artwork) {
+  public void addArtwork(HttpServletRequest request, @RequestBody Map<Object, Object> artwork)
+      throws SoffitAuthException {
+    String email = authorizer.getClaimFromJWT(request, "email").asString();
+    service.checkAdmin(email);
     service.addArtwork(artwork);
   }
-
+  @CrossOrigin
   @PostMapping("location/addition")
-  public void addLocation(@RequestBody Map<String, String> location) {
+  public void addLocation(HttpServletRequest request, @RequestBody Map<String, String> location)
+      throws SoffitAuthException {
+    String email = authorizer.getClaimFromJWT(request, "email").asString();
+    service.checkAdmin(email);
     service.addLocation(location);
   }
 
   ///// updates /////
+  @CrossOrigin
   @PostMapping("artwork/update")
-  public void updateArtwork(@RequestBody Map<Object, Object> artwork) {
+  public void updateArtwork(HttpServletRequest request, @RequestBody Map<Object, Object> artwork)
+      throws SoffitAuthException {
+    String email = authorizer.getClaimFromJWT(request, "email").asString();
+    service.checkAdmin(email);
     service.updateArtwork(artwork);
   }
 
+  @CrossOrigin
   @PostMapping("creator/update")
-  public void updateCreator(@RequestBody Map<Object, Object> creator) {
+  public void updateCreator(HttpServletRequest request, @RequestBody Map<Object, Object> creator)
+      throws SoffitAuthException {
+    String email = authorizer.getClaimFromJWT(request, "email").asString();
+    service.checkAdmin(email);
     service.updateCreator(creator);
   }
 
+  @CrossOrigin
   @PostMapping("location/update")
-  public void updateLocation(@RequestBody Map<Object, Object> location) {
+  public void updateLocation(HttpServletRequest request, @RequestBody Map<Object, Object> location)
+      throws SoffitAuthException {
+    String email = authorizer.getClaimFromJWT(request, "email").asString();
+    service.checkAdmin(email);
     service.updateLocation(location);
   }
 
   ///// deletes /////
+  @CrossOrigin
   @PostMapping("artwork/{artworkId}/removal")
-  public void deleteArtwork(@PathVariable String artworkId) {
+  public void deleteArtwork(HttpServletRequest request, @PathVariable String artworkId)
+      throws SoffitAuthException {
+    String email = authorizer.getClaimFromJWT(request, "email").asString();
+    service.checkAdmin(email);
     dao.deleteArtwork(artworkId);
   }
 
+  @CrossOrigin
   @PostMapping("creator/{creatorId}/removal")
-  public void deleteCreator(@PathVariable int creatorId) {
+  public void deleteCreator(HttpServletRequest request, @PathVariable int creatorId)
+      throws SoffitAuthException {
+    String email = authorizer.getClaimFromJWT(request, "email").asString();
+    service.checkAdmin(email);
     dao.deleteCreator(creatorId);
   }
 
+  @CrossOrigin
   @PostMapping("location/{locationId}/removal")
-  public void deleteLocation(@PathVariable int locationId) {
+  public void deleteLocation(HttpServletRequest request, @PathVariable int locationId)
+      throws SoffitAuthException {
+    String email = authorizer.getClaimFromJWT(request, "email").asString();
+    service.checkAdmin(email);
     dao.deleteLocation(locationId);
   }
 
+  @CrossOrigin
   @PostMapping("tour/{tourId}/removal")
-  public void deleteTour(@PathVariable int tourId) {
+  public void deleteTour(HttpServletRequest request, @PathVariable int tourId)
+      throws SoffitAuthException {
+    String email = authorizer.getClaimFromJWT(request, "email").asString();
+    service.checkAdmin(email);
     dao.deleteTour(tourId);
   }
 
   ////////// consumer specific actions //////////
 
   ///// favorites /////
-  @GetMapping("consumer/{email}/favorites")
-  public Favorite getUserFavorites(@PathVariable String email) {
+  @CrossOrigin
+  @GetMapping("consumer/favorites")
+  public Favorite getUserFavorites(HttpServletRequest request) throws SoffitAuthException {
+    String email = authorizer.getClaimFromJWT(request, "email").asString();
     return service.getFavoritesForUser(email);
   }
 
-  @PostMapping("consumer/{email}/favorites/artwork/{artworkId}")
-  public void favoriteArtwork(@PathVariable String email, @PathVariable String artworkId) {
+  @CrossOrigin
+  @PostMapping("consumer/favorites/artwork/{artworkId}")
+  public void favoriteArtwork(HttpServletRequest request, @PathVariable String artworkId)
+      throws SoffitAuthException {
+    String email = authorizer.getClaimFromJWT(request, "email").asString();
     dao.favoriteArtwork(email, artworkId);
   }
 
-  @PostMapping("consumer/{email}/favorites/creator/{creatorId}")
-  public void favoriteCreator(@PathVariable String email, @PathVariable int creatorId) {
+  @CrossOrigin
+  @PostMapping("consumer/favorites/creator/{creatorId}")
+  public void favoriteCreator(HttpServletRequest request, @PathVariable int creatorId)
+      throws SoffitAuthException {
+    String email = authorizer.getClaimFromJWT(request, "email").asString();
     dao.favoriteCreator(email, creatorId);
   }
 
-  @PostMapping("consumer/{email}/favorites/tour/{tourId}")
-  public void favoriteTour(@PathVariable String email, @PathVariable int tourId) {
+  @CrossOrigin
+  @PostMapping("consumer/favorites/tour/{tourId}")
+  public void favoriteTour(HttpServletRequest request, @PathVariable int tourId)
+      throws SoffitAuthException {
+    String email = authorizer.getClaimFromJWT(request, "email").asString();
     dao.favoriteTour(email, tourId);
   }
 
-  @PostMapping("consumer/{email}/favorites/artwork/{artworkId}/removal")
-  public void deleteFavoriteArtwork(@PathVariable String email, @PathVariable String artworkId) {
+  @CrossOrigin
+  @PostMapping("consumer/favorites/artwork/{artworkId}/removal")
+  public void deleteFavoriteArtwork(HttpServletRequest request, @PathVariable String artworkId)
+      throws SoffitAuthException {
+    String email = authorizer.getClaimFromJWT(request, "email").asString();
     dao.deleteFavoriteArtwork(email, artworkId);
   }
 
-  @PostMapping("consumer/{email}/favorites/creator/{creatorId}/removal")
-  public void deleteFavoriteCreator(@PathVariable String email, @PathVariable int creatorId) {
+  @CrossOrigin
+  @PostMapping("consumer/favorites/creator/{creatorId}/removal")
+  public void deleteFavoriteCreator(HttpServletRequest request, @PathVariable int creatorId)
+      throws SoffitAuthException {
+    String email = authorizer.getClaimFromJWT(request, "email").asString();
     dao.deleteFavoriteCreator(email, creatorId);
   }
 
-  @PostMapping("consumer/{email}/favorites/tour/{tourId}/removal")
-  public void deleteFavoriteTour(@PathVariable String email, @PathVariable int tourId) {
+  @CrossOrigin
+  @PostMapping("consumer/favorites/tour/{tourId}/removal")
+  public void deleteFavoriteTour(HttpServletRequest request, @PathVariable int tourId)
+      throws SoffitAuthException {
+    String email = authorizer.getClaimFromJWT(request, "email").asString();
     dao.deleteFavoriteTour(email, tourId);
   }
 
   ///// tours /////
-  @GetMapping("consumer/{email}/tours")
-  public List<Tour> getToursForUser(@PathVariable String email) {
+  @CrossOrigin
+  @GetMapping("consumer/tours")
+  public List<Tour> getToursForUser(HttpServletRequest request) throws SoffitAuthException {
+    String email = authorizer.getClaimFromJWT(request, "email").asString();
     return service.getToursForUser(email);
   }
 
-  @PostMapping("consumer/{email}/tour/creation")
-  public void createTour(@PathVariable String email, @RequestBody String tourName) {
+  @CrossOrigin
+  @PostMapping("consumer/tour/creation")
+  public void createTour(HttpServletRequest request, @RequestBody String tourName)
+      throws SoffitAuthException {
+    String email = authorizer.getClaimFromJWT(request, "email").asString();
     dao.createTour(tourName, email);
   }
 
+  @CrossOrigin
   @PostMapping("tour/{tourId}/artwork/{artworkId}/add")
-  public void addToTour(@PathVariable int tourId, @PathVariable String artworkId) {
+  public void addToTour(
+      HttpServletRequest request, @PathVariable int tourId, @PathVariable String artworkId)
+      throws SoffitAuthException {
+    String email =
+        authorizer.getClaimFromJWT(request, "email").asString(); // just to check if token is valid
     dao.addToTour(tourId, artworkId);
   }
 
+  @CrossOrigin
   @PostMapping("tour/{tourId}/artwork/{artworkId}/removal")
-  public void deleteFromTour(@PathVariable int tourId, @PathVariable String artworkId) {
+  public void deleteFromTour(
+      HttpServletRequest request, @PathVariable int tourId, @PathVariable String artworkId)
+      throws SoffitAuthException {
+    String email =
+        authorizer.getClaimFromJWT(request, "email").asString(); // just to check if token is valid
     dao.deleteFromTour(tourId, artworkId);
   }
 
+  @CrossOrigin
   @PostMapping("tour/{tourId}/update")
-  public void updateTour(@RequestBody String tourName, @PathVariable int tourId) {
+  public void updateTour(
+      HttpServletRequest request, @RequestBody String tourName, @PathVariable int tourId)
+      throws SoffitAuthException {
+    String email =
+        authorizer.getClaimFromJWT(request, "email").asString(); // just to check if token is valid
     dao.updateTour(tourName, tourId);
   }
 
-  ////////// admin //////////
-  @GetMapping("admin/{email}")
-  public Integer isAdmin(@PathVariable String email) {
-    return dao.isAdmin(email);
-  }
-
   ////////// general user //////////
+  @CrossOrigin
   @PostMapping("user/register")
-  public boolean registerUser(@RequestBody Map<String, String> user) {
+  public Map<String, String> registerUser(@RequestBody Map<String, String> user) {
     return service.registerUser(user);
   }
 
+  @CrossOrigin
   @GetMapping("user/{email}/login")
-  public Integer login(@RequestBody Map<String, String> userCreds) {
-    return service.login(userCreds);
+  public Map<String, String> login(@PathVariable String email) {
+    return service.login(email);
   }
 
-  @PostMapping("user/{email}/removal")
-  public void deleteUser(@PathVariable String email) {
-    dao.deleteUser(email);
+  @CrossOrigin
+  @PostMapping("user/{userEmail}/removal")
+  public void deleteUser(HttpServletRequest request, @PathVariable String userEmail)
+      throws SoffitAuthException {
+    String email = authorizer.getClaimFromJWT(request, "email").asString();
+    service.checkAdmin(email);
+    dao.deleteUser(userEmail);
   }
 
+  @CrossOrigin
   @PostMapping("user/update")
-  public void updateUser(@RequestBody Map<String, String> user) {
-    service.updateUser(user);
+  public void updateUser(HttpServletRequest request, @RequestBody Map<String, String> userInfo)
+      throws SoffitAuthException {
+    String email = authorizer.getClaimFromJWT(request, "email").asString();
+    service.updateUser(email, userInfo);
   }
 }

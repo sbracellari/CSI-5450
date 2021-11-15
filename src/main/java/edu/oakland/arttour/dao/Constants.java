@@ -4,8 +4,7 @@ public class Constants {
 
   ////////// reports //////////
   public static final String GET_ADMIN_EMAILS =
-      new String(" SELECT * FROM admin")
-          .replaceAll("\\s+", " ");
+      new String(" SELECT * FROM admin").replaceAll("\\s+", " ");
 
   public static final String GET_COLLECTION =
       new String(
@@ -29,7 +28,7 @@ public class Constants {
 
   ////////// queries //////////
   public static final String GET_FILTERED_COLLECTION =
-  // not sure if dynamically passing a column name will work.
+      // not sure if dynamically passing a column name will work.
       new String(
               " SELECT                                     "
                   + "     *                                      "
@@ -40,46 +39,37 @@ public class Constants {
                   + "     NATURAL JOIN location l                "
                   + " WHERE                                      "
                   + "     ? = ?                                  "
-                + " LIMIT 500                                    ")
+                  + " LIMIT 500                                    ")
           .replaceAll("\\s+", " ");
 
-  public static final String IS_ADMIN =
+  public static final String CHECK_ADMIN =
       new String(
-              " SELECT                          "
-                  + "     IF(email=?, TRUE, FALSE)    "
-                  + " AS                              "
-                  + "     is_admin                    "
-                  + " FROM                            "
-                  + "     admin                       ")
+              " SELECT                 "
+                  + "     email        "
+                  + " FROM             "
+                  + "     admin        "
+                  + " WHERE            "
+                  + "     email = ?    ")
           .replaceAll("\\s+", " ");
 
   public static final String LOGIN =
       new String(
               " SELECT                  "
-                  + "     1                   "
+                  + "     password            "
                   + " FROM                    "
                   + "     user                "
                   + " WHERE                   "
-                  + "     email = ?           "
-                  + "     AND password = ?    "
-                  + " UNION ALL               "
-                  + " SELECT                  "
-                  + "     0                   "
-                  + " LIMIT 1                 ")
+                  + "     email = ?           ")
           .replaceAll("\\s+", " ");
 
   public static final String USER_EXISTS =
       new String(
               " SELECT           "
-                  + "     1            "
+                  + "     email        "
                   + " FROM             "
                   + "     user         "
                   + " WHERE            "
-                  + "     email = ?    "
-                  + " UNION ALL        "
-                  + " SELECT           "
-                  + "     0            "
-                  + " LIMIT 1          ")
+                  + "     email = ?    ")
           .replaceAll("\\s+", " ");
 
   public static final String GET_ARTWORK =
@@ -177,8 +167,7 @@ public class Constants {
           .replaceAll("\\s+", " ");
 
   ////////// procedures //////////
-  public static final String ADD_ADMIN =
-      new String("CALL add_admin(?)").replaceAll("\\s+", " ");
+  public static final String ADD_ADMIN = new String("CALL add_admin(?)").replaceAll("\\s+", " ");
 
   public static final String ADD_ARTWORK =
       new String("CALL add_artwork(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)").replaceAll("\\s+", " ");
