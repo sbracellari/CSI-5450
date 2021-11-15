@@ -95,7 +95,7 @@ export function Register() {
                     }}
                 >
                     Already have an account? {" "}
-                  <Link to="/account/login">
+                  <Link to="/">
                     Sign in
                   </Link>
                </Typography>

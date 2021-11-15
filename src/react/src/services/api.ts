@@ -253,11 +253,11 @@ export const api = createApi({
             }),
         }),
         updateUser: builder.mutation({
-            query: (user: User) => ({
+            query: ({ fName, lName, password }) => ({
                 url: `user/update`,
                 method: 'POST',
                 mode: 'cors',
-                body: user,
+                body: JSON.stringify({ fName, lName, password }),
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('token')
                 }

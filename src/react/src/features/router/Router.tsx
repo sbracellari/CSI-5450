@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Tabs, Tab } from '@mui/material';
+import { Tabs, Tab, Box } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { handleSelect, indexToTab as tabs } from './tabsSlice';
 import { Collection } from '../collection/Collection';
@@ -10,6 +10,8 @@ import { Register } from '../auth/Register';
 import { Tours } from '../tour/Tours';
 import { TourStepper } from '../tour/TourStepper';
 import { Admin } from '../admin/Admin';
+import { AccountInfo } from '../auth/AccountInfo';
+import { EditAccount } from '../auth/EditAccount';
 
 export function Router() {
     const { tab: tabValue, path } = useAppSelector((state) => state.tabs);
@@ -22,7 +24,7 @@ export function Router() {
     const handleTabs = (event: React.SyntheticEvent<Element, Event>, val: number) => {
         dispatch(handleSelect(val));
     };
-    //@todo need to add a tab for account
+
     //@todo redirect back to login if a user isn't logged in
     return (
         <BrowserRouter basename='/'>
@@ -30,10 +32,14 @@ export function Router() {
                 <Route exact path='/' component={Login} />
                 <Route exact path='/register' component={Register} />
                 <Route>
-                    <Tabs value={tabValue} onChange={handleTabs} centered>
-                        {tabComponent}
-                    </Tabs>
+                    <Box sx={{display: 'flex', justifyContent: 'center'}}>
+                        <Tabs value={tabValue} onChange={handleTabs} centered sx={{ml: '10%', width: '80%', alignItems: 'center'}} >
+                            {tabComponent}
+                        </Tabs>
+                        <AccountInfo />
+                    </Box>
                     <Switch>
+                        <Route exact path='/account/update' component={EditAccount} />
                         <Route exact path="/collection" component={Collection} />
                         <Route exact path="/tour" component={Tours} />
                         <Route path="/tour/:tourId" component={TourStepper} />
