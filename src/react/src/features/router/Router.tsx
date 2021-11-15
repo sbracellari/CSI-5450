@@ -25,21 +25,25 @@ export function Router() {
     //@todo need to add a tab for account
     return (
         <BrowserRouter basename='/'>
-            <Tabs value={tabValue} onChange={handleTabs} centered>
-                {tabComponent}
-            </Tabs>
             <Switch>
-                <Route exact path="/">
-                    <Redirect to="/collection" />
-                </Route>
-                <Route exact path="/collection" component={Collection} />
-                <Route exact path="/tour" component={Tours} />
-                <Route path="/tour/:tourId" component={TourStepper} />
-                <Route exact path="/favorites" />
-                <Route exact path="/admin" component={Admin} />
-                <Route path='/details' component={Detail} />
                 <Route path='/account/login' component={Login} />
                 <Route path='/account/register' component={Register} />
+                <Route>
+                    <Tabs value={tabValue} onChange={handleTabs} centered>
+                        {tabComponent}
+                    </Tabs>
+                    <Switch>
+                        <Route exact path="/">
+                            <Redirect to="/collection" />
+                        </Route>
+                        <Route exact path="/collection" component={Collection} />
+                        <Route exact path="/tour" component={Tours} />
+                        <Route path="/tour/:tourId" component={TourStepper} />
+                        <Route exact path="/favorites" />
+                        <Route exact path="/admin" component={Admin} />
+                        <Route path='/details' component={Detail} />
+                    </Switch>
+                </Route>
             </Switch>
         </BrowserRouter>
     )
