@@ -23,19 +23,17 @@ export function Router() {
         dispatch(handleSelect(val));
     };
     //@todo need to add a tab for account
+    //@todo redirect back to login if a user isn't logged in
     return (
         <BrowserRouter basename='/'>
             <Switch>
-                <Route path='/account/login' component={Login} />
-                <Route path='/account/register' component={Register} />
+                <Route exact path='/' component={Login} />
+                <Route exact path='/register' component={Register} />
                 <Route>
                     <Tabs value={tabValue} onChange={handleTabs} centered>
                         {tabComponent}
                     </Tabs>
                     <Switch>
-                        <Route exact path="/">
-                            <Redirect to="/collection" />
-                        </Route>
                         <Route exact path="/collection" component={Collection} />
                         <Route exact path="/tour" component={Tours} />
                         <Route path="/tour/:tourId" component={TourStepper} />

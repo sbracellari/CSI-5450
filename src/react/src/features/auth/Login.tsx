@@ -21,6 +21,7 @@ export function Login() {
     if (isLoggedIn) {
         return <Redirect to="/collection" />;
     }
+
     console.log(message, status === 'failed');
 
     return (
@@ -80,7 +81,7 @@ export function Login() {
                     }}
                 >
                     New to YourTour? {" "}
-                  <Link to='/account/register'>
+                  <Link to='/register'>
                     Create an account
                   </Link>
                 </Typography>
