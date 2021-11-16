@@ -1,46 +1,49 @@
 import { getPublicTours, getToursForUser } from "../../services/api";
-import { Box, Grid, CircularProgress } from "@mui/material";
+import { Box, Grid, CircularProgress, Typography, Tooltip } from "@mui/material";
 import { data } from "../../services/tourApi";
 import { Tour } from "./Tour";
 import { useAppSelector } from "../../app/hooks";
-export function Tours(props: { isPublic: boolean; }) {
-    const { isPublic } = props;
-    let tours;
+import { Tour as TourType } from "../../app/types";
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
 
-    const publicTours = getPublicTours();
-    const personalTours = getToursForUser();
 
-    if (isPublic) {
-        tours = publicTours;
-    } else {
-        tours = personalTours;
-    }
+export function Tours(props: { isPublic: boolean, tours: any }) {
+    const { isPublic, tours } = props;
+    const { data, isError, isLoading, isFetching } = tours
 
-    // const { data: tours, isError, isLoading, isFetching } = { data, isLoading: false, isError: false, isFetching: false }
-
-    if (tours.isFetching || tours.isLoading) {
+    if (isFetching || isLoading) {
         return (
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                 <CircularProgress />
             </Box>);
     }
-    if (!tours.data || tours.isError) {
+    if (!data || isError) {
         return (
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
                 An error occurred.
             </Box>);
     }
-    if(tours.data.length === 0) {
+    if(data.length === 0) {
         return (
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
                 No tours to display.
             </Box>);
     }
     return (
-        <Grid container spacing={1} alignContent="center" flexDirection="column" >
-            {tours.data.map((tour, index) => {
-                return <Tour key={tour.tourId} tour={tour} isPublic={isPublic} />
-            })}
-        </Grid >
+        <>
+            <Grid container spacing={1} alignContent="center" flexDirection="column" >
+                {data.map((tour: TourType, index: any) => {
+                    return <Tour key={tour.tourId} tour={tour} isPublic={isPublic} />
+                })}
+            </Grid >
+            {!isPublic && (
+                <Tooltip title='Create new tour' placement='left'>
+                    <Fab size='small' color="primary" aria-label="add" sx={{position: 'fixed', right: 15, bottom: 15}}>
+                        <AddIcon />
+                    </Fab>
+                </Tooltip>
+            )}
+        </>
     )
 };

@@ -4,9 +4,11 @@ import { Artwork } from './Artwork';
 import { getCollection } from '../../services/api';
 import { data as collectionData } from '../../services/collectionApi';
 
-export function Collection() {
+export function Collection(props: { tours: any }) {
   //const { data: collection, isError, isLoading, isFetching } = getCollection();
   //temp data
+  const { tours } = props;
+
   const { data: collection, isError, isLoading, isFetching } = { data: collectionData, isLoading: false, isError: false, isFetching: false }
 
   let component;
@@ -22,7 +24,7 @@ export function Collection() {
       collection.map((artwork, index) => {
         return (
           <Grid key={`${index}_${artwork.title}`} item xs={11} >
-            <Artwork artwork={artwork} />
+            <Artwork tours={tours.data} artwork={artwork} />
           </Grid>
         )
       }));

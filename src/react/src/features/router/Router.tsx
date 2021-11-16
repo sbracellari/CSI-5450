@@ -13,6 +13,7 @@ import { Admin } from '../admin/Admin';
 import { AccountInfo } from '../auth/AccountInfo';
 import { EditAccount } from '../auth/EditAccount';
 import { MobileDrawer } from '../MobileDrawer';
+import { getPublicTours, getToursForUser } from "../../services/api";
 
 export function Router() {
     const { tab: tabValue, path } = useAppSelector((state) => state.tabs);
@@ -25,6 +26,9 @@ export function Router() {
     const handleTabs = (event: React.SyntheticEvent<Element, Event>, val: number) => {
         dispatch(handleSelect(val));
     };
+
+    const publicTours = getPublicTours();
+    const personalTours = getToursForUser();
 
     //@todo redirect back to login if a user isn't logged in
     return (
@@ -39,14 +43,21 @@ export function Router() {
                     </Box>
                     <Switch>
                         <Route exact path='/account' component={EditAccount} />
-                        <Route exact path="/collection" component={Collection} />
+                        <Route exact path="/collection">
+                            <Collection tours={personalTours} />
+                        </Route>
                         <Route exact path='/public-tours'>
-                            <Tours isPublic={true} />
+                            <Tours tours={publicTours} isPublic={true} />
                         </Route>
                         <Route exact path='/my-tours'>
-                            <Tours isPublic={false} />
+                            <Tours tours={personalTours} isPublic={false} />
                         </Route>
-                        <Route path="/tour/:tourId" component={TourStepper} />
+                        <Route path="/public-tours/:tourId">
+                            <TourStepper tours={publicTours} isPublic={true} />
+                        </Route>
+                        <Route path="/my-tours/:tourId">
+                            <TourStepper tours={personalTours} isPublic={false} />
+                        </Route>
                         <Route exact path="/favorites" />
                         <Route exact path="/admin" component={Admin} />
                         <Route path='/details' component={Detail} />

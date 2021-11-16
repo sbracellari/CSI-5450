@@ -1,21 +1,53 @@
 import { Artwork as ArtworkType } from "../../app/types";
-import { Box, Button, Card, CardActions, CardContent, CardMedia, Chip, IconButton, Typography } from "@mui/material";
+import { Box, Button, Card, CardActions, CardContent, CardMedia, Chip, IconButton, Typography, DialogContent,
+    ListItemIcon, ListItemButton, DialogActions
+} from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { Link } from 'react-router-dom';
 import { useAppDispatch } from "../../app/hooks";
+import Avatar from '@mui/material/Avatar';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemText from '@mui/material/ListItemText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from '@mui/material/Dialog';
+import PersonIcon from '@mui/icons-material/Person';
+import AddIcon from '@mui/icons-material/Add';
+import React, { useState } from 'react';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import { Tour } from '../../app/types';
+import { addToTour } from '../../services/api';
+
 interface ArtworkProps {
     artwork: ArtworkType;
+    tours: Tour[];
 }
 
 export function Artwork(props: ArtworkProps) {
-    const { artwork } = props;
+    const { artwork, tours } = props;
     const dispatch = useAppDispatch();
     const isLoggedIn = true;//@todo: get user 
     const handleFavorite = (artworkId: string) => {
         //@todo: check user artwork favorites and filter throwgh them 
         console.log('handle favorites');
     }
+
+    const [open, setOpen] = useState(false);
+    const [tourId, setTourId] = useState(0);
+
+    const handleSubmit = (tourId: number, artworkId: string) => {
+        setOpen(false);
+        console.log(tourId)
+        // dispatch(addToTour({ tourId, artworkId }));
+    };
+
     return (
+        <>
         <Card variant="elevation" sx={{ pb: 2, maxWidth: 400 }}>
             <CardMedia
                 component="img"
@@ -51,8 +83,31 @@ export function Artwork(props: ArtworkProps) {
                     component={Link} to={`/details?id=${artwork.artworkId}`}
                     onClick={() => console.log('view detail')}
                 >Details</Button>
-                <Button size="small" aria-label="add to tour" >Add to tour</Button>
+                <Button onClick={() => setOpen(true)} size="small" aria-label="add to tour">Add to tour</Button>
             </CardActions>
         </Card>
+
+        <Dialog onClose={() => setOpen(false)} open={open}>
+            <DialogTitle>Choose Tour</DialogTitle>
+            <DialogContent>
+                <FormControl component="fieldset">
+                    <FormLabel sx={{mb: 1}} component="legend">Choose which tour you'd like to add this artwork to</FormLabel>
+                    <RadioGroup
+                        value={tourId}
+                        onChange={event => setTourId(parseInt(event.target.value))}
+                    >
+                        {tours?.map(tour => (
+                            <FormControlLabel value={tour.tourId} control={<Radio />} label={tour.tourName} />
+                        ))}
+                    </RadioGroup>
+                </FormControl>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={() => setOpen(false)}>Cancel</Button>
+                <Button disabled={tourId === 0} onClick={() => handleSubmit(tourId, artwork.artworkId)}>Add</Button>
+            </DialogActions>
+        </Dialog>
+
+        </>
     )
 };
