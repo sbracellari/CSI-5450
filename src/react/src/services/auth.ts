@@ -25,7 +25,7 @@ const register = (user: User) => {
 }
 
 const login = (user: LoginUser) => {
-    return axios.get(API_URL + '/user/' + user.email + '/login').then((response) => {
+    return axios.get(`${API_URL}/user/${user.email}/login`).then((response) => {
         if (user.password === response.data.password) {
             localStorage.setItem("token", response.data.token);
             return response.data;
