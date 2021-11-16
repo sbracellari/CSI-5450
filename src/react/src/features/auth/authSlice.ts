@@ -11,7 +11,6 @@ export const register = createAsyncThunk(
     async (user: User) => {
         // @todo: might need try catch block
         const response = await authService.register(user);
-        console.log(response.data.message);
         return response.data;
     }
 );
@@ -50,7 +49,7 @@ const authSlice = createSlice({
                 state.status = 'loading';
             })
             .addCase(register.fulfilled, (state, action) => {
-                state.isLoggedIn = false;
+                state.isLoggedIn = true;
                 state.status = 'idle';
                 state.message = action.payload;
             })
