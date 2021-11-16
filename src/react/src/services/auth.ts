@@ -1,5 +1,6 @@
 import axios, { AxiosRequestHeaders } from "axios";
 import { LoginUser, User } from "../app/types";
+import { Redirect } from "react-router-dom";
 
 const API_URL = "http://localhost:8080/v1";
 
@@ -32,14 +33,17 @@ const login = (user: LoginUser) => {
     });
 }
 
-const logout = () => {
-    localStorage.removeItem("token");
-}
+// const logout = () => {
+//     return Promise.resolve().then(() => {
+//         console.log("HELLLOOOO")
+//         localStorage.removeItem("token");
+//     });
+// }
 
 const authHeader = (): AxiosRequestHeaders => {
     const localUser = localStorage.getItem("token");
     const user = localUser ? JSON.parse(localUser) : null;
     return user && user.accessToken ? { "x-access-token": user.accessToken } : {};
 }
-const authService = { register, login, logout, authHeader };
+const authService = { register, login, authHeader };
 export default authService;

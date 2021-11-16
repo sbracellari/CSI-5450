@@ -5,16 +5,21 @@ import { useState } from "react";
 import SwipeableViews from 'react-swipeable-views';
 import { PlayCircle, KeyboardArrowLeft, KeyboardArrowRight, RoomOutlined, MoreVert, PhotoLibraryOutlined } from "@mui/icons-material";
 import { Link, useHistory } from "react-router-dom";
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import EditIcon from '@mui/icons-material/Edit';
+import TextField from '@mui/material/TextField';
+import SaveIcon from '@mui/icons-material/Save';
+import { updateTour } from '../../services/api';
 
-interface TourProps {
-    tour: TourType;
-}
-export function Tour(props: TourProps) {
-    const { tour } = props;
+export function Tour(props: { tour: TourType; isPublic: boolean; }) {
+    const { tour, isPublic } = props;
+    
     const dispatch = useAppDispatch();
     //@todo: start a tour
     const [activeStep, setActiveStep] = useState(0);
-    const maxSteps = 5;
+    const [disabled, setDisabled] = useState(true);
+    const [tourName, setTourName] = useState(tour.tourName);
+    const maxSteps = tour.artworks.length;
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -27,6 +32,13 @@ export function Tour(props: TourProps) {
     const handleStepChange = (step: any) => {
         setActiveStep(step);
     };
+
+    const handleSave = () => {
+        setDisabled(true);
+        console.log(tourName, tour.tourId);
+        // dispatch(updateTour({ tourName, tourId })); // how to call this?
+    };
+
     const history = useHistory();
     const handleRouting = () => history.push(`/tour/${tour.tourId}`);
 
@@ -39,12 +51,39 @@ export function Tour(props: TourProps) {
                 }}
                 elevation={1}>
                 <Box component="div" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography component="div" variant="h6" >
-                        {tour.tourName}
-                    </Typography>
-                    {DropdownButton()}
+                    <Box sx={{display: 'flex', alignItems: 'center'}}>
+                        {isPublic ? (
+                            <Typography component="div" variant="h6" >
+                                {tour.tourName}
+                            </Typography>
+                        ) : (
+                            <>
+                                <TextField
+                                    defaultValue={tour.tourName} 
+                                    disabled={disabled} 
+                                    onChange={(e) => setTourName(e.target.value)} 
+                                    variant='standard'
+                                />
+                                {disabled ? (
+                                    <IconButton onClick={() => setDisabled(false)}>
+                                        <EditIcon />
+                                    </IconButton>
+                                ) : (
+                                    <IconButton onClick={() => handleSave()}>
+                                        <SaveIcon />
+                                    </IconButton>
+                                )}
+                            </>
+                        )}    
+                    </Box>
+                    <Box>
+                    <IconButton>
+                        <FavoriteIcon />
+                    </IconButton>
+                    {!isPublic && DropdownButton()}
+                    </Box>
                 </Box>
-                <Box component="div" sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                <Box component="div" sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 1 }}>
                     <PhotoLibraryOutlined />
                     <Typography component="div" variant="subtitle1" ml={1}>
                         {tour.artworks.length}
@@ -150,7 +189,6 @@ const DropdownButton = () => {
             >
                 <MenuItem onClick={handleClose}>Edit</MenuItem>
                 <MenuItem onClick={handleClose}>Delete</MenuItem>
-                <MenuItem onClick={handleClose}>Favorite</MenuItem>
             </Menu>
         </>
     );

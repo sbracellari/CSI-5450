@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Tabs, Tab, Box } from '@mui/material';
+import { Tabs, Tab, Box, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { handleSelect, indexToTab as tabs } from './tabsSlice';
 import { Collection } from '../collection/Collection';
@@ -12,6 +12,7 @@ import { TourStepper } from '../tour/TourStepper';
 import { Admin } from '../admin/Admin';
 import { AccountInfo } from '../auth/AccountInfo';
 import { EditAccount } from '../auth/EditAccount';
+import { MobileDrawer } from '../MobileDrawer';
 
 export function Router() {
     const { tab: tabValue, path } = useAppSelector((state) => state.tabs);
@@ -29,19 +30,22 @@ export function Router() {
     return (
         <BrowserRouter basename='/'>
             <Switch>
-                <Route exact path='/' component={Login} />
+                <Route exact path={['/', '/login']} component={Login} />
                 <Route exact path='/register' component={Register} />
                 <Route>
-                    <Box sx={{display: 'flex', justifyContent: 'center'}}>
-                        <Tabs value={tabValue} onChange={handleTabs} centered sx={{ml: '10%', width: '80%', alignItems: 'center'}} >
-                            {tabComponent}
-                        </Tabs>
-                        <AccountInfo />
+                    <Box sx={{display: 'flex', alignItems: 'center'}}>
+                        <MobileDrawer />
+                        <Typography sx={{fontSize: 18, ml: 2}}><strong>YourTour - Carnegie Museum of Art</strong></Typography>
                     </Box>
                     <Switch>
-                        <Route exact path='/account/update' component={EditAccount} />
+                        <Route exact path='/account' component={EditAccount} />
                         <Route exact path="/collection" component={Collection} />
-                        <Route exact path="/tour" component={Tours} />
+                        <Route exact path='/public-tours'>
+                            <Tours isPublic={true} />
+                        </Route>
+                        <Route exact path='/my-tours'>
+                            <Tours isPublic={false} />
+                        </Route>
                         <Route path="/tour/:tourId" component={TourStepper} />
                         <Route exact path="/favorites" />
                         <Route exact path="/admin" component={Admin} />

@@ -23,13 +23,15 @@ export const login = createAsyncThunk(
     }
 );
 
+export const logout = () => localStorage.removeItem('token');
 
-export const logout = createAsyncThunk(
-    'auth/logout',
-    async () => {
-        await authService.logout();
-    }
-);
+// export const logout = createAsyncThunk(
+//     'auth/logout',
+//     async () => {
+//         const response = await authService.logout();
+//         return response;
+//     }
+// );
 // @todo: check is this correct?
 const initialState: UserState = {
     isLoggedIn: user ? true : false,
@@ -78,21 +80,21 @@ const authSlice = createSlice({
                 console.log('log in failed', action);
 
             })
-            .addCase(logout.pending, (state) => {
-                state.isLoggedIn = false;
-                state.status = 'loading';
-            })
-            .addCase(logout.fulfilled, (state, action) => {
-                state.isLoggedIn = true;
-                state.status = 'idle';
-                //state.message = action.payload;
-                state.user = null;
-            })
-            .addCase(logout.rejected, (state, action) => {
-                state.isLoggedIn = false;
-                state.status = 'failed';
-                state.message = action.payload;
-            })
+            // .addCase(logout.pending, (state) => {
+            //     state.isLoggedIn = false;
+            //     state.status = 'loading';
+            // })
+            // .addCase(logout.fulfilled, (state, action) => {
+            //     state.isLoggedIn = true;
+            //     state.status = 'idle';
+            //     //state.message = action.payload;
+            //     state.user = null;
+            // })
+            // .addCase(logout.rejected, (state, action) => {
+            //     state.isLoggedIn = false;
+            //     state.status = 'failed';
+            //     state.message = action.payload;
+            // })
     },
 });
 

@@ -190,7 +190,7 @@ export const api = createApi({
                 }
             }),
         }),
-        getToursForUser: builder.query<Tour[], string>({
+        getToursForUser: builder.query<Tour[], void>({
             query: () => ({
                 url: `consumer/tours`,
                 method: 'GET',
