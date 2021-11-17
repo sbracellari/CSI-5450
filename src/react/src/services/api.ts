@@ -14,9 +14,12 @@ const headers = {
 export const api = createApi({
     reducerPath: 'api',
     baseQuery,
+    tagTypes: ['Artwork', 'Favorites'],
     endpoints: (builder) => ({
         getCollection: builder.query<Artwork[], void>({
-            query: () => 'collection'
+            query: () => 'collection',
+            providesTags: ['Artwork']
+
         }),
         getPublicTours: builder.query<Tour[], void>({
             query: () => 'tours'
@@ -119,26 +122,26 @@ export const api = createApi({
                 }
             }),
         }),
-        getUserFavorites: builder.query<Favorite, string>({
+        getUserFavorites: builder.query({
             query: () => ({
-                url: `consumer/favorites`,
-                method: 'GET',
+                url: 'consumer/favorites',
                 mode: 'cors',
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                },
             }),
+            providesTags: ['Favorites']
         }),
         favoriteArtwork: builder.mutation({
-            //@todo: how to define types for 2 params
             query: (artworkId: string) => ({
                 url: `consumer/favorites/artwork/${artworkId}`,
                 method: 'POST',
                 mode: 'cors',
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                },
             }),
+            invalidatesTags: ['Artwork', 'Favorites']
         }),
         favoriteCreator: builder.mutation({
             query: (creatorId: number) => ({
@@ -167,8 +170,9 @@ export const api = createApi({
                 mode: 'cors',
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                },
             }),
+            invalidatesTags: ['Artwork', 'Favorites']
         }),
         deleteFavoriteCreator: builder.mutation({
             query: (creatorId: number) => ({
@@ -292,5 +296,5 @@ export const {
     useUpdateLocationMutation: updateLocation,
     useUpdateTourMutation: updateTour,
     useDeleteUserMutation: deleteUser,
-    useUpdateUserMutation: updateUser
+    useUpdateUserMutation: updateUser,
 } = api;
