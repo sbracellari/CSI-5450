@@ -60,6 +60,7 @@ export interface User {
     lname: string,
     email: string,
     password: string,
+    token: string,
 }
 export interface DetailState {
     detail?: Artwork,
@@ -70,6 +71,7 @@ export interface TabState {
 }
 
 export type LoginUser = Partial<Pick<User, "fname" | "lname">> & Pick<User, "email" | "password">;
+export type RegisterUser = Partial<Pick<User, "email" | "fname" | "lname" | "password">>;
 
 export interface UserState {
     isLoggedIn: boolean,

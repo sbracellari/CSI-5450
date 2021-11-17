@@ -3,8 +3,8 @@ import { Box, Button, Card, CardActions, CardContent, CardMedia, Chip, IconButto
     ListItemIcon, ListItemButton, DialogActions
 } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { Link } from 'react-router-dom';
-import { useAppDispatch } from "../../app/hooks";
+import { Link, Redirect } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import Avatar from '@mui/material/Avatar';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -31,7 +31,7 @@ interface ArtworkProps {
 export function Artwork(props: ArtworkProps) {
     const { artwork, tours } = props;
     const dispatch = useAppDispatch();
-    const isLoggedIn = true;//@todo: get user 
+    const { isLoggedIn } = useAppSelector(state => state.auth); 
     const handleFavorite = (artworkId: string) => {
         //@todo: check user artwork favorites and filter throwgh them 
         console.log('handle favorites');
@@ -45,6 +45,10 @@ export function Artwork(props: ArtworkProps) {
         console.log(tourId)
         // dispatch(addToTour({ tourId, artworkId }));
     };
+
+    if (!isLoggedIn) {
+        return <Redirect to='/login' />;
+    } 
 
     return (
         <>

@@ -3,18 +3,22 @@ import { Grid, Typography, CircularProgress } from "@mui/material";
 import { Artwork } from './Artwork';
 import { getCollection } from '../../services/api';
 import { data as collectionData } from '../../services/collectionApi';
+import { useAppSelector } from "../../app/hooks";
+import { Redirect } from "react-router-dom";
 
 export function Collection(props: { tours: any }) {
   //const { data: collection, isError, isLoading, isFetching } = getCollection();
   //temp data
   const { tours } = props;
 
+  const { isLoggedIn } = useAppSelector(state => state.auth);
   const { data: collection, isError, isLoading, isFetching } = { data: collectionData, isLoading: false, isError: false, isFetching: false }
 
   let component;
 
-
-  if (isFetching || isLoading) {
+  if (!isLoggedIn) {
+    return <Redirect to='/login' />;
+  } else if (isFetching || isLoading) {
     component = <CircularProgress />;
   } else if (isError) {
     component = <Typography>An error occured</Typography>;

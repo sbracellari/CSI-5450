@@ -6,11 +6,17 @@ import { useAppSelector } from "../../app/hooks";
 import { Tour as TourType } from "../../app/types";
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
+import { Redirect } from 'react-router-dom';
 
 
 export function Tours(props: { isPublic: boolean, tours: any }) {
     const { isPublic, tours } = props;
     const { data, isError, isLoading, isFetching } = tours
+    const { isLoggedIn } = useAppSelector(state => state.auth);
+
+    if (!isLoggedIn) {
+        return <Redirect to='/login' />;
+    }
 
     if (isFetching || isLoading) {
         return (

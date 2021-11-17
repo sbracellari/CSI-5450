@@ -69,7 +69,7 @@ public class ArtTourController {
   public List<Artwork> getCollection() {
     return dao.getCollection();
   }
-  
+
   @CrossOrigin
   @GetMapping("tours")
   public List<Tour> getPublicTours() {

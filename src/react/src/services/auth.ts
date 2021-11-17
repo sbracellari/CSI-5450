@@ -1,14 +1,13 @@
 import axios, { AxiosRequestHeaders } from "axios";
-import { LoginUser, User } from "../app/types";
-import { Redirect } from "react-router-dom";
+import { LoginUser, RegisterUser } from "../app/types";
 
 const API_URL = "http://localhost:8080/v1";
 
-const register = (user: User) => {
+const register = (user: RegisterUser) => {
     const userInfo = JSON.stringify({
         email: user.email,
-        fName: user.fname,
-        lName: user.lname,
+        fname: user.fname,
+        lname: user.lname,
         password: user.password
     });
 
@@ -18,8 +17,18 @@ const register = (user: User) => {
             'Content-Type': 'application/json'   
         }}).then((response) => {
         if (response.data.token !== null) {
-            localStorage.setItem("token", response.data.token);
+            localStorage.setItem('token', response.data.token);
+            const usr = {
+                email: response.data.email,
+                fname: response.data.fname,
+                lname: response.data.lname,
+                password: response.data.password,
+                token: response.data.token
+            }
+            localStorage.setItem('user', JSON.stringify(usr));
             return response.data;
+        } else {
+            throw 'Email already exists.';
         }
     });
 }
@@ -27,23 +36,34 @@ const register = (user: User) => {
 const login = (user: LoginUser) => {
     return axios.get(`${API_URL}/user/${user.email}/login`).then((response) => {
         if (user.password === response.data.password) {
-            localStorage.setItem("token", response.data.token);
+            localStorage.setItem('token', response.data.token);
+            const usr = {
+                email: response.data.email,
+                fname: response.data.fname,
+                lname: response.data.lname,
+                password: response.data.password,
+                token: response.data.token
+            }
+            localStorage.setItem('user', JSON.stringify(usr));
             return response.data;
+        } else {
+            throw 'Incorrect email or password.';
         }
     });
 }
 
-// const logout = () => {
-//     return Promise.resolve().then(() => {
-//         console.log("HELLLOOOO")
-//         localStorage.removeItem("token");
-//     });
-// }
+const logout = () => {
+    return Promise.resolve().then((response) => {
+        localStorage.removeItem('token');
+        return response;
+    })
+}
 
 const authHeader = (): AxiosRequestHeaders => {
-    const localUser = localStorage.getItem("token");
-    const user = localUser ? JSON.parse(localUser) : null;
-    return user && user.accessToken ? { "x-access-token": user.accessToken } : {};
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem('user');
+    return user && token ? { "token" : token } : {};  
 }
-const authService = { register, login, authHeader };
+
+const authService = { register, login, authHeader, logout };
 export default authService;

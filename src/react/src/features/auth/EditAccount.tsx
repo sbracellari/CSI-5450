@@ -1,8 +1,7 @@
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { Redirect, Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { Box, Button, TextField, Alert, Typography } from '@mui/material';
 import { useState } from 'react';
-import { register } from './authSlice';
 import { updateUser } from '../../services/api';
 
 export function EditAccount() {
@@ -16,7 +15,7 @@ export function EditAccount() {
     //@todo: add validation and error handling
 
     if (!isLoggedIn) { 
-        <Redirect to='/' />;
+        <Redirect to='/login' />;
     }
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {

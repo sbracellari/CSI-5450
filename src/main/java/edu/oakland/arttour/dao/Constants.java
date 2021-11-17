@@ -54,12 +54,12 @@ public class Constants {
 
   public static final String LOGIN =
       new String(
-              " SELECT                  "
-                  + "     password            "
-                  + " FROM                    "
-                  + "     user                "
-                  + " WHERE                   "
-                  + "     email = ?           ")
+              " SELECT                 "
+                  + "     *            "
+                  + " FROM             "
+                  + "     user         "
+                  + " WHERE            "
+                  + "     email = ?    ")
           .replaceAll("\\s+", " ");
 
   public static final String USER_EXISTS =

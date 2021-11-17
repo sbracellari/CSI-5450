@@ -26,16 +26,18 @@ public class ArtTourService {
   public Map<String, String> login(String email) {
     Map<String, String> loginInfo = new HashMap<>();
     try {
-      String password = dao.login(email);
+      User user = dao.login(email);
       String jws =
           Jwts.builder()
               .setIssuer("Soffit")
-              .claim("email", email)
+              .claim("email", user.getEmail())
               .signWith(SignatureAlgorithm.HS256, SECRET)
               .compact();
       loginInfo.put("token", jws);
-      loginInfo.put("password", password);
-
+      loginInfo.put("email", user.getEmail());
+      loginInfo.put("fname", user.getFname());
+      loginInfo.put("lname", user.getLname());
+      loginInfo.put("password", user.getPassword());
       return loginInfo;
     } catch (EmptyResultDataAccessException e) {
       return loginInfo;
@@ -56,13 +58,13 @@ public class ArtTourService {
 
   public Map<String, String> registerUser(Map<String, String> user) {
     String email = user.get("email");
-    String fName = user.get("fName");
-    String lName = user.get("lName");
+    String fname = user.get("fname");
+    String lname = user.get("lname");
     String password = user.get("password");
 
-    Map<String, String> token = new HashMap<>();
+    Map<String, String> userInfo = new HashMap<>();
     if (checkUser(email) == null) {
-      dao.registerUser(email, fName, lName, password);
+      dao.registerUser(email, fname, lname, password);
       dao.addConsumer(email);
 
       String jws =
@@ -71,11 +73,20 @@ public class ArtTourService {
               .claim("email", email)
               .signWith(SignatureAlgorithm.HS256, SECRET)
               .compact();
-      token.put("token", jws);
-      return token;
+      userInfo.put("token", jws);
+      userInfo.put("email", email);
+      userInfo.put("fname", fname);
+      userInfo.put("lname", lname);
+      userInfo.put("password", password);
+      return userInfo;
     }
-    token.put("token", null);
-    return token;
+
+    userInfo.put("token", null);
+    userInfo.put("email", null);
+    userInfo.put("fname", null);
+    userInfo.put("lname", null);
+    userInfo.put("password", null);
+    return userInfo;
   }
 
   public void addLocation(Map<String, String> location) {
@@ -199,11 +210,11 @@ public class ArtTourService {
   }
 
   public void updateUser(String email, Map<String, String> user) {
-    String fName = user.get("fName");
-    String lName = user.get("lName");
+    String fname = user.get("fname");
+    String lname = user.get("lname");
     String password = user.get("password");
 
-    dao.updateUser(email, fName, lName, password);
+    dao.updateUser(email, fname, lname, password);
   }
 
   public List<Tour> getToursForUser(String email) {

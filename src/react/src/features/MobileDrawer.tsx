@@ -114,7 +114,7 @@ export function MobileDrawer() {
                     </ListItemIcon>
                     <ListItemText primary='My Account' />
                   </ListItemButton>
-                  <ListItemButton onClick={() => logout()} component={Link} to='/login'>
+                  <ListItemButton onClick={() => dispatch(logout())} component={Link} to='/login'>
                     <ListItemIcon>
                       <LogoutIcon />
                     </ListItemIcon>
