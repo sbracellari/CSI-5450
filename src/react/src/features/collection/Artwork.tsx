@@ -14,7 +14,7 @@ import { addToTour, favoriteArtwork, deleteFavoriteArtwork, getUserFavorites } f
 export function Artwork(props: { artwork: ArtworkType }) {
     const { artwork } = props;
     const dispatch = useAppDispatch();
-    const isLoggedIn = true;//@todo: get user 
+    const isLoggedIn = localStorage.getItem('token');//@todo: get user 
     const [open, setOpen] = useState(false);
     const [tourId, setTourId] = useState(0);
 

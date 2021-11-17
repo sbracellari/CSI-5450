@@ -39,7 +39,7 @@ export function Tour(props: { tour: TourType; isPublic: boolean; }) {
     const [activeStep, setActiveStep] = useState(0);
     const [disabled, setDisabled] = useState(true);
     const maxSteps = tour.artworks.length;
-    const isLoggedIn = true; //todo: check user login
+    const isLoggedIn = localStorage.getItem('token'); //todo: check user login in state
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
