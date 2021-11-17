@@ -9,7 +9,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 interface TourCardProps {
     artwork: Artwork;
     isPublic: boolean;
-    tourId: number;
+    tourId: number | null;
 }
 
 export function TourCard(props: TourCardProps) {

@@ -15,7 +15,7 @@ public class Constants {
                   + "     NATURAL JOIN artwork_has_creator ac    "
                   + "     NATURAL JOIN creator c                 "
                   + "     NATURAL JOIN location l                "
-                  + " LIMIT 500                                  ")
+                  + " LIMIT 50                                   ")
           .replaceAll("\\s+", " ");
 
   public static final String GET_ALL_LOCATIONS =

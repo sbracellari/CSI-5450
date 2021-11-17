@@ -9,28 +9,34 @@ import AddIcon from '@mui/icons-material/Add';
 import { Redirect } from 'react-router-dom';
 
 
-export function Tours(props: { isPublic: boolean, tours: any }) {
-    const { isPublic, tours } = props;
-    const { data, isError, isLoading, isFetching } = tours
+export function Tours(props: { isPublic: boolean }) {
+    const { isPublic } = props;
     const { isLoggedIn } = useAppSelector(state => state.auth);
+
+    let tours;
+    if (isPublic) {
+        tours = getPublicTours();
+    } else {
+        tours = getToursForUser();
+    }    
 
     if (!isLoggedIn) {
         return <Redirect to='/login' />;
     }
 
-    if (isFetching || isLoading) {
+    if (tours.isFetching || tours.isLoading) {
         return (
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                 <CircularProgress />
             </Box>);
     }
-    if (!data || isError) {
+    if (!tours.data || tours.isError) {
         return (
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
                 An error occurred.
             </Box>);
     }
-    if(data.length === 0) {
+    if(tours.data.length === 0) {
         return (
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
                 No tours to display.
@@ -39,7 +45,7 @@ export function Tours(props: { isPublic: boolean, tours: any }) {
     return (
         <>
             <Grid container spacing={1} alignContent="center" flexDirection="column" >
-                {data.map((tour: TourType, index: any) => {
+                {tours.data.map((tour: TourType, index: any) => {
                     return <Tour key={tour.tourId} tour={tour} isPublic={isPublic} />
                 })}
             </Grid >

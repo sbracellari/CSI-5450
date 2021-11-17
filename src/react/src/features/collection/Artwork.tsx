@@ -21,15 +21,14 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { Tour } from '../../app/types';
-import { addToTour } from '../../services/api';
+import { addToTour, getToursForUser } from '../../services/api';
 
 interface ArtworkProps {
     artwork: ArtworkType;
-    tours: Tour[];
 }
 
 export function Artwork(props: ArtworkProps) {
-    const { artwork, tours } = props;
+    const { artwork } = props;
     const dispatch = useAppDispatch();
     const { isLoggedIn } = useAppSelector(state => state.auth); 
     const handleFavorite = (artworkId: string) => {
@@ -39,6 +38,7 @@ export function Artwork(props: ArtworkProps) {
 
     const [open, setOpen] = useState(false);
     const [tourId, setTourId] = useState(0);
+    const { data: tours } = getToursForUser();
 
     const handleSubmit = (tourId: number, artworkId: string) => {
         setOpen(false);

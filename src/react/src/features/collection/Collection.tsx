@@ -2,17 +2,12 @@
 import { Grid, Typography, CircularProgress } from "@mui/material";
 import { Artwork } from './Artwork';
 import { getCollection } from '../../services/api';
-import { data as collectionData } from '../../services/collectionApi';
 import { useAppSelector } from "../../app/hooks";
 import { Redirect } from "react-router-dom";
 
-export function Collection(props: { tours: any }) {
-  //const { data: collection, isError, isLoading, isFetching } = getCollection();
-  //temp data
-  const { tours } = props;
-
+export function Collection() {
   const { isLoggedIn } = useAppSelector(state => state.auth);
-  const { data: collection, isError, isLoading, isFetching } = { data: collectionData, isLoading: false, isError: false, isFetching: false }
+  const { data: collection, isError, isFetching, isLoading } = getCollection();
 
   let component;
 
@@ -25,10 +20,10 @@ export function Collection(props: { tours: any }) {
   } else {
     //@todo: fix centering of the artworks
     component = (
-      collection.map((artwork, index) => {
+      collection?.map((artwork, index) => {
         return (
           <Grid key={`${index}_${artwork.title}`} item xs={11} >
-            <Artwork tours={tours.data} artwork={artwork} />
+            <Artwork artwork={artwork} />
           </Grid>
         )
       }));
