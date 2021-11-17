@@ -10,7 +10,6 @@ import { Register } from '../auth/Register';
 import { Tours } from '../tour/Tours';
 import { TourStepper } from '../tour/TourStepper';
 import { Admin } from '../admin/Admin';
-import { AccountInfo } from '../auth/AccountInfo';
 import { EditAccount } from '../auth/EditAccount';
 import { MobileDrawer } from '../MobileDrawer';
 import { getPublicTours, getToursForUser } from "../../services/api";

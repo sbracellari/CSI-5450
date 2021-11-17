@@ -1,4 +1,4 @@
-import { Artwork, Favorite, Tour, Location, Creator } from './../app/types';
+import { Artwork, Favorite, Tour, Location, Creator, User, UpdateUser } from './../app/types';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import auth from "./auth";
 
@@ -6,7 +6,9 @@ import auth from "./auth";
 const API_URL = "http://localhost:8080/v1/";
 const baseQuery = fetchBaseQuery({ baseUrl: API_URL });
 const headers = {
-    Authorization: 'Bearer ' + auth.authHeader().token
+    Authorization: 'Bearer ' + auth.authHeader().token,
+    Accept: 'application/json',
+    'Content-Type': 'application/json'
 };
 
 export const api = createApi({
@@ -205,15 +207,6 @@ export const api = createApi({
                 headers: headers
             }),
         }),
-        updateUser: builder.mutation({
-            query: ({ fname, lname, password }) => ({
-                url: `user/update`,
-                method: 'POST',
-                mode: 'cors',
-                body: JSON.stringify({ fname, lname, password }),
-                headers: headers
-            }),
-        }),
     })
 })
 
@@ -243,5 +236,4 @@ export const {
     useUpdateLocationMutation: updateLocation,
     useUpdateTourMutation: updateTour,
     useDeleteUserMutation: deleteUser,
-    useUpdateUserMutation: updateUser
 } = api;

@@ -1,5 +1,5 @@
 import authService from '../../services/auth';
-import { User, UserState, LoginUser, RegisterUser } from '../../app/types';
+import { User, UserState, LoginUser, RegisterUser, UpdateUser } from '../../app/types';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 const token = localStorage.getItem('token');
@@ -36,10 +36,19 @@ export const login = createAsyncThunk(
     }
 );
 
+
 export const logout = createAsyncThunk(
     'auth/logout',
     async () => {
         const response = await authService.logout();
+        return response;
+    }
+);
+
+export const updateUser = createAsyncThunk(
+    'auth/update',
+    async (user: UpdateUser) => {
+        const response = await authService.updateUser(user);
         return response;
     }
 );
@@ -82,14 +91,12 @@ const authSlice = createSlice({
                 state.status = 'idle';
                 state.user = action.payload;
                 console.log('log in successful', action.payload);
-
             })
             .addCase(login.rejected, (state, action) => {
                 state.isLoggedIn = false;
                 state.status = 'failed';
                 state.message = 'Unable to login at this time.';
                 console.log('log in failed', action);
-
             })
             .addCase(logout.pending, (state) => {
                 state.isLoggedIn = true;
@@ -105,6 +112,23 @@ const authSlice = createSlice({
                 state.isLoggedIn = true;
                 state.status = 'failed';
                 state.message = action.payload;
+            })
+            .addCase(updateUser.pending, (state) => {
+                console.log('update pending');
+                state.isLoggedIn = true;
+                state.status = 'loading';
+            })
+            .addCase(updateUser.fulfilled, (state, action) => {
+                state.isLoggedIn = true;
+                state.status = 'idle';
+                state.user = action.payload;
+                console.log('update successful', action.payload);
+            })
+            .addCase(updateUser.rejected, (state, action) => {
+                state.isLoggedIn = true;
+                state.status = 'failed';
+                state.message = 'Unable to update your information at this time.';
+                console.log('update failed', action);
             })
     },
 });
