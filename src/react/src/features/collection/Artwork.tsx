@@ -1,21 +1,15 @@
 import { Artwork as ArtworkType } from "../../app/types";
 import {
     Box, Button, Card, CardActions, CardContent, CardMedia, Chip, IconButton, Typography, DialogContent,
-    ListItemIcon, ListItemButton, DialogActions
+    DialogActions, DialogTitle, Dialog, RadioGroup, FormLabel, FormControl
 } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { Link } from 'react-router-dom';
 import { useAppDispatch } from "../../app/hooks";
-import DialogTitle from '@mui/material/DialogTitle';
-import Dialog from '@mui/material/Dialog';
 import React, { useState } from 'react';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 import { Tour } from '../../app/types';
-import { addToTour, favoriteArtwork, deleteFavoriteArtwork, api } from '../../services/api';
+import { addToTour, favoriteArtwork, deleteFavoriteArtwork, getUserFavorites } from '../../services/api';
 
 export function Artwork(props: { artwork: ArtworkType }) {
     const { artwork } = props;
@@ -23,22 +17,25 @@ export function Artwork(props: { artwork: ArtworkType }) {
     const isLoggedIn = true;//@todo: get user 
     const [
         addFavorite,
-        { isLoading: isAdded },
     ] = favoriteArtwork()
     const [
         deleteFavorite,
-        { isLoading: isRemoved },
     ] = deleteFavoriteArtwork()
-    const {data: favorites} = api.endpoints.getUserFavorites.useQueryState({ skipToken: true });
+
+    const { data: favorites } = getUserFavorites({ skipToken: true });
 
     const handleFavorite = (artworkId: string) => {
-        //@todo: check user artwork favorites and filter throwgh them 
-        const isFavorite =  favorites?.favoriteArtworks.find((item: ArtworkType) => item.artworkId === artworkId);
-        console.log("favorite", favorites.favoriteArtworks, artworkId);
-        isFavorite ? deleteFavorite(artworkId) : addFavorite(artworkId);
-        console.log('handle favorites', isFavorite);
-    }
+        const isFavorite = favorites?.favoriteArtworks.find((item: ArtworkType) => item.artworkId === artworkId);
+        return isFavorite ? (
+            <IconButton aria-label="add to favorites" onClick={() => deleteFavorite(artwork.artworkId)}>
+                <FavoriteIcon />
+            </IconButton>)
+            :
+            (<IconButton aria-label="add to favorites" onClick={() => addFavorite(artwork.artworkId)}>
+                <FavoriteBorderIcon />
+            </IconButton>);
 
+    }
     const [open, setOpen] = useState(false);
     const [tourId, setTourId] = useState(0);
 
@@ -78,9 +75,7 @@ export function Artwork(props: { artwork: ArtworkType }) {
                     </Box>
                 </Box>
                 <CardActions>
-                    {isLoggedIn && <IconButton aria-label="add to favorites" onClick={() => handleFavorite(artwork.artworkId)}>
-                        <FavoriteIcon />
-                    </IconButton>}
+                    {isLoggedIn && handleFavorite(artwork.artworkId)}
                     <Button size="small" aria-label="view details"
                         component={Link} to={`/details?id=${artwork.artworkId}`}
                         onClick={() => console.log('view detail')}
