@@ -4,19 +4,18 @@ import { Artwork } from './Artwork';
 import { getCollection } from '../../services/api';
 import { data as collectionData } from '../../services/collectionApi';
 
-export function Collection(props: { tours: any }) {
-  //const { data: collection, isError, isLoading, isFetching } = getCollection();
+export function Collection() {
+  const { data: collection, isError, isLoading, isFetching } = getCollection();
   //temp data
-  const { tours } = props;
 
-  const { data: collection, isError, isLoading, isFetching } = { data: collectionData, isLoading: false, isError: false, isFetching: false }
+  //const { data: collection, isError, isLoading, isFetching } = { data: collectionData, isLoading: false, isError: false, isFetching: false }
 
   let component;
 
 
   if (isFetching || isLoading) {
     component = <CircularProgress />;
-  } else if (isError) {
+  } else if (!collection || isError) {
     component = <Typography>An error occured</Typography>;
   } else {
     //@todo: fix centering of the artworks
@@ -24,7 +23,7 @@ export function Collection(props: { tours: any }) {
       collection.map((artwork, index) => {
         return (
           <Grid key={`${index}_${artwork.title}`} item xs={11} >
-            <Artwork tours={tours.data} artwork={artwork} />
+            <Artwork artwork={artwork} />
           </Grid>
         )
       }));

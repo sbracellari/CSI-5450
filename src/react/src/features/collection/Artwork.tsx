@@ -1,19 +1,13 @@
 import { Artwork as ArtworkType } from "../../app/types";
-import { Box, Button, Card, CardActions, CardContent, CardMedia, Chip, IconButton, Typography, DialogContent,
+import {
+    Box, Button, Card, CardActions, CardContent, CardMedia, Chip, IconButton, Typography, DialogContent,
     ListItemIcon, ListItemButton, DialogActions
 } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { Link } from 'react-router-dom';
 import { useAppDispatch } from "../../app/hooks";
-import Avatar from '@mui/material/Avatar';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
-import PersonIcon from '@mui/icons-material/Person';
-import AddIcon from '@mui/icons-material/Add';
 import React, { useState } from 'react';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
@@ -21,20 +15,28 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { Tour } from '../../app/types';
-import { addToTour } from '../../services/api';
+import { addToTour, favoriteArtwork, deleteFavoriteArtwork, api } from '../../services/api';
 
-interface ArtworkProps {
-    artwork: ArtworkType;
-    tours: Tour[];
-}
-
-export function Artwork(props: ArtworkProps) {
-    const { artwork, tours } = props;
+export function Artwork(props: { artwork: ArtworkType }) {
+    const { artwork } = props;
     const dispatch = useAppDispatch();
     const isLoggedIn = true;//@todo: get user 
+    const [
+        addFavorite,
+        { isLoading: isAdded },
+    ] = favoriteArtwork()
+    const [
+        deleteFavorite,
+        { isLoading: isRemoved },
+    ] = deleteFavoriteArtwork()
+    const {data: favorites} = api.endpoints.getUserFavorites.useQueryState({ skipToken: true });
+
     const handleFavorite = (artworkId: string) => {
         //@todo: check user artwork favorites and filter throwgh them 
-        console.log('handle favorites');
+        const isFavorite =  favorites?.favoriteArtworks.find((item: ArtworkType) => item.artworkId === artworkId);
+        console.log("favorite", favorites.favoriteArtworks, artworkId);
+        isFavorite ? deleteFavorite(artworkId) : addFavorite(artworkId);
+        console.log('handle favorites', isFavorite);
     }
 
     const [open, setOpen] = useState(false);
@@ -43,70 +45,70 @@ export function Artwork(props: ArtworkProps) {
     const handleSubmit = (tourId: number, artworkId: string) => {
         setOpen(false);
         console.log(tourId)
-        // dispatch(addToTour({ tourId, artworkId }));
+        // dispatch(addToTour, addTo({ tourId, artworkId }));
     };
 
     return (
         <>
-        <Card variant="elevation" sx={{ pb: 2, maxWidth: 400 }}>
-            <CardMedia
-                component="img"
-                sx={{ width: 200 }}
-                image="../../../public/logo512.png"
-            />
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <CardContent >
-                    <Typography component="div" variant="h6" display='inline'>
-                        {`${artwork.title}, `}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" component="div" display='inline'>
-                        {artwork.creationDate}
-                    </Typography>
-                    <Typography variant="subtitle1" component="div">
-                        {artwork.creator.fullName}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" component="div">
-                        {artwork.creator.nationality}, {artwork.creator.birthDate} - {artwork.creator.deathDate}
-                    </Typography>
+            <Card variant="elevation" sx={{ pb: 2, maxWidth: 400 }}>
+                <CardMedia
+                    component="img"
+                    sx={{ width: 200 }}
+                    image="../../../public/logo512.png"
+                />
+                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <CardContent >
+                        <Typography component="div" variant="h6" display='inline'>
+                            {`${artwork.title}, `}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" component="div" display='inline'>
+                            {artwork.creationDate}
+                        </Typography>
+                        <Typography variant="subtitle1" component="div">
+                            {artwork.creator.fullName}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" component="div">
+                            {artwork.creator.nationality}, {artwork.creator.birthDate} - {artwork.creator.deathDate}
+                        </Typography>
 
-                </CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', pl: 1, pb: 1, gap: 2 }}>
-                    {artwork.medium && <Chip color="info" label={artwork.medium} />}
-                    {artwork.classification && <Chip color="secondary" label={artwork.classification} />}
+                    </CardContent>
+                    <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', pl: 1, pb: 1, gap: 2 }}>
+                        {artwork.medium && <Chip color="info" label={artwork.medium} />}
+                        {artwork.classification && <Chip color="secondary" label={artwork.classification} />}
+                    </Box>
                 </Box>
-            </Box>
-            <CardActions>
-                {isLoggedIn && <IconButton aria-label="add to favorites" onClick={() => handleFavorite(artwork.artworkId)}>
-                    <FavoriteIcon />
-                </IconButton>}
-                <Button size="small" aria-label="view details"
-                    component={Link} to={`/details?id=${artwork.artworkId}`}
-                    onClick={() => console.log('view detail')}
-                >Details</Button>
-                <Button onClick={() => setOpen(true)} size="small" aria-label="add to tour">Add to tour</Button>
-            </CardActions>
-        </Card>
+                <CardActions>
+                    {isLoggedIn && <IconButton aria-label="add to favorites" onClick={() => handleFavorite(artwork.artworkId)}>
+                        <FavoriteIcon />
+                    </IconButton>}
+                    <Button size="small" aria-label="view details"
+                        component={Link} to={`/details?id=${artwork.artworkId}`}
+                        onClick={() => console.log('view detail')}
+                    >Details</Button>
+                    <Button onClick={() => setOpen(true)} size="small" aria-label="add to tour">Add to tour</Button>
+                </CardActions>
+            </Card>
 
-        <Dialog onClose={() => setOpen(false)} open={open}>
-            <DialogTitle>Choose Tour</DialogTitle>
-            <DialogContent>
-                <FormControl component="fieldset">
-                    <FormLabel sx={{mb: 1}} component="legend">Choose which tour you'd like to add this artwork to</FormLabel>
-                    <RadioGroup
-                        value={tourId}
-                        onChange={event => setTourId(parseInt(event.target.value))}
-                    >
-                        {tours?.map(tour => (
-                            <FormControlLabel value={tour.tourId} control={<Radio />} label={tour.tourName} />
-                        ))}
-                    </RadioGroup>
-                </FormControl>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={() => setOpen(false)}>Cancel</Button>
-                <Button disabled={tourId === 0} onClick={() => handleSubmit(tourId, artwork.artworkId)}>Add</Button>
-            </DialogActions>
-        </Dialog>
+            <Dialog onClose={() => setOpen(false)} open={open}>
+                <DialogTitle>Choose Tour</DialogTitle>
+                <DialogContent>
+                    <FormControl component="fieldset">
+                        <FormLabel sx={{ mb: 1 }} component="legend">Choose which tour you'd like to add this artwork to</FormLabel>
+                        <RadioGroup
+                            value={tourId}
+                            onChange={event => setTourId(parseInt(event.target.value))}
+                        >
+                            {/* {tours?.map(tour => (
+                                <FormControlLabel value={tour.tourId} control={<Radio />} label={tour.tourName} />
+                            ))} */}
+                        </RadioGroup>
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpen(false)}>Cancel</Button>
+                    <Button disabled={tourId === 0} onClick={() => handleSubmit(tourId, artwork.artworkId)}>Add</Button>
+                </DialogActions>
+            </Dialog>
 
         </>
     )
