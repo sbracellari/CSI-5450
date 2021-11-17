@@ -14,15 +14,19 @@ const headers = {
 export const api = createApi({
     reducerPath: 'api',
     baseQuery,
-    tagTypes: ['Artwork', 'Favorites'],
+    tagTypes: ['Artwork', 'Favorites', 'Tours'],
     endpoints: (builder) => ({
         getCollection: builder.query<Artwork[], void>({
             query: () => 'collection',
-            providesTags: ['Artwork']
-
+            providesTags: (result) =>
+                result ? result.map(({ artworkId }) => ({ type: 'Artwork', id: artworkId })) : ['Artwork'],
         }),
         getPublicTours: builder.query<Tour[], void>({
-            query: () => 'tours'
+            query: () => 'tours',
+            providesTags: ['Tours'],
+            // providesTags: (result) =>
+            // result ? result.map(({ tourId }) => ({ type: 'Tours', id: tourId })) : ['Tours'],
+
         }),
         getAllLocations: builder.query<Location[], void>({
             query: () => 'locations'
@@ -140,8 +144,8 @@ export const api = createApi({
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('token')
                 },
+                invalidatesTags: [{ type: 'Artwork', id: artworkId }, 'Favorites']
             }),
-            invalidatesTags: ['Artwork', 'Favorites']
         }),
         favoriteCreator: builder.mutation({
             query: (creatorId: number) => ({
@@ -154,7 +158,8 @@ export const api = createApi({
             }),
         }),
         favoriteTour: builder.mutation({
-            query: (tourId: number) => ({
+            //@todo: how to avoid passing null
+            query: (tourId: number | null) => ({
                 url: `consumer/favorites/tour/${tourId}`,
                 method: 'POST',
                 mode: 'cors',
@@ -162,6 +167,7 @@ export const api = createApi({
                     Authorization: 'Bearer ' + localStorage.getItem('token')
                 }
             }),
+            invalidatesTags: ['Tours', 'Favorites']
         }),
         deleteFavoriteArtwork: builder.mutation({
             query: (artworkId: string) => ({
@@ -185,7 +191,7 @@ export const api = createApi({
             }),
         }),
         deleteFavoriteTour: builder.mutation({
-            query: (tourId: number) => ({
+            query: (tourId: number | null) => ({
                 url: `consumer/favorites/tour/${tourId}/removal`,
                 method: 'POST',
                 mode: 'cors',
@@ -193,6 +199,7 @@ export const api = createApi({
                     Authorization: 'Bearer ' + localStorage.getItem('token')
                 }
             }),
+            invalidatesTags: ['Tours', 'Favorites']
         }),
         getToursForUser: builder.query<Tour[], void>({
             query: () => ({
@@ -203,6 +210,7 @@ export const api = createApi({
                     Authorization: 'Bearer ' + localStorage.getItem('token')
                 }
             }),
+            providesTags: ['Tours']
         }),
         createTour: builder.mutation({
             query: (tourName: string) => ({
