@@ -15,27 +15,6 @@ export function Artwork(props: { artwork: ArtworkType }) {
     const { artwork } = props;
     const dispatch = useAppDispatch();
     const isLoggedIn = true;//@todo: get user 
-    const [
-        addFavorite,
-    ] = favoriteArtwork()
-    const [
-        deleteFavorite,
-    ] = deleteFavoriteArtwork()
-
-    const { data: favorites } = getUserFavorites({ skipToken: true });
-
-    const handleFavorite = (artworkId: string) => {
-        const isFavorite = favorites?.favoriteArtworks.find((item: ArtworkType) => item.artworkId === artworkId);
-        return isFavorite ? (
-            <IconButton aria-label="add to favorites" onClick={() => deleteFavorite(artwork.artworkId)}>
-                <FavoriteIcon />
-            </IconButton>)
-            :
-            (<IconButton aria-label="add to favorites" onClick={() => addFavorite(artwork.artworkId)}>
-                <FavoriteBorderIcon />
-            </IconButton>);
-
-    }
     const [open, setOpen] = useState(false);
     const [tourId, setTourId] = useState(0);
 
@@ -75,7 +54,7 @@ export function Artwork(props: { artwork: ArtworkType }) {
                     </Box>
                 </Box>
                 <CardActions>
-                    {isLoggedIn && handleFavorite(artwork.artworkId)}
+                    {isLoggedIn && FavoriteButton(artwork)}
                     <Button size="small" aria-label="view details"
                         component={Link} to={`/details?id=${artwork.artworkId}`}
                         onClick={() => console.log('view detail')}
@@ -108,3 +87,25 @@ export function Artwork(props: { artwork: ArtworkType }) {
         </>
     )
 };
+
+const FavoriteButton = (artwork: ArtworkType) => {
+    const [
+        addFavorite,
+    ] = favoriteArtwork()
+    const [
+        deleteFavorite,
+    ] = deleteFavoriteArtwork()
+
+    const { data: favorites } = getUserFavorites({ skipToken: true });
+
+    const isFavorite = favorites?.favoriteArtworks.find((item: ArtworkType) => item.artworkId === artwork.artworkId);
+    return isFavorite ? (
+        <IconButton aria-label="add to favorites" onClick={() => deleteFavorite(artwork.artworkId)}>
+            <FavoriteIcon />
+        </IconButton>)
+        :
+        (<IconButton aria-label="add to favorites" onClick={() => addFavorite(artwork.artworkId)}>
+            <FavoriteBorderIcon />
+        </IconButton>);
+
+}
