@@ -1,17 +1,45 @@
-import { getPublicTours, getToursForUser } from "../../services/api";
-import { Box, Grid, CircularProgress, Typography, Tooltip } from "@mui/material";
-import { data } from "../../services/tourApi";
+import { createTour, getPublicTours, getToursForUser } from "../../services/api";
+import { 
+    Box, 
+    Grid, 
+    CircularProgress, 
+    Tooltip,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    TextField,
+    FormControl,
+    Button
+} from "@mui/material";
 import { Tour } from "./Tour";
 import { useAppSelector } from "../../app/hooks";
 import { Tour as TourType } from "../../app/types";
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import { Redirect } from 'react-router-dom';
+import React, { useState } from 'react';
 
 
 export function Tours(props: { isPublic: boolean }) {
     const { isPublic } = props;
     const { isLoggedIn } = useAppSelector(state => state.auth);
+    const [open, setOpen] = useState(false);
+    const [tourName, setTourName] = useState('');
+    const [nameErr, setNameErr] = useState(false);
+
+    const [
+        createNewTour
+    ] = createTour();
+
+    const handleTourCreate = () => {
+        if (tourName === null || tourName.length === 0) {
+            setNameErr(true);
+        } else {
+            createNewTour(tourName);
+            setOpen(false);
+        }
+    }
 
     let tours;
     if (isPublic) {
@@ -51,11 +79,42 @@ export function Tours(props: { isPublic: boolean }) {
             </Grid >
             {!isPublic && (
                 <Tooltip title='Create new tour' placement='left'>
-                    <Fab size='small' color="primary" aria-label="add" sx={{position: 'fixed', right: 15, bottom: 15}}>
+                    <Fab 
+                        size='small' 
+                        color="primary" 
+                        aria-label="add" 
+                        sx={{position: 'fixed', right: 15, bottom: 15}}
+                        onClick={() => setOpen(true)}
+                    >
                         <AddIcon />
                     </Fab>
                 </Tooltip>
             )}
+            <Dialog onClose={() => setOpen(false)} open={open}>
+            <DialogTitle>Create a new tour</DialogTitle>
+            <DialogContent>
+                <FormControl component="fieldset">
+                    <TextField 
+                        sx={{width: '300px'}}
+                        placeholder='Tour name'
+                        onChange={e => setTourName(e.target.value)}
+                        variant='standard'
+                        error={nameErr}
+                        helperText={
+                            nameErr
+                                ? 'Tour name cannot be empty'
+                                : ''
+                        }
+                    />
+                </FormControl>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={() => setOpen(false)}>Cancel</Button>
+                <Button 
+                  onClick={() => handleTourCreate()}
+                >Save</Button>
+            </DialogActions>
+        </Dialog>
         </>
     )
 };

@@ -29,7 +29,6 @@ interface ArtworkProps {
 
 export function Artwork(props: ArtworkProps) {
     const { artwork } = props;
-    const dispatch = useAppDispatch();
     const { isLoggedIn } = useAppSelector(state => state.auth); 
     const handleFavorite = (artworkId: string) => {
         //@todo: check user artwork favorites and filter throwgh them 
@@ -40,10 +39,14 @@ export function Artwork(props: ArtworkProps) {
     const [tourId, setTourId] = useState(0);
     const { data: tours } = getToursForUser();
 
+    const [
+        addArtworkToTour
+    ] = addToTour()
+
     const handleSubmit = (tourId: number, artworkId: string) => {
         setOpen(false);
         console.log(tourId)
-        // dispatch(addToTour({ tourId, artworkId }));
+        addArtworkToTour({ tourId, artworkId });
     };
 
     if (!isLoggedIn) {

@@ -164,7 +164,6 @@ public class ArtTourController {
   public void deleteTour(HttpServletRequest request, @PathVariable int tourId)
       throws SoffitAuthException {
     String email = authorizer.getClaimFromJWT(request, "email").asString();
-    service.checkAdmin(email);
     dao.deleteTour(tourId);
   }
 

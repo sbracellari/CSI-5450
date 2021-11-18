@@ -92,7 +92,7 @@ export const api = createApi({
             }),
         }),
         deleteTour: builder.mutation({
-            query: (tourId: number) => ({
+            query: (tourId: number | null) => ({
                 url: `tour/${tourId}/removal`,
                 method: 'POST',
                 mode: 'cors',

@@ -180,8 +180,14 @@ const DropdownButton = (tour: TourType) => {
     const handleDropdown = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         setAnchorEl(event.currentTarget);
     };
-    const dispatch = useAppDispatch();
 
+    const [
+        editTourName
+    ] = updateTour()
+
+    const [
+        removeTour
+    ] = deleteTour()
 
     const handleClose = () => {
         //@todo: create handlers for edit/delete/favorite
@@ -191,9 +197,13 @@ const DropdownButton = (tour: TourType) => {
     const handleSave = (tourId: number | null, tourName: string | null) => {
         setModalOpen(false);
         setAnchorEl(null);
-        console.log(tourName, tour.tourId);
-        // dispatch(updateTour({ tourName, tourId })); // how to call this?
+        editTourName({ tourName, tourId }); 
     };
+
+    const handleDelete = (tourId: number | null) => {
+        console.log(tourId);
+        removeTour(tourId);
+    }
 
     const [modalOpen, setModalOpen] = useState(false);
     const [tourName, setTourName] = useState(tour.tourName);
@@ -216,7 +226,7 @@ const DropdownButton = (tour: TourType) => {
                     <ListItemText primary='Edit Name' />
                 </MenuItem>
                 <MenuItem 
-                    // onClick={() => dispatch(deleteTour(tourId))} // how to call this?
+                    onClick={() => handleDelete(tour.tourId)}
                 >
                     <ListItemIcon>
                         <DeleteIcon />

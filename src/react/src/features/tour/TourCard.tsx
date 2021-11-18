@@ -14,7 +14,14 @@ interface TourCardProps {
 
 export function TourCard(props: TourCardProps) {
     const { artwork, isPublic, tourId } = props;
-    const dispatch = useAppDispatch();
+
+    const [
+        deleteArtworkFromTour
+    ] = deleteFromTour()
+
+    const handleDelete = (tourId: number | null, artworkId: string) => {
+        deleteArtworkFromTour({ tourId, artworkId });
+    }
 
     //@todo: add more details for each card
     const onView = artwork.location.physicalLocation !== 'Not on View';
@@ -40,7 +47,7 @@ export function TourCard(props: TourCardProps) {
                     
                     <Tooltip title='Delete from tour' placement='bottom'>
                         <IconButton 
-                            // onClick={() => dispatch(deleteFromTour({tourId, artwork.artworkId}))} // how to call?
+                            onClick={() => handleDelete(tourId, artwork.artworkId)}
                         >
                             <DeleteIcon />
                         </IconButton>
