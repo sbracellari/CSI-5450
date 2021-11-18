@@ -1,5 +1,5 @@
 import axios, { AxiosRequestHeaders } from "axios";
-import { LoginUser, RegisterUser } from "../app/types";
+import { LoginUser, RegisterUser, UpdateUser } from "../app/types";
 
 const API_URL = "http://localhost:8080/v1";
 
@@ -59,11 +59,36 @@ const logout = () => {
     })
 }
 
+const updateUser = (user: UpdateUser) => {
+    const userInfo = JSON.stringify({
+        fname: user.fname,
+        lname: user.lname,
+        password: user.password
+    });
+
+    return axios.post(API_URL + "/user/update", userInfo, {
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + authHeader().token   
+        }}).then((response) => {
+            const usr = {
+                email: response.data.email,
+                fname: response.data.fname,
+                lname: response.data.lname,
+                password: response.data.password,
+                token: localStorage.getItem('token')
+            }
+            localStorage.setItem('user', JSON.stringify(usr));
+            return response.data;
+    });
+}
+
 const authHeader = (): AxiosRequestHeaders => {
     const token = localStorage.getItem("token");
     const user = localStorage.getItem('user');
     return user && token ? { "token" : token } : {};  
 }
 
-const authService = { register, login, authHeader, logout };
+const authService = { register, login, authHeader, logout, updateUser };
 export default authService;

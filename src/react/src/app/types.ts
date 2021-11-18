@@ -72,6 +72,7 @@ export interface TabState {
 
 export type LoginUser = Partial<Pick<User, "fname" | "lname">> & Pick<User, "email" | "password">;
 export type RegisterUser = Partial<Pick<User, "email" | "fname" | "lname" | "password">>;
+export type UpdateUser = Partial<Pick<User, "fname" | "lname" | "password">>;
 
 export interface UserState {
     isLoggedIn: boolean,
