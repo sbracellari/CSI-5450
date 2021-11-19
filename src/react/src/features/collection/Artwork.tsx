@@ -1,7 +1,7 @@
 import { Artwork as ArtworkType } from "../../app/types";
 import {
     Box, Button, Card, CardActions, CardContent, CardMedia, Chip, IconButton, Typography, DialogContent,
-    DialogActions, DialogTitle, Dialog, RadioGroup, FormLabel, FormControl
+    DialogActions, DialogTitle, Dialog, RadioGroup, FormLabel, FormControl, SnackbarOrigin, Snackbar
 } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import { useAppDispatch } from "../../app/hooks";
 import React, { useState } from 'react';
 import { Tour } from '../../app/types';
-import { addToTour, favoriteArtwork, deleteFavoriteArtwork, getUserFavorites } from '../../services/api';
+import { addToTour, favoriteArtwork, deleteFavoriteArtwork, getUserFavorites, deleteArtwork } from '../../services/api';
 
 export function Artwork(props: { artwork: ArtworkType }) {
     const { artwork } = props;
@@ -89,23 +89,62 @@ export function Artwork(props: { artwork: ArtworkType }) {
 };
 
 const FavoriteButton = (artwork: ArtworkType) => {
-    const [
-        addFavorite,
-    ] = favoriteArtwork()
-    const [
-        deleteFavorite,
-    ] = deleteFavoriteArtwork()
 
+    const [
+        addFavArtwork,
+        {
+            isSuccess: addedFavArtwork,
+            isError: errorAddingFavArtwork
+        }
+    ] = favoriteArtwork();
+    const [
+        deleteFavArtwork,
+        {
+            isSuccess: deletedFavArtwork,
+            isError: errorDeletingFavArtwork
+        }
+    ] = deleteFavoriteArtwork();
+    const [alert, setAlert] = useState(false);
+
+    const handleClose = () => {
+        setAlert(false);
+    };
     const { data: favorites } = getUserFavorites({ skipToken: true });
-
+    let message;
     const isFavorite = favorites?.favoriteArtworks.find((item: ArtworkType) => item.artworkId === artwork.artworkId);
-    return isFavorite ? (
-        <IconButton aria-label="add to favorites" onClick={() => deleteFavorite(artwork.artworkId)}>
-            <FavoriteIcon />
-        </IconButton>)
-        :
-        (<IconButton aria-label="add to favorites" onClick={() => addFavorite(artwork.artworkId)}>
-            <FavoriteBorderIcon />
-        </IconButton>);
+    if (addedFavArtwork) {
+        message = "Artwork added to favorites.";
+    }
+    if (errorAddingFavArtwork) {
+        message = "An error occured when adding a favorite an artwork.";
+    }
+    if (deletedFavArtwork) {
+        message = "Artwork deleted from favorites.";
+    }
+    if (errorDeletingFavArtwork) {
+        message = "An error occured when deleting an artwork from favorites.";
+    }
+//{deleteFavArtwork(artwork.artworkId);setAlert(true);}
+    return (
+        <>
+            {isFavorite ? (
+                <IconButton aria-label="add to favorites" onClick={() => deleteFavArtwork(artwork.artworkId)}>
+                    <FavoriteIcon />
+                </IconButton>)
+                :
+                (<IconButton aria-label="add to favorites" onClick={() => addFavArtwork(artwork.artworkId)}>
+                    <FavoriteBorderIcon />
+                </IconButton>)}
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                }}
+                open={alert}
+                onClose={handleClose}
+                message={message}
+            />
+        </>
+    );
 
 }
