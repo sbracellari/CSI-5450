@@ -18,8 +18,7 @@ export const api = createApi({
     endpoints: (builder) => ({
         getCollection: builder.query<Artwork[], void>({
             query: () => 'collection',
-            providesTags: (result) =>
-                result ? result.map(({ artworkId }) => ({ type: 'Artwork', id: artworkId })) : ['Artwork'],
+            providesTags: ['Artwork'],
         }),
         getPublicTours: builder.query<Tour[], void>({
             query: () => 'tours',
@@ -144,7 +143,7 @@ export const api = createApi({
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('token')
                 },
-                invalidatesTags: [{ type: 'Artwork', id: artworkId }, 'Favorites']
+                invalidatesTags: ['Artwork', 'Favorites']
             }),
         }),
         favoriteCreator: builder.mutation({
