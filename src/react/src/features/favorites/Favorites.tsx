@@ -1,5 +1,5 @@
 import { getUserFavorites } from "../../services/api";
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, CircularProgress, Typography, Grid, Chip, Divider } from "@mui/material";
 import { Artwork } from "../collection/Artwork";
 import { Tour } from "../tour/Tour";
 import { Creator } from "../collection/Creator";
@@ -30,25 +30,36 @@ export function Favorites() {
             </Box>);
     }
     return (
-        <Box>
+        <Box sx={{ mt: 2 }}>
             {favoriteArtworks.length !== 0 &&
-                <>
-                    <Typography>Favorite artworks</Typography>
-                    {favoriteArtworks.map((artwork: ArtworkType) => <Artwork artwork={artwork} />)}
-                </>
+                <Grid container spacing={1} sx={{ display: 'flex', alignContent: 'center', flexDirection: "column", mb: 2 }}>
+                    <Divider>
+                    <Typography gutterBottom variant="h6" component="div">
+                        Favorite Artworks
+                    </Typography>
+                    </Divider>
+                    {favoriteArtworks.map((artwork: ArtworkType) => <Grid item><Artwork artwork={artwork} /></Grid>)}
+                </Grid>
             }
             {favoriteCreators.length !== 0 &&
-                <>
-                    <Typography>Favorite creators</Typography>
-                    {favoriteCreators.map((creator: CreatorType) => <Creator creator={creator} />)}
-                </>
+                <Grid container spacing={1} sx={{ display: 'flex', alignContent: 'center', flexDirection: "column", mb: 2 }}>
+                    <Divider>
+                        <Typography gutterBottom variant="h6" component="div">
+                            Favorite Creators
+                        </Typography>
+                    </Divider>
+                    {favoriteCreators.map((creator: CreatorType) => <Grid item><Creator creator={creator} /></Grid>)}
+                </Grid >
             }
             {favoriteTours.length !== 0 &&
-                <>
-                    <Typography>Favorite tours</Typography>
-                    {favoriteTours.map((tour: TourType) => <Tour tour={tour} isPublic={false} />)}
-                </>
+                <Grid container spacing={1} sx={{ display: 'flex', alignContent: 'center', flexDirection: "column", mb: 2 }}>
+                    <Divider>
+                    <Typography gutterBottom variant="h6" component="div">
+                        Favorite Tours
+                    </Typography>
+                    </Divider>
+                    {favoriteTours.map((tour: TourType) => <Grid item><Tour tour={tour} isPublic={false} /></Grid>)}
+                </Grid>
             }
         </Box>);
-
 };
