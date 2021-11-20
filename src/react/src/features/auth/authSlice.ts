@@ -89,6 +89,7 @@ const authSlice = createSlice({
             .addCase(login.fulfilled, (state, action) => {
                 state.isLoggedIn = true;
                 state.status = 'idle';
+                state.message= '';
                 state.user = action.payload;
                 console.log('log in successful', action.payload);
             })
