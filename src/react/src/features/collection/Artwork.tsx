@@ -1,27 +1,19 @@
 import { Artwork as ArtworkType } from "../../app/types";
 import {
     Box, Button, Card, CardActions, CardContent, CardMedia, Chip, IconButton, Typography, DialogContent,
-    ListItemIcon, ListItemButton, DialogActions, FormHelperText
+    DialogActions, FormHelperText
 } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { Link, Redirect } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import Avatar from '@mui/material/Avatar';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemText from '@mui/material/ListItemText';
+import { useAppSelector } from "../../app/hooks";
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
-import PersonIcon from '@mui/icons-material/Person';
-import AddIcon from '@mui/icons-material/Add';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import { Tour } from '../../app/types';
 import { addToTour, getToursForUser } from '../../services/api';
 
 interface ArtworkProps {
@@ -46,7 +38,6 @@ export function Artwork(props: ArtworkProps) {
 
     const handleSubmit = (tourId: number, artworkId: string) => {
         setOpen(false);
-        console.log(tourId);
         setTourId(0);
         addArtworkToTour({ tourId, artworkId });
     };
@@ -54,7 +45,6 @@ export function Artwork(props: ArtworkProps) {
     const artworkInTour = (tourId: number | null, artworkId: string) => {
         const tour = tours?.find(tour => tour.tourId === tourId);
         const artwork = tour?.artworks.find(artwork => artwork.artworkId === artworkId);
-        console.log('inTour', artwork);
         return artwork ? true : false;
     }
     if (!isLoggedIn) {
