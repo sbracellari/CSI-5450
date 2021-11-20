@@ -14,12 +14,14 @@ const headers = {
 export const api = createApi({
     reducerPath: 'api',
     baseQuery,
+    tagTypes: ['Tour', 'Public Tour'],
     endpoints: (builder) => ({
         getCollection: builder.query<Artwork[], void>({
             query: () => 'collection'
         }),
         getPublicTours: builder.query<Tour[], void>({
-            query: () => 'tours'
+            query: () => 'tours',
+            providesTags: ['Public Tour'],
         }),
         getAllLocations: builder.query<Location[], void>({
             query: () => 'locations'
@@ -100,6 +102,7 @@ export const api = createApi({
                 mode: 'cors',
                 headers: headers
             }),
+            invalidatesTags: ['Tour', 'Public Tour']
         }),
         getUserFavorites: builder.query<Favorite, string>({
             query: () => ({
@@ -164,6 +167,7 @@ export const api = createApi({
                 mode: 'cors',
                 headers: headers
             }),
+            providesTags: ['Tour']
         }),
         createTour: builder.mutation({
             query: (tourName: string) => ({
@@ -173,6 +177,7 @@ export const api = createApi({
                 body: tourName,
                 headers: headers
             }),
+            invalidatesTags: ['Tour']
         }),
         addToTour: builder.mutation({
             query: ({ tourId, artworkId }) => ({
@@ -181,6 +186,7 @@ export const api = createApi({
                 mode: 'cors',
                 headers: headers
             }),
+            invalidatesTags: ['Tour']
         }),
         deleteFromTour: builder.mutation({
             query: ({ tourId, artworkId }) => ({
@@ -189,6 +195,7 @@ export const api = createApi({
                 mode: 'cors',
                 headers: headers
             }),
+            invalidatesTags: ['Tour']
         }),
         updateTour: builder.mutation({
             query: ({ tourName, tourId }) => ({
@@ -198,6 +205,7 @@ export const api = createApi({
                 body: tourName,
                 headers: headers
             }),
+            invalidatesTags: ['Tour', 'Public Tour']
         }),
         deleteUser: builder.mutation({
             query: (userEmail: string) => ({
