@@ -1,13 +1,13 @@
 
 import { Grid, Typography, CircularProgress } from "@mui/material";
 import { Artwork } from './Artwork';
-import { getCollection } from '../../services/api';
+import { useGetCollectionQuery } from '../../services/api';
 import { useAppSelector } from "../../app/hooks";
 import { Redirect } from "react-router-dom";
 
 export function Collection() {
   const { isLoggedIn } = useAppSelector(state => state.auth);
-  const { data: collection, isError, isFetching, isLoading } = getCollection();
+  const { data: collection, isError, isFetching, isLoading } = useGetCollectionQuery();
 
   let component;
 

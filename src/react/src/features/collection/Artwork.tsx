@@ -8,7 +8,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { Redirect } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useState } from 'react';
-import { addToTour, favoriteArtwork, deleteFavoriteArtwork, getUserFavorites, deleteArtwork, getToursForUser } from '../../services/api';
+import { useAddToTourMutation, useFavoriteArtworkMutation, useDeleteArtworkMutation, useGetUserFavoritesQuery, useGetToursForUserQuery } from '../../services/api';
 interface ArtworkProps {
     artwork: ArtworkType;
 }
@@ -20,11 +20,11 @@ export function Artwork(props: ArtworkProps) {
 
     const [open, setOpen] = useState(false);
     const [tourId, setTourId] = useState(0);
-    const { data: tours } = getToursForUser();
+    const { data: tours } = useGetToursForUserQuery();
 
     const [
         addArtworkToTour
-    ] = addToTour()
+    ] = useAddToTourMutation()
 
     const handleSubmit = (tourId: number, artworkId: string) => {
         setOpen(false);
@@ -63,7 +63,6 @@ export function Artwork(props: ArtworkProps) {
                         <Typography variant="body2" color="text.secondary" component="div">
                             {artwork.creator.nationality}, {artwork.creator.birthDate} - {artwork.creator.deathDate}
                         </Typography>
-
                     </CardContent>
                     <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', pl: 1, pb: 1, gap: 2 }}>
                         {artwork.medium && <Chip color="info" label={artwork.medium} />}
@@ -115,20 +114,20 @@ export const FavoriteButton = (artwork: ArtworkType) => {
             isSuccess: addedFavArtwork,
             isError: errorAddingFavArtwork
         }
-    ] = favoriteArtwork();
+    ] = useFavoriteArtworkMutation();
     const [
         deleteFavArtwork,
         {
             isSuccess: deletedFavArtwork,
             isError: errorDeletingFavArtwork
         }
-    ] = deleteFavoriteArtwork();
+    ] = useDeleteArtworkMutation();
     const [alert, setAlert] = useState(false);
 
     const handleClose = () => {
         setAlert(false);
     };
-    const { data: favorites } = getUserFavorites({ skipToken: true });
+    const { data: favorites } = useGetUserFavoritesQuery({ skipToken: true });
     let message;
     const isFavorite = favorites?.favoriteArtworks.find((item: ArtworkType) => item.artworkId === artwork.artworkId);
     if (addedFavArtwork) {

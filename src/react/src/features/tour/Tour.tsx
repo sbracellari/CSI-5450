@@ -29,7 +29,7 @@ import { Link, useHistory } from "react-router-dom";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import EditIcon from '@mui/icons-material/Edit';
 import TextField from '@mui/material/TextField';
-import { updateTour, deleteTour, favoriteTour, deleteFavoriteTour, getUserFavorites, deleteFromTour } from '../../services/api';
+import { useUpdateTourMutation, useDeleteTourMutation, useFavoriteTourMutation, useDeleteFavoriteTourMutation, useDeleteFromTourMutation, useGetUserFavoritesQuery } from '../../services/api';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -184,7 +184,7 @@ const DropdownButton = (tour: TourType) => {
 
     const [
         editTourName
-    ] = updateTour();
+    ] = useUpdateTourMutation();
     const [openArtworksModal, setOpenArtworksModal] = useState(false);
     const [
         removeTour, {
@@ -192,7 +192,7 @@ const DropdownButton = (tour: TourType) => {
             isSuccess,
             isError
         }
-    ] = deleteTour()
+    ] = useDeleteTourMutation()
 
     const handleClose = () => {
         //@todo: create handlers for edit/delete/favorite
@@ -207,7 +207,7 @@ const DropdownButton = (tour: TourType) => {
 
     const [
         deleteArtworkFromTour
-    ] = deleteFromTour();
+    ] = useDeleteFromTourMutation();
     return (
         <>
             <IconButton aria-label="more actions" onClick={handleDropdown}>
@@ -295,12 +295,12 @@ const FavoriteButton = (tour: TourType) => {
 
     const [
         addFavorite,
-    ] = favoriteTour()
+    ] = useFavoriteTourMutation()
     const [
         deleteFavorite,
-    ] = deleteFavoriteTour()
+    ] = useDeleteFavoriteTourMutation()
 
-    const { data: favorites } = getUserFavorites({ skipToken: true });
+    const { data: favorites } = useGetUserFavoritesQuery({ skipToken: true });
     const isFavorite = favorites?.favoriteTours.find((item: TourType) => item.tourId === tour.tourId);
 
     return isFavorite ?

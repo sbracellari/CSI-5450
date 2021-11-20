@@ -1,4 +1,4 @@
-import { getUserFavorites } from "../../services/api";
+import { useGetUserFavoritesQuery } from "../../services/api";
 import { Box, CircularProgress, Typography, Grid, Chip, Divider } from "@mui/material";
 import { Artwork } from "../collection/Artwork";
 import { Tour } from "../tour/Tour";
@@ -6,7 +6,7 @@ import { Creator } from "../collection/Creator";
 import { Artwork as ArtworkType, Tour as TourType, Creator as CreatorType } from "../../app/types";
 
 export function Favorites() {
-    const { data, isError, isLoading, isFetching } = getUserFavorites({ skipToken: true });
+    const { data, isError, isLoading, isFetching } = useGetUserFavoritesQuery({ skipToken: true });
 
     if (isFetching || isLoading) {
         return (

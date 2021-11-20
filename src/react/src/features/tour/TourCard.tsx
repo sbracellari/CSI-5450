@@ -1,7 +1,6 @@
 import { Artwork } from "../../app/types";
-import { Box, Typography, Grid, IconButton, Tooltip, Fab } from "@mui/material";
+import { Box, Typography, Grid, IconButton} from "@mui/material";
 import { RoomOutlined } from "@mui/icons-material";
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import { FavoriteButton } from "../collection/Artwork";
 import { useAppSelector } from "../../app/hooks";
 
