@@ -62,7 +62,7 @@ export function Tour(props: { tour: TourType; isPublic: boolean; }) {
 
     //@todo: need to fix some weird padding betwin the swipe and the text
     return (
-        <Box sx={{ maxWidth: 400, mt: 2 }} >
+        <Box sx={{ width: 400, mt: 2 }} >
             <Paper
                 sx={{
                     p: 2,
@@ -86,7 +86,7 @@ export function Tour(props: { tour: TourType; isPublic: boolean; }) {
                 <Box component="div" sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 1 }}>
                     <PhotoLibraryOutlined />
                     <Typography component="div" variant="subtitle1" ml={1}>
-                        {tour.artworks.length}
+                        {tour.artworks.length <1 ? `${tour.artworks.length} Start adding artworks to this tour.`:tour.artworks.length}
                     </Typography>
                 </Box>
                 <SwipeableViews
@@ -147,28 +147,29 @@ export function Tour(props: { tour: TourType; isPublic: boolean; }) {
                         )
                     })}
                 </SwipeableViews>
-                <MobileStepper
-                    steps={maxSteps}
-                    position="static"
-                    activeStep={activeStep}
-                    backButton={
-                        <Button
-                            size="small"
-                            onClick={handleBack}
-                            disabled={activeStep === 0}>
-                            <KeyboardArrowLeft />
-                            Back
-                        </Button>
-                    }
-                    nextButton={
-                        <Button size="small"
-                            onClick={handleNext}
-                            disabled={activeStep === maxSteps - 1}>
-                            Next
-                            <KeyboardArrowRight />
-                        </Button>
-                    }
-                />
+                {tour.artworks.length > 1 &&
+                    <MobileStepper
+                        steps={maxSteps}
+                        position="static"
+                        activeStep={activeStep}
+                        backButton={
+                            <Button
+                                size="small"
+                                onClick={handleBack}
+                                disabled={activeStep === 0}>
+                                <KeyboardArrowLeft />
+                                Back
+                            </Button>
+                        }
+                        nextButton={
+                            <Button size="small"
+                                onClick={handleNext}
+                                disabled={activeStep === maxSteps - 1}>
+                                Next
+                                <KeyboardArrowRight />
+                            </Button>
+                        }
+                    />}
             </Paper>
         </Box>
     )
@@ -189,7 +190,7 @@ const DropdownButton = (tour: TourType) => {
         removeTour, {
             isLoading,
             isSuccess,
-            isError 
+            isError
         }
     ] = deleteTour()
 
@@ -206,7 +207,7 @@ const DropdownButton = (tour: TourType) => {
 
     const [modalOpen, setModalOpen] = useState(false);
     const [tourName, setTourName] = useState(tour.tourName);
-    console.log("loading", isLoading, "error", isError, "success",isSuccess);
+    console.log("loading", isLoading, "error", isError, "success", isSuccess);
     return (
         <>
             <IconButton aria-label="more actions" onClick={handleDropdown}>
