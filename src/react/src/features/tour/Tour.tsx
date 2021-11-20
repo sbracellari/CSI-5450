@@ -1,21 +1,21 @@
 import { Tour as TourType } from "../../app/types";
-import { 
-    Box, 
-    Button, 
-    Menu, 
-    MenuItem, 
-    IconButton, 
-    Typography, 
-    Grid, 
-    MobileStepper, 
-    Paper, 
-    Tooltip, 
-    Fab, 
-    ListItemIcon, 
+import {
+    Box,
+    Button,
+    Menu,
+    MenuItem,
+    IconButton,
+    Typography,
+    Grid,
+    MobileStepper,
+    Paper,
+    Tooltip,
+    Fab,
+    ListItemIcon,
     ListItemText,
     Dialog,
-    DialogTitle, 
-    DialogContent, 
+    DialogTitle,
+    DialogContent,
     DialogActions,
     FormControl,
 } from "@mui/material";
@@ -34,12 +34,12 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 export function Tour(props: { tour: TourType; isPublic: boolean; }) {
     const { tour, isPublic } = props;
-    
+
     //@todo: start a tour
     const [activeStep, setActiveStep] = useState(0);
     const [disabled, setDisabled] = useState(true);
     const maxSteps = tour.artworks.length;
-    
+
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -54,9 +54,9 @@ export function Tour(props: { tour: TourType; isPublic: boolean; }) {
     };
 
     const history = useHistory();
-    const handleRouting = () =>  {
-        isPublic 
-            ? history.push(`/public-tours/${tour.tourId}`) 
+    const handleRouting = () => {
+        isPublic
+            ? history.push(`/public-tours/${tour.tourId}`)
             : history.push(`/my-tours/${tour.tourId}`)
     };
 
@@ -69,18 +69,18 @@ export function Tour(props: { tour: TourType; isPublic: boolean; }) {
                 }}
                 elevation={1}>
                 <Box component="div" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Box sx={{display: 'flex', alignItems: 'center'}}>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Typography component="div" variant="h6" >
                             {tour.tourName?.replace(/['"]+/g, '')} {/* for some reason it was coming wrapped in double quotes - this is just a quick fix */}
                         </Typography>
                     </Box>
                     <Box>
-                    <Tooltip title='Favorite tour' placement='bottom'>
-                        <IconButton>
-                            <FavoriteIcon />
-                        </IconButton>
-                    </Tooltip>
-                    {!isPublic && DropdownButton(tour)}
+                        <Tooltip title='Favorite tour' placement='bottom'>
+                            <IconButton>
+                                <FavoriteIcon />
+                            </IconButton>
+                        </Tooltip>
+                        {!isPublic && DropdownButton(tour)}
                     </Box>
                 </Box>
                 <Box component="div" sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 1 }}>
@@ -100,28 +100,28 @@ export function Tour(props: { tour: TourType; isPublic: boolean; }) {
                             <Grid key={`tour_${index}_${artwork.title}`}>
                                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                     <Box>
-                                    <Box
-                                        component="img"
-                                        sx={{
-                                            height: 200,
-                                            width: '100%'
-                                        }}
-                                        src={"./art.png"}
-                                    />
-                                    <Box sx={{ display: 'flex', justifyContent: 'center', float: 'right', mt: '-7%', mr: '5%' }}>
-                                        <Fab component={Link} 
-                                            color='primary'
-                                            to={
-                                                isPublic 
-                                                    ? `/public-tours/${tour.tourId}`
-                                                    : `/my-tours/${tour.tourId}`
-                                            }
-                                            onClick={() => handleRouting()/*dispatch(view(artwork))*/}
-                                            size='small'
-                                        >
-                                            <PlayArrowIcon sx={{color: 'white'}} />
-                                        </Fab>
-                                    </Box>
+                                        <Box
+                                            component="img"
+                                            sx={{
+                                                height: 200,
+                                                width: '100%'
+                                            }}
+                                            src={"./art.png"}
+                                        />
+                                        <Box sx={{ display: 'flex', justifyContent: 'center', float: 'right', mt: '-7%', mr: '5%' }}>
+                                            <Fab component={Link}
+                                                color='primary'
+                                                to={
+                                                    isPublic
+                                                        ? `/public-tours/${tour.tourId}`
+                                                        : `/my-tours/${tour.tourId}`
+                                                }
+                                                onClick={() => handleRouting()/*dispatch(view(artwork))*/}
+                                                size='small'
+                                            >
+                                                <PlayArrowIcon sx={{ color: 'white' }} />
+                                            </Fab>
+                                        </Box>
                                     </Box>
                                     <Typography component="div" variant="h6">
                                         {artwork.title}
@@ -186,7 +186,11 @@ const DropdownButton = (tour: TourType) => {
     ] = updateTour()
 
     const [
-        removeTour
+        removeTour, {
+            isLoading,
+            isSuccess,
+            isError 
+        }
     ] = deleteTour()
 
     const handleClose = () => {
@@ -197,17 +201,12 @@ const DropdownButton = (tour: TourType) => {
     const handleSave = (tourId: number | null, tourName: string | null) => {
         setModalOpen(false);
         setAnchorEl(null);
-        editTourName({ tourName, tourId }); 
+        editTourName({ tourName, tourId });
     };
-
-    const handleDelete = (tourId: number | null) => {
-        console.log(tourId);
-        removeTour(tourId);
-    }
 
     const [modalOpen, setModalOpen] = useState(false);
     const [tourName, setTourName] = useState(tour.tourName);
-
+    console.log("loading", isLoading, "error", isError, "success",isSuccess);
     return (
         <>
             <IconButton aria-label="more actions" onClick={handleDropdown}>
@@ -225,8 +224,8 @@ const DropdownButton = (tour: TourType) => {
                     </ListItemIcon>
                     <ListItemText primary='Edit Name' />
                 </MenuItem>
-                <MenuItem 
-                    onClick={() => handleDelete(tour.tourId)}
+                <MenuItem
+                    onClick={() => removeTour(tour.tourId)}
                 >
                     <ListItemIcon>
                         <DeleteIcon />
@@ -236,24 +235,24 @@ const DropdownButton = (tour: TourType) => {
             </Menu>
 
             <Dialog onClose={() => setModalOpen(false)} open={modalOpen}>
-            <DialogTitle>Edit Tour Name</DialogTitle>
-            <DialogContent>
-                <FormControl component="fieldset">
-                    <TextField 
-                        sx={{width: '300px'}}
-                        defaultValue={tourName}
-                        onChange={e => setTourName(e.target.value)}
-                        variant='standard'
-                    />
-                </FormControl>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={() => setModalOpen(false)}>Cancel</Button>
-                <Button 
-                  onClick={() => handleSave(tour.tourId, tourName)}
-                >Save</Button>
-            </DialogActions>
-        </Dialog>
+                <DialogTitle>Edit Tour Name</DialogTitle>
+                <DialogContent>
+                    <FormControl component="fieldset">
+                        <TextField
+                            sx={{ width: '300px' }}
+                            defaultValue={tourName}
+                            onChange={e => setTourName(e.target.value)}
+                            variant='standard'
+                        />
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setModalOpen(false)}>Cancel</Button>
+                    <Button
+                        onClick={() => handleSave(tour.tourId, tourName)}
+                    >Save</Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 }
