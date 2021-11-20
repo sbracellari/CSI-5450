@@ -1,25 +1,27 @@
-import { Artwork, Favorite, Tour, Location, Creator, User } from './../app/types';
+import { Artwork, Favorite, Tour, Location, Creator, User, UpdateUser } from './../app/types';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import auth from "./auth";
+
 //@todo: export API in a config
 const API_URL = "http://localhost:8080/v1/";
 const baseQuery = fetchBaseQuery({ baseUrl: API_URL });
-
 const headers = {
-    "Content-type": "application/json",
+    Authorization: 'Bearer ' + auth.authHeader().token,
+    Accept: 'application/json',
+    'Content-Type': 'application/json'
 };
 
-// const getAdmin = () => axios.get(API_URL + "admin", { headers: auth.authHeader() });
-// const getUser = () => axios.get(API_URL + "user", { headers: auth.authHeader() });
 export const api = createApi({
     reducerPath: 'api',
     baseQuery,
+    tagTypes: ['Tour', 'Public Tour'],
     endpoints: (builder) => ({
         getCollection: builder.query<Artwork[], void>({
             query: () => 'collection'
         }),
         getPublicTours: builder.query<Tour[], void>({
-            query: () => 'tours'
+            query: () => 'tours',
+            providesTags: ['Public Tour'],
         }),
         getAllLocations: builder.query<Location[], void>({
             query: () => 'locations'
@@ -30,9 +32,7 @@ export const api = createApi({
                 method: 'POST',
                 mode: 'cors',
                 body: artwork,
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                headers: headers
             })
         }),
         addLocation: builder.mutation({
@@ -41,9 +41,7 @@ export const api = createApi({
                 method: 'POST',
                 mode: 'cors',
                 body: location,
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                headers: headers
             }),
         }),
         updateArtwork: builder.mutation({
@@ -52,9 +50,7 @@ export const api = createApi({
                 method: 'POST',
                 mode: 'cors',
                 body: artwork,
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                headers: headers
             }),
         }),
         updateCreator: builder.mutation({
@@ -63,9 +59,7 @@ export const api = createApi({
                 method: 'POST',
                 mode: 'cors',
                 body: creator,
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                headers: headers
             }),
         }),
         updateLocation: builder.mutation({
@@ -74,9 +68,7 @@ export const api = createApi({
                 method: 'POST',
                 mode: 'cors',
                 body: location,
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                headers: headers
             }),
         }),
         deleteArtwork: builder.mutation({
@@ -84,9 +76,7 @@ export const api = createApi({
                 url: `artwork/${artworkId}/removal`,
                 method: 'POST',
                 mode: 'cors',
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                headers: headers
             }),
         }),
         deleteCreator: builder.mutation({
@@ -94,9 +84,7 @@ export const api = createApi({
                 url: `creator/${creatorId}/removal`,
                 method: 'POST',
                 mode: 'cors',
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                headers: headers
             }),
         }),
         deleteLocation: builder.mutation({
@@ -104,40 +92,32 @@ export const api = createApi({
                 url: `location/${locationId}/removal`,
                 method: 'POST',
                 mode: 'cors',
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                headers: headers
             }),
         }),
         deleteTour: builder.mutation({
-            query: (tourId: number) => ({
+            query: (tourId: number | null) => ({
                 url: `tour/${tourId}/removal`,
                 method: 'POST',
                 mode: 'cors',
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                headers: headers
             }),
+            invalidatesTags: ['Tour', 'Public Tour']
         }),
         getUserFavorites: builder.query<Favorite, string>({
             query: () => ({
                 url: `consumer/favorites`,
                 method: 'GET',
                 mode: 'cors',
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                headers: headers
             }),
         }),
         favoriteArtwork: builder.mutation({
-            //@todo: how to define types for 2 params
             query: (artworkId: string) => ({
                 url: `consumer/favorites/artwork/${artworkId}`,
                 method: 'POST',
                 mode: 'cors',
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                headers: headers
             }),
         }),
         favoriteCreator: builder.mutation({
@@ -145,9 +125,7 @@ export const api = createApi({
                 url: `consumer/favorites/creator/${creatorId}`,
                 method: 'POST',
                 mode: 'cors',
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                headers: headers
             }),
         }),
         favoriteTour: builder.mutation({
@@ -155,9 +133,7 @@ export const api = createApi({
                 url: `consumer/favorites/tour/${tourId}`,
                 method: 'POST',
                 mode: 'cors',
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                headers: headers
             }),
         }),
         deleteFavoriteArtwork: builder.mutation({
@@ -165,9 +141,7 @@ export const api = createApi({
                 url: `consumer/favorites/artwork/${artworkId}/removal`,
                 method: 'POST',
                 mode: 'cors',
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                headers: headers
             }),
         }),
         deleteFavoriteCreator: builder.mutation({
@@ -175,9 +149,7 @@ export const api = createApi({
                 url: `consumer/favorites/creator/${creatorId}/removal`,
                 method: 'POST',
                 mode: 'cors',
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                headers: headers
             }),
         }),
         deleteFavoriteTour: builder.mutation({
@@ -185,20 +157,17 @@ export const api = createApi({
                 url: `consumer/favorites/tour/${tourId}/removal`,
                 method: 'POST',
                 mode: 'cors',
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                headers: headers
             }),
         }),
-        getToursForUser: builder.query<Tour[], string>({
+        getToursForUser: builder.query<Tour[], void>({
             query: () => ({
                 url: `consumer/tours`,
                 method: 'GET',
                 mode: 'cors',
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                headers: headers
             }),
+            providesTags: ['Tour']
         }),
         createTour: builder.mutation({
             query: (tourName: string) => ({
@@ -206,30 +175,27 @@ export const api = createApi({
                 method: 'POST',
                 mode: 'cors',
                 body: tourName,
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                headers: headers
             }),
+            invalidatesTags: ['Tour']
         }),
         addToTour: builder.mutation({
             query: ({ tourId, artworkId }) => ({
                 url: `tour/${tourId}/artwork/${artworkId}/add`,
                 method: 'POST',
                 mode: 'cors',
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                headers: headers
             }),
+            invalidatesTags: ['Tour']
         }),
         deleteFromTour: builder.mutation({
             query: ({ tourId, artworkId }) => ({
                 url: `tour/${tourId}/artwork/${artworkId}/removal`,
                 method: 'POST',
                 mode: 'cors',
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                headers: headers
             }),
+            invalidatesTags: ['Tour']
         }),
         updateTour: builder.mutation({
             query: ({ tourName, tourId }) => ({
@@ -237,30 +203,16 @@ export const api = createApi({
                 method: 'POST',
                 mode: 'cors',
                 body: tourName,
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                headers: headers
             }),
+            invalidatesTags: ['Tour', 'Public Tour']
         }),
         deleteUser: builder.mutation({
             query: (userEmail: string) => ({
                 url: `user/${userEmail}/removal`,
                 method: 'POST',
                 mode: 'cors',
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
-            }),
-        }),
-        updateUser: builder.mutation({
-            query: (user: User) => ({
-                url: `user/update`,
-                method: 'POST',
-                mode: 'cors',
-                body: user,
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
+                headers: headers
             }),
         }),
     })
@@ -292,5 +244,4 @@ export const {
     useUpdateLocationMutation: updateLocation,
     useUpdateTourMutation: updateTour,
     useDeleteUserMutation: deleteUser,
-    useUpdateUserMutation: updateUser
 } = api;

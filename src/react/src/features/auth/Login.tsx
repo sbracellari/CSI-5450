@@ -22,8 +22,6 @@ export function Login() {
         return <Redirect to="/collection" />;
     }
 
-    console.log(message, status === 'failed');
-
     return (
         <Box sx={{height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <Box component="form" autoComplete="off" onSubmit={handleSubmit}

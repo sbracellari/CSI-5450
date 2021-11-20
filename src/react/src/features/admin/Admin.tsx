@@ -9,7 +9,7 @@ export function Admin(){
 
     const { data: favorites } = getUserFavorites('admin1@arttour.com');
 
-    const { data: tours } = getToursForUser('admin1@arttour.com');
+    const { data: tours } = getToursForUser();
 
     return(
         <Box>

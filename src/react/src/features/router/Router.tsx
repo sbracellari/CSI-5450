@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
-import { Tabs, Tab } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { handleSelect, indexToTab as tabs } from './tabsSlice';
+import { Box, Typography } from '@mui/material';
 import { Collection } from '../collection/Collection';
 import { BrowserRouter, Route, Link, Switch, Redirect } from 'react-router-dom';
 import { Detail } from '../collection/Detail';
@@ -10,33 +8,35 @@ import { Register } from '../auth/Register';
 import { Tours } from '../tour/Tours';
 import { TourStepper } from '../tour/TourStepper';
 import { Admin } from '../admin/Admin';
+import { EditAccount } from '../auth/EditAccount';
+import { MobileDrawer } from '../MobileDrawer';
 
 export function Router() {
-    const { tab: tabValue, path } = useAppSelector((state) => state.tabs);
-    let tabComponent = [];
-    for (const [path, index] of Object.entries(tabs)) {
-        tabComponent.push(<Tab key={`${index}_${path}`} label={path}
-            to={`/${path}`} value={index} component={Link} />)
-    }
-    const dispatch = useAppDispatch();
-    const handleTabs = (event: React.SyntheticEvent<Element, Event>, val: number) => {
-        dispatch(handleSelect(val));
-    };
-    //@todo need to add a tab for account
-    //@todo redirect back to login if a user isn't logged in
     return (
         <BrowserRouter basename='/'>
             <Switch>
-                <Route exact path='/' component={Login} />
+                <Route exact path={['/', '/login']} component={Login} />
                 <Route exact path='/register' component={Register} />
                 <Route>
-                    <Tabs value={tabValue} onChange={handleTabs} centered>
-                        {tabComponent}
-                    </Tabs>
+                    <Box sx={{display: 'flex', alignItems: 'center'}}>
+                        <MobileDrawer />
+                        <Typography sx={{fontSize: 18, ml: 2}}><strong>YourTour - Carnegie Museum of Art</strong></Typography>
+                    </Box>
                     <Switch>
+                        <Route exact path='/account' component={EditAccount} />
                         <Route exact path="/collection" component={Collection} />
-                        <Route exact path="/tour" component={Tours} />
-                        <Route path="/tour/:tourId" component={TourStepper} />
+                        <Route exact path='/public-tours'>
+                            <Tours isPublic={true} /> {/* not sure how to avoid passing this prop. i don't think its a big deal tho */}
+                        </Route>
+                        <Route exact path='/my-tours'>
+                            <Tours isPublic={false} />
+                        </Route>
+                        <Route path="/public-tours/:tourId">
+                            <TourStepper isPublic={true} />
+                        </Route>
+                        <Route path="/my-tours/:tourId">
+                            <TourStepper isPublic={false} />
+                        </Route>
                         <Route exact path="/favorites" />
                         <Route exact path="/admin" component={Admin} />
                         <Route path='/details' component={Detail} />

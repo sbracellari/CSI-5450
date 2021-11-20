@@ -5,6 +5,7 @@ import edu.oakland.arttour.model.Artwork;
 import edu.oakland.arttour.model.Favorite;
 import edu.oakland.arttour.model.Location;
 import edu.oakland.arttour.model.Tour;
+import edu.oakland.arttour.model.User;
 import edu.oakland.arttour.service.ArtTourService;
 import edu.oakland.soffit.auth.AuthService;
 import edu.oakland.soffit.auth.SoffitAuthException;
@@ -69,7 +70,7 @@ public class ArtTourController {
   public List<Artwork> getCollection() {
     return dao.getCollection();
   }
-  
+
   @CrossOrigin
   @GetMapping("tours")
   public List<Tour> getPublicTours() {
@@ -164,7 +165,6 @@ public class ArtTourController {
   public void deleteTour(HttpServletRequest request, @PathVariable int tourId)
       throws SoffitAuthException {
     String email = authorizer.getClaimFromJWT(request, "email").asString();
-    service.checkAdmin(email);
     dao.deleteTour(tourId);
   }
 
@@ -296,9 +296,10 @@ public class ArtTourController {
 
   @CrossOrigin
   @PostMapping("user/update")
-  public void updateUser(HttpServletRequest request, @RequestBody Map<String, String> userInfo)
+  public User updateUser(HttpServletRequest request, @RequestBody Map<String, String> userInfo)
       throws SoffitAuthException {
     String email = authorizer.getClaimFromJWT(request, "email").asString();
     service.updateUser(email, userInfo);
+    return dao.login(email);
   }
 }

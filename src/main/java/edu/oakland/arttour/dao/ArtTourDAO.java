@@ -3,6 +3,7 @@ package edu.oakland.arttour.dao;
 import edu.oakland.arttour.model.Artwork;
 import edu.oakland.arttour.model.Creator;
 import edu.oakland.arttour.model.Location;
+import edu.oakland.arttour.model.User;
 
 import java.util.List;
 
@@ -32,12 +33,12 @@ public class ArtTourDAO {
     return jdbcTemplate.queryForList(Constants.GET_ADMIN_EMAILS, String.class);
   }
 
-  public void registerUser(String email, String fName, String lName, String password) {
-    jdbcTemplate.update(Constants.REGISTER_USER, new Object[] {email, fName, lName, password});
+  public void registerUser(String email, String fname, String lname, String password) {
+    jdbcTemplate.update(Constants.REGISTER_USER, new Object[] {email, fname, lname, password});
   }
 
-  public String login(String email) throws DataAccessException {
-    return jdbcTemplate.queryForObject(Constants.LOGIN, String.class, email);
+  public User login(String email) throws DataAccessException {
+    return jdbcTemplate.queryForObject(Constants.LOGIN, User.mapper, email);
   }
 
   public void addConsumer(String email) {
@@ -281,7 +282,7 @@ public class ArtTourDAO {
     jdbcTemplate.update(Constants.UPDATE_TOUR, new Object[] {tourId, tourName});
   }
 
-  public void updateUser(String email, String fName, String lName, String password) {
-    jdbcTemplate.update(Constants.UPDATE_USER, new Object[] {email, fName, lName, password});
+  public void updateUser(String email, String fname, String lname, String password) {
+    jdbcTemplate.update(Constants.UPDATE_USER, new Object[] {email, fname, lname, password});
   }
 }
