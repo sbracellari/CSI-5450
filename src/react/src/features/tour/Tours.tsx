@@ -21,13 +21,10 @@ import { Redirect } from 'react-router-dom';
 import React, { useState } from 'react';
 
 
-export function Tours(props: { isPublic: boolean }) {
-    const { isPublic } = props;
-    const { isLoggedIn } = useAppSelector(state => state.auth);
+const AddTour = () => {
     const [open, setOpen] = useState(false);
     const [tourName, setTourName] = useState('');
     const [nameErr, setNameErr] = useState(false);
-
     const [
         createNewTour
     ] = createTour();
@@ -40,7 +37,52 @@ export function Tours(props: { isPublic: boolean }) {
             setOpen(false);
         }
     }
+    return (
+        <>
+            <Tooltip title='Create new tour' placement='left'>
+                <Fab 
+                    size='small' 
+                    color="primary" 
+                    aria-label="add" 
+                    sx={{position: 'fixed', right: 15, bottom: 15}}
+                    onClick={() => setOpen(true)}
+                >
+                    <AddIcon />
+                </Fab>
+            </Tooltip>
+            <Dialog onClose={() => setOpen(false)} open={open}>
+                <DialogTitle>Create a new tour</DialogTitle>
+                <DialogContent>
+                    <FormControl component="fieldset">
+                        <TextField 
+                            sx={{width: '300px'}}
+                            placeholder='Tour name'
+                            onChange={e => setTourName(e.target.value)}
+                            variant='standard'
+                            error={nameErr}
+                            helperText={
+                                nameErr
+                                    ? 'Tour name cannot be empty'
+                                    : ''
+                            }
+                        />
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpen(false)}>Cancel</Button>
+                    <Button 
+                      onClick={() => handleTourCreate()}
+                    >Save</Button>
+                </DialogActions>
+            </Dialog>
+        </>
+    )
+}
 
+export function Tours(props: { isPublic: boolean }) {
+    const { isPublic } = props;
+    const { isLoggedIn } = useAppSelector(state => state.auth);
+    
     let tours;
     if (isPublic) {
         tours = getPublicTours();
@@ -66,9 +108,13 @@ export function Tours(props: { isPublic: boolean }) {
     }
     if(tours.data.length === 0) {
         return (
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-                No tours to display.
-            </Box>);
+            <>
+                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                    No tours to display.
+                </Box>
+                {!isPublic && <AddTour /> }
+            </>
+        )
     }
     return (
         <>
@@ -77,44 +123,7 @@ export function Tours(props: { isPublic: boolean }) {
                     return <Tour key={tour.tourId} tour={tour} isPublic={isPublic} />
                 })}
             </Grid >
-            {!isPublic && (
-                <Tooltip title='Create new tour' placement='left'>
-                    <Fab 
-                        size='small' 
-                        color="primary" 
-                        aria-label="add" 
-                        sx={{position: 'fixed', right: 15, bottom: 15}}
-                        onClick={() => setOpen(true)}
-                    >
-                        <AddIcon />
-                    </Fab>
-                </Tooltip>
-            )}
-            <Dialog onClose={() => setOpen(false)} open={open}>
-            <DialogTitle>Create a new tour</DialogTitle>
-            <DialogContent>
-                <FormControl component="fieldset">
-                    <TextField 
-                        sx={{width: '300px'}}
-                        placeholder='Tour name'
-                        onChange={e => setTourName(e.target.value)}
-                        variant='standard'
-                        error={nameErr}
-                        helperText={
-                            nameErr
-                                ? 'Tour name cannot be empty'
-                                : ''
-                        }
-                    />
-                </FormControl>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={() => setOpen(false)}>Cancel</Button>
-                <Button 
-                  onClick={() => handleTourCreate()}
-                >Save</Button>
-            </DialogActions>
-        </Dialog>
+            {!isPublic && <AddTour /> }
         </>
     )
 };

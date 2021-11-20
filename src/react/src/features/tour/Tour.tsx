@@ -71,7 +71,7 @@ export function Tour(props: { tour: TourType; isPublic: boolean; }) {
                 <Box component="div" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Box sx={{display: 'flex', alignItems: 'center'}}>
                         <Typography component="div" variant="h6" >
-                            {tour.tourName}
+                            {tour.tourName?.replace(/['"]+/g, '')} {/* for some reason it was coming wrapped in double quotes - this is just a quick fix */}
                         </Typography>
                     </Box>
                     <Box>
