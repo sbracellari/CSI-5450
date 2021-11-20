@@ -95,22 +95,23 @@ export function Artwork(props: ArtworkProps) {
             <Dialog onClose={() => setOpen(false)} open={open}>
                 <DialogTitle>Choose Tour</DialogTitle>
                 <DialogContent>
-                    <FormControl component="fieldset">
-                        <FormLabel sx={{ mb: 1 }} component="legend">Choose which tour you'd like to add this artwork to</FormLabel>
-                        <RadioGroup
-                            value={tourId}
-                            onChange={event => setTourId(parseInt(event.target.value))}
-                        >
-                            {tours?.map(tour => (
-                                <>
-                                    <FormControlLabel value={tour.tourId} control={<Radio />} label={tour.tourName?.replace(/['"]+/g, '')} disabled={artworkInTour(tour.tourId, artwork.artworkId)} />
-                                    {artworkInTour(tour.tourId, artwork.artworkId) &&
-                                        <FormHelperText>Artwork is already in this tour.</FormHelperText>
-                                    }
-                                </>
-                            ))}
-                        </RadioGroup>
-                    </FormControl>
+                    {tours?.length === 0 ? <Typography>You don't have any tours yet. Go to "Your Trours" to add one.</Typography> :
+                        <FormControl component="fieldset">
+                            <FormLabel sx={{ mb: 1 }} component="legend">Choose which tour you'd like to add this artwork to</FormLabel>
+                            <RadioGroup
+                                value={tourId}
+                                onChange={event => setTourId(parseInt(event.target.value))}
+                            >
+                                {tours?.map(tour => (
+                                    <>
+                                        <FormControlLabel value={tour.tourId} control={<Radio />} label={tour.tourName?.replace(/['"]+/g, '')} disabled={artworkInTour(tour.tourId, artwork.artworkId)} />
+                                        {artworkInTour(tour.tourId, artwork.artworkId) &&
+                                            <FormHelperText>Artwork is already in this tour.</FormHelperText>
+                                        }
+                                    </>
+                                ))}
+                            </RadioGroup>
+                        </FormControl>}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpen(false)}>Cancel</Button>
