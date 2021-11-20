@@ -95,7 +95,7 @@ export function Artwork(props: ArtworkProps) {
             <Dialog onClose={() => setOpen(false)} open={open}>
                 <DialogTitle>Choose Tour</DialogTitle>
                 <DialogContent>
-                    {tours?.length === 0 ? <Typography>You don't have any tours yet. Go to "Your Trours" to add one.</Typography> :
+                    {tours?.length === 0 ? <Typography>You don't have any tours yet. Go to "My Tours" to add one.</Typography> :
                         <FormControl component="fieldset">
                             <FormLabel sx={{ mb: 1 }} component="legend">Choose which tour you'd like to add this artwork to</FormLabel>
                             <RadioGroup
