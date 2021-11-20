@@ -2,20 +2,26 @@ import { Artwork, Tour as TourType } from "../../app/types";
 import { Box, Button, Typography, Paper, Step, StepContent, StepLabel, Stepper } from "@mui/material";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { data } from "../../services/tourApi";
 import { TourCard } from "./TourCard";
-import { getPublicTours } from "../../services/api";
+import { getPublicTours, getToursForUser } from "../../services/api";
+import { useAppSelector } from "../../app/hooks";
+import { Redirect } from 'react-router-dom';
 
-export function TourStepper(props: { isPublic: boolean, tours: any }) {
-    const { isPublic, tours } = props;
-    const { data } = tours
+export function TourStepper(props: { isPublic: boolean }) {
+    const { isPublic } = props;
+    const { isLoggedIn } = useAppSelector(state => state.auth);
 
-    console.log(data);
+    let tours;
+    if (isPublic) {
+        tours = getPublicTours();
+    } else {
+        tours = getToursForUser();
+    }
+
+    const { data } = tours;
 
     //@todo: block tour if user doesn't have access
     //@todo: add modal to add tour to favorites if user enjoyed it
-    //@todo: check if user is logged ina and add the other tours as well
-    // const { data: tours, isLoading, isError, error, isSuccess } = getPublicTours();
     
     const [activeStep, setActiveStep] = useState(0);
     const handleNext = () => {
@@ -27,8 +33,12 @@ export function TourStepper(props: { isPublic: boolean, tours: any }) {
     };
 
     const { tourId } = useParams<{ tourId?: string }>();
-    const tour = tourId && data?.find((tour: { tourId: number; }) => tour.tourId === (parseInt(tourId, 10)));
+    const tour = tourId && data?.find(tour => tour.tourId === (parseInt(tourId, 10)));
   
+    if (!isLoggedIn) {
+        return <Redirect to='/login' />;
+    }
+
     //@todo: add proper loading and error indicators
     if (!tour) {
         return <div>An error occurred</div>;

@@ -2,25 +2,25 @@
 import { Grid, Typography, CircularProgress } from "@mui/material";
 import { Artwork } from './Artwork';
 import { getCollection } from '../../services/api';
-import { data as collectionData } from '../../services/collectionApi';
+import { useAppSelector } from "../../app/hooks";
+import { Redirect } from "react-router-dom";
 
 export function Collection() {
-  const { data: collection, isError, isLoading, isFetching } = getCollection();
-  //temp data
-
-  //const { data: collection, isError, isLoading, isFetching } = { data: collectionData, isLoading: false, isError: false, isFetching: false }
+  const { isLoggedIn } = useAppSelector(state => state.auth);
+  const { data: collection, isError, isFetching, isLoading } = getCollection();
 
   let component;
 
-
-  if (isFetching || isLoading) {
+  if (!isLoggedIn) {
+    return <Redirect to='/login' />;
+  } else if (isFetching || isLoading) {
     component = <CircularProgress />;
   } else if (!collection || isError) {
     component = <Typography>An error occured</Typography>;
   } else {
     //@todo: fix centering of the artworks
     component = (
-      collection.map((artwork, index) => {
+      collection?.map((artwork, index) => {
         return (
           <Grid key={`${index}_${artwork.title}`} item xs={11} >
             <Artwork artwork={artwork} />

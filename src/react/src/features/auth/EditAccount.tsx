@@ -1,9 +1,8 @@
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { Redirect, Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { Box, Button, TextField, Alert, Typography } from '@mui/material';
 import { useState } from 'react';
-import { register } from './authSlice';
-import { updateUser } from '../../services/api';
+import { updateUser } from '../auth/authSlice';
 
 export function EditAccount() {
     const dispatch = useAppDispatch();
@@ -16,12 +15,12 @@ export function EditAccount() {
     //@todo: add validation and error handling
 
     if (!isLoggedIn) { 
-        <Redirect to='/' />;
+        <Redirect to='/login' />;
     }
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        // dispatch(updateUser({ fname, lname, password })); // how to call this?
+        dispatch(updateUser({ fname, lname, password}));
     };
 
     return (
@@ -39,7 +38,7 @@ export function EditAccount() {
                 </Typography>
                 <TextField
                     label="First Name"
-                    defaultValue={user?.fname}
+                    defaultValue={fname}
                     onChange={(e) => setFname(e.target.value)}
                     margin="normal"
                     required
@@ -47,7 +46,7 @@ export function EditAccount() {
                 />
                 <TextField
                     label="Last Name"
-                    defaultValue={user?.lname}
+                    defaultValue={lname}
                     onChange={(e) => setLname(e.target.value)}
                     margin="normal"
                     required
@@ -55,7 +54,7 @@ export function EditAccount() {
                 />
                 <TextField
                     label="Password"
-                    defaultValue={user?.password}
+                    defaultValue={password}
                     type="password"
                     onChange={(e) => setPassword(e.target.value)}
                     margin="normal"

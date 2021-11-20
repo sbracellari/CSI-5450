@@ -1,28 +1,45 @@
 import { Artwork as ArtworkType } from "../../app/types";
 import {
     Box, Button, Card, CardActions, CardContent, CardMedia, Chip, IconButton, Typography, DialogContent,
-    DialogActions, DialogTitle, Dialog, RadioGroup, FormLabel, FormControl, SnackbarOrigin, Snackbar
+    DialogActions, DialogTitle, Dialog, RadioGroup, FormLabel, FormControl, SnackbarOrigin, Snackbar, FormControlLabel, FormHelperText, Radio, Tooltip
 } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { Link } from 'react-router-dom';
-import { useAppDispatch } from "../../app/hooks";
-import React, { useState } from 'react';
-import { Tour } from '../../app/types';
-import { addToTour, favoriteArtwork, deleteFavoriteArtwork, getUserFavorites, deleteArtwork } from '../../services/api';
+import { Redirect } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useState } from 'react';
+import { addToTour, favoriteArtwork, deleteFavoriteArtwork, getUserFavorites, deleteArtwork, getToursForUser } from '../../services/api';
+interface ArtworkProps {
+    artwork: ArtworkType;
+}
 
-export function Artwork(props: { artwork: ArtworkType }) {
+export function Artwork(props: ArtworkProps) {
     const { artwork } = props;
+    const { isLoggedIn } = useAppSelector(state => state.auth);
     const dispatch = useAppDispatch();
-    const isLoggedIn = localStorage.getItem('token');//@todo: get user 
+
     const [open, setOpen] = useState(false);
     const [tourId, setTourId] = useState(0);
+    const { data: tours } = getToursForUser();
+
+    const [
+        addArtworkToTour
+    ] = addToTour()
 
     const handleSubmit = (tourId: number, artworkId: string) => {
         setOpen(false);
-        console.log(tourId)
-        // dispatch(addToTour, addTo({ tourId, artworkId }));
+        setTourId(0);
+        addArtworkToTour({ tourId, artworkId });
     };
+
+    const artworkInTour = (tourId: number | null, artworkId: string) => {
+        const tour = tours?.find(tour => tour.tourId === tourId);
+        const artwork = tour?.artworks.find(artwork => artwork.artworkId === artworkId);
+        return artwork ? true : false;
+    }
+    if (!isLoggedIn) {
+        return <Redirect to='/login' />;
+    }
 
     return (
         <>
@@ -55,10 +72,6 @@ export function Artwork(props: { artwork: ArtworkType }) {
                 </Box>
                 <CardActions>
                     {isLoggedIn && FavoriteButton(artwork)}
-                    <Button size="small" aria-label="view details"
-                        component={Link} to={`/details?id=${artwork.artworkId}`}
-                        onClick={() => console.log('view detail')}
-                    >Details</Button>
                     <Button onClick={() => setOpen(true)} size="small" aria-label="add to tour">Add to tour</Button>
                 </CardActions>
             </Card>
@@ -66,17 +79,23 @@ export function Artwork(props: { artwork: ArtworkType }) {
             <Dialog onClose={() => setOpen(false)} open={open}>
                 <DialogTitle>Choose Tour</DialogTitle>
                 <DialogContent>
-                    <FormControl component="fieldset">
-                        <FormLabel sx={{ mb: 1 }} component="legend">Choose which tour you'd like to add this artwork to</FormLabel>
-                        <RadioGroup
-                            value={tourId}
-                            onChange={event => setTourId(parseInt(event.target.value))}
-                        >
-                            {/* {tours?.map(tour => (
-                                <FormControlLabel value={tour.tourId} control={<Radio />} label={tour.tourName} />
-                            ))} */}
-                        </RadioGroup>
-                    </FormControl>
+                    {tours?.length === 0 ? <Typography>You don't have any tours yet. Go to "My Tours" to add one.</Typography> :
+                        <FormControl component="fieldset">
+                            <FormLabel sx={{ mb: 1 }} component="legend">Choose which tour you'd like to add this artwork to</FormLabel>
+                            <RadioGroup
+                                value={tourId}
+                                onChange={event => setTourId(parseInt(event.target.value))}
+                            >
+                                {tours?.map(tour => (
+                                    <>
+                                        <FormControlLabel value={tour.tourId} control={<Radio />} label={tour.tourName?.replace(/['"]+/g, '')} disabled={artworkInTour(tour.tourId, artwork.artworkId)} />
+                                        {artworkInTour(tour.tourId, artwork.artworkId) &&
+                                            <FormHelperText>Artwork is already in this tour.</FormHelperText>
+                                        }
+                                    </>
+                                ))}
+                            </RadioGroup>
+                        </FormControl>}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpen(false)}>Cancel</Button>
@@ -124,17 +143,22 @@ const FavoriteButton = (artwork: ArtworkType) => {
     if (errorDeletingFavArtwork) {
         message = "An error occured when deleting an artwork from favorites.";
     }
-//{deleteFavArtwork(artwork.artworkId);setAlert(true);}
+    //{deleteFavArtwork(artwork.artworkId);setAlert(true);}
     return (
         <>
             {isFavorite ? (
-                <IconButton aria-label="add to favorites" onClick={() => deleteFavArtwork(artwork.artworkId)}>
-                    <FavoriteIcon />
-                </IconButton>)
+                <Tooltip title='Unavorite artwork' placement='bottom'>
+                    <IconButton aria-label="add to favorites" onClick={() => deleteFavArtwork(artwork.artworkId)}>
+                        <FavoriteIcon />
+                    </IconButton>
+                </Tooltip>)
                 :
-                (<IconButton aria-label="add to favorites" onClick={() => addFavArtwork(artwork.artworkId)}>
-                    <FavoriteBorderIcon />
-                </IconButton>)}
+                (<Tooltip title='Favorite artwork' placement='bottom'>
+                    <IconButton aria-label="add to favorites" onClick={() => addFavArtwork(artwork.artworkId)}>
+                        <FavoriteBorderIcon />
+                    </IconButton>
+                </Tooltip>
+                )}
             <Snackbar
                 anchorOrigin={{
                     vertical: 'bottom',
