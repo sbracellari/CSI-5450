@@ -1,9 +1,6 @@
 import { Artwork } from "../../app/types";
 import { Box, Typography, Grid, IconButton, Tooltip, Fab } from "@mui/material";
 import { RoomOutlined } from "@mui/icons-material";
-import DeleteIcon from '@mui/icons-material/Delete';
-import { deleteFromTour } from '../../services/api';
-import { useAppDispatch } from "../../app/hooks";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
 interface TourCardProps {
@@ -14,14 +11,6 @@ interface TourCardProps {
 
 export function TourCard(props: TourCardProps) {
     const { artwork, isPublic, tourId } = props;
-
-    const [
-        deleteArtworkFromTour
-    ] = deleteFromTour()
-
-    const handleDelete = (tourId: number | null, artworkId: string) => {
-        deleteArtworkFromTour({ tourId, artworkId });
-    }
 
     //@todo: add more details for each card
     const onView = artwork.location.physicalLocation !== 'Not on View';
@@ -43,18 +32,6 @@ export function TourCard(props: TourCardProps) {
                             <FavoriteIcon />
                         </IconButton>
                     </Tooltip>
-                    {!isPublic && (
-                    
-                    <Tooltip title='Delete from tour' placement='bottom'>
-                        <IconButton 
-                            onClick={() => handleDelete(tourId, artwork.artworkId)}
-                        >
-                            <DeleteIcon />
-                        </IconButton>
-                    </Tooltip>
-                    
-                   
-                )}
                  </Box>
                 </Box>
                 <Box
@@ -65,7 +42,6 @@ export function TourCard(props: TourCardProps) {
                     }}
                     src={"./art.png"}
                 />
-
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             </Box>

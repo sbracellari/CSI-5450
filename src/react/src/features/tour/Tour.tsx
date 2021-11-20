@@ -1,4 +1,4 @@
-import { Tour as TourType } from "../../app/types";
+import { Artwork, Tour as TourType } from "../../app/types";
 import {
     Box,
     Button,
@@ -18,6 +18,10 @@ import {
     DialogContent,
     DialogActions,
     FormControl,
+    Avatar,
+    List,
+    ListItem,
+    ListItemAvatar,
 } from "@mui/material";
 import { useAppDispatch } from "../../app/hooks";
 import { useState } from "react";
@@ -28,7 +32,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import EditIcon from '@mui/icons-material/Edit';
 import TextField from '@mui/material/TextField';
 import SaveIcon from '@mui/icons-material/Save';
-import { updateTour, deleteTour, favoriteTour } from '../../services/api';
+import { updateTour, deleteTour, favoriteTour, deleteFromTour, api } from '../../services/api';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
@@ -86,7 +90,7 @@ export function Tour(props: { tour: TourType; isPublic: boolean; }) {
                 <Box component="div" sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 1 }}>
                     <PhotoLibraryOutlined />
                     <Typography component="div" variant="subtitle1" ml={1}>
-                        {tour.artworks.length <1 ? `${tour.artworks.length} Start adding artworks to this tour.`:tour.artworks.length}
+                        {tour.artworks.length < 1 ? `${tour.artworks.length} Start adding artworks to this tour.` : tour.artworks.length}
                     </Typography>
                 </Box>
                 <SwipeableViews
@@ -176,16 +180,19 @@ export function Tour(props: { tour: TourType; isPublic: boolean; }) {
 };
 
 const DropdownButton = (tour: TourType) => {
+    const dispatch = useAppDispatch()
     const [anchorEl, setAnchorEl] = useState<null | HTMLButtonElement>(null);
     const open = Boolean(anchorEl);
     const handleDropdown = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         setAnchorEl(event.currentTarget);
     };
+    const [modalOpen, setModalOpen] = useState(false);
+    const [tourName, setTourName] = useState(tour.tourName);
 
     const [
         editTourName
-    ] = updateTour()
-
+    ] = updateTour();
+    const [openArtworksModal, setOpenArtworksModal] = useState(false);
     const [
         removeTour, {
             isLoading,
@@ -205,9 +212,9 @@ const DropdownButton = (tour: TourType) => {
         editTourName({ tourName, tourId });
     };
 
-    const [modalOpen, setModalOpen] = useState(false);
-    const [tourName, setTourName] = useState(tour.tourName);
-    console.log("loading", isLoading, "error", isError, "success", isSuccess);
+    const [
+        deleteArtworkFromTour
+    ] = deleteFromTour();
     return (
         <>
             <IconButton aria-label="more actions" onClick={handleDropdown}>
@@ -233,6 +240,15 @@ const DropdownButton = (tour: TourType) => {
                     </ListItemIcon>
                     <ListItemText primary='Delete Tour' />
                 </MenuItem>
+                {tour.artworks.length !== 0 &&
+                    <MenuItem
+                        onClick={() => setOpenArtworksModal(true)}
+                    >
+                        <ListItemIcon>
+                            <DeleteIcon />
+                        </ListItemIcon>
+                        <ListItemText primary='Remove artworks' />
+                    </MenuItem>}
             </Menu>
 
             <Dialog onClose={() => setModalOpen(false)} open={modalOpen}>
@@ -252,6 +268,31 @@ const DropdownButton = (tour: TourType) => {
                     <Button
                         onClick={() => handleSave(tour.tourId, tourName)}
                     >Save</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog onClose={() => setOpenArtworksModal(false)} open={openArtworksModal}>
+                <DialogTitle>Remove Artworks From Tour</DialogTitle>
+                <DialogContent>
+                    <List>
+                        {tour.artworks.map((artwork) => {
+                            return (<ListItem
+                                secondaryAction={
+                                    <IconButton edge="end" aria-label="delete">
+                                        <DeleteIcon onClick={() => deleteArtworkFromTour({ tourId: tour.tourId, artworkId: artwork.artworkId })} />
+                                    </IconButton>
+                                }
+                            >
+                                <ListItemText
+                                    primary={artwork.title}
+                                />
+                            </ListItem>
+                            )
+                        })}
+                    </List>
+                </DialogContent>
+                <DialogActions>
+                    {/* <Button onClick={() => { setOpenArtworksModal(false);setAnchorEl(null);}}>Close</Button> */}
                 </DialogActions>
             </Dialog>
         </>
