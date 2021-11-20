@@ -107,7 +107,7 @@ export function Artwork(props: ArtworkProps) {
     )
 };
 
-const FavoriteButton = (artwork: ArtworkType) => {
+export const FavoriteButton = (artwork: ArtworkType) => {
 
     const [
         addFavArtwork,

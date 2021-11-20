@@ -3,10 +3,11 @@ import {
     Box, Button, Card, CardActions, CardContent, CardMedia, Chip, IconButton, Typography, DialogContent,
 } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { useAppSelector } from "../../app/hooks";
 
 export function Creator(props: { creator: CreatorType }) {
     const { creator } = props;
-    const isLoggedIn = true;//@todo: get user 
+    const { isLoggedIn } = useAppSelector(state => state.auth);
     const handleFavorite = (artworkId: number | null) => {
         //@todo: check user artwork favorites and filter throwgh them 
         console.log('handle favorites');

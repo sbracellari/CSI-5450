@@ -2,6 +2,8 @@ import { Artwork } from "../../app/types";
 import { Box, Typography, Grid, IconButton, Tooltip, Fab } from "@mui/material";
 import { RoomOutlined } from "@mui/icons-material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { FavoriteButton } from "../collection/Artwork";
+import { useAppSelector } from "../../app/hooks";
 
 interface TourCardProps {
     artwork: Artwork;
@@ -11,7 +13,7 @@ interface TourCardProps {
 
 export function TourCard(props: TourCardProps) {
     const { artwork, isPublic, tourId } = props;
-
+    const { isLoggedIn } = useAppSelector(state => state.auth);
     //@todo: add more details for each card
     const onView = artwork.location.physicalLocation !== 'Not on View';
     const unknown = artwork.location.physicalLocation !== 'Unknown';
@@ -25,13 +27,7 @@ export function TourCard(props: TourCardProps) {
                         {artwork.title}
                     </Typography>
                     <Box sx={{display: 'flex', alignItems: 'center'}}>
-                    <Tooltip title='Favorite artwork' placement='bottom'>
-                        <IconButton 
-                            // onClick={() => dispatch(favoriteArtwork(artwork.artworkId))} // how to call?
-                        >
-                            <FavoriteIcon />
-                        </IconButton>
-                    </Tooltip>
+                    {isLoggedIn && FavoriteButton(artwork)}
                  </Box>
                 </Box>
                 <Box
