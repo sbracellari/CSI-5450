@@ -103,7 +103,7 @@ export const api = createApi({
                 mode: 'cors',
                 headers: headers
             }),
-            invalidatesTags: ['Tour', 'Public Tour']
+            invalidatesTags: ['Tour', 'Public Tour', 'Favorites']
         }),
         getUserFavorites: builder.query({
             query: () => ({
@@ -120,7 +120,7 @@ export const api = createApi({
                 mode: 'cors',
                 headers: headers,
             }),
-            invalidatesTags: ['Artwork', 'Favorites']
+            invalidatesTags: ['Favorites']
         }),
         favoriteCreator: builder.mutation({
             query: (creatorId: number) => ({
@@ -138,7 +138,7 @@ export const api = createApi({
                 mode: 'cors',
                 headers: headers
             }),
-            invalidatesTags: ['Tour', 'Favorites']
+            invalidatesTags: ['Favorites']
         }),
         deleteFavoriteArtwork: builder.mutation({
             query: (artworkId: string) => ({
@@ -147,7 +147,7 @@ export const api = createApi({
                 mode: 'cors',
                 headers: headers
             }),
-            invalidatesTags: ['Artwork', 'Favorites']
+            invalidatesTags: ['Favorites']
         }),
         deleteFavoriteCreator: builder.mutation({
             query: (creatorId: number) => ({
@@ -164,7 +164,7 @@ export const api = createApi({
                 mode: 'cors',
                 headers: headers
             }),
-            invalidatesTags: ['Tour', 'Favorites']
+            invalidatesTags: ['Favorites']
         }),
         getToursForUser: builder.query<Tour[], void>({
             query: () => ({
@@ -201,7 +201,7 @@ export const api = createApi({
                 mode: 'cors',
                 headers: headers
             }),
-            invalidatesTags: ['Tour']
+            invalidatesTags: ['Tour', 'Favorites']
         }),
         updateTour: builder.mutation({
             query: ({ tourName, tourId }) => ({
@@ -211,7 +211,7 @@ export const api = createApi({
                 body: tourName,
                 headers: headers
             }),
-            invalidatesTags: ['Tour', 'Public Tour']
+            invalidatesTags: ['Tour', 'Public Tour', 'Favorites']
         }),
         deleteUser: builder.mutation({
             query: (userEmail: string) => ({
