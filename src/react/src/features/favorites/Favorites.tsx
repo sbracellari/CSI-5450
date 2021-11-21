@@ -38,7 +38,7 @@ export function Favorites() {
                         Favorite Artworks
                     </Typography>
                     </Divider>
-                    {favoriteArtworks.map((artwork: ArtworkType) => <Grid item><Artwork artwork={artwork} /></Grid>)}
+                    {favoriteArtworks.map((artwork: ArtworkType) => <Grid key={artwork.artworkId} item><Artwork artwork={artwork} /></Grid>)}
                 </Grid>
             }
             {favoriteCreators.length !== 0 &&
@@ -48,7 +48,7 @@ export function Favorites() {
                             Favorite Creators
                         </Typography>
                     </Divider>
-                    {favoriteCreators.map((creator: CreatorType) => <Grid item><Creator creator={creator} /></Grid>)}
+                    {favoriteCreators.map((creator: CreatorType) => <Grid key={creator.creatorId} item><Creator creator={creator} /></Grid>)}
                 </Grid >
             }
             {favoriteTours.length !== 0 &&
@@ -58,7 +58,7 @@ export function Favorites() {
                         Favorite Tours
                     </Typography>
                     </Divider>
-                    {favoriteTours.map((tour: TourType) => <Grid item><Tour tour={tour} isPublic={false} /></Grid>)}
+                    {favoriteTours.map((tour: TourType) => <Grid key={tour.tourId} item><Tour tour={tour} isPublic={tour.email==="admin1@arttour.com"} /></Grid>)}
                 </Grid>
             }
         </Box>);
