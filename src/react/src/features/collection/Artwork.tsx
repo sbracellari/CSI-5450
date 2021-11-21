@@ -121,7 +121,7 @@ export const FavoriteButton = (artwork: ArtworkType) => {
             isSuccess: deletedFavArtwork,
             isError: errorDeletingFavArtwork
         }
-    ] = useDeleteArtworkMutation();
+    ] = useDeleteFavoriteArtworkMutation();
     const [alert, setAlert] = useState(false);
 
     const handleClose = () => {
