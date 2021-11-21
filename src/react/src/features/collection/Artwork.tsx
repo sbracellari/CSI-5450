@@ -8,7 +8,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { Redirect } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useState } from 'react';
-import { useAddToTourMutation, useFavoriteArtworkMutation, useDeleteArtworkMutation, useGetUserFavoritesQuery, useGetToursForUserQuery } from '../../services/api';
+import { useAddToTourMutation, useFavoriteArtworkMutation, useDeleteFavoriteArtworkMutation, useGetUserFavoritesQuery, useGetToursForUserQuery } from '../../services/api';
 interface ArtworkProps {
     artwork: ArtworkType;
 }
