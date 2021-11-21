@@ -41,7 +41,6 @@ export function Tour(props: { tour: TourType; isPublic: boolean; }) {
     const [activeStep, setActiveStep] = useState(0);
     const [disabled, setDisabled] = useState(true);
     const maxSteps = tour.artworks.length;
-
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
@@ -306,7 +305,7 @@ const FavoriteButton = (tour: TourType) => {
     return isFavorite ?
         (<Tooltip title='Unfavorite tour' placement='bottom'>
             <IconButton onClick={() => deleteFavorite(tour.tourId)} >
-                <FavoriteIcon />
+                <FavoriteIcon color="error" />
             </IconButton>
         </Tooltip>) :
         (<Tooltip title='Favorite tour' placement='bottom'>

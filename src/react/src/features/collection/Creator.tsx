@@ -27,7 +27,7 @@ export function Creator(props: { creator: CreatorType }) {
                 </CardContent>
                 <CardActions>
                     {isLoggedIn && <IconButton aria-label="add to favorites" onClick={() => handleFavorite(creator.creatorId)}>
-                        <FavoriteIcon />
+                        <FavoriteIcon color="error" />
                     </IconButton>}
                 </CardActions>
             </Card>

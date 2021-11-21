@@ -148,7 +148,7 @@ export const FavoriteButton = (artwork: ArtworkType) => {
             {isFavorite ? (
                 <Tooltip title='Unavorite artwork' placement='bottom'>
                     <IconButton aria-label="add to favorites" onClick={() => deleteFavArtwork(artwork.artworkId)}>
-                        <FavoriteIcon />
+                        <FavoriteIcon color="error" />
                     </IconButton>
                 </Tooltip>)
                 :
