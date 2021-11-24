@@ -1,4 +1,4 @@
-import { Tour as TourType } from "../../app/types";
+import { Artwork, Tour as TourType } from "../../app/types";
 import {
     Box,
     Button,
@@ -20,6 +20,8 @@ import {
     FormControl,
     List,
     ListItem,
+    Checkbox,
+    FormControlLabel,
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useState } from "react";
@@ -175,38 +177,61 @@ const DropdownButton = (tour: TourType) => {
     const dispatch = useAppDispatch()
     const [anchorEl, setAnchorEl] = useState<null | HTMLButtonElement>(null);
     const open = Boolean(anchorEl);
-    const handleDropdown = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        setAnchorEl(event.currentTarget);
-    };
     const [modalOpen, setModalOpen] = useState(false);
     const [tourName, setTourName] = useState(tour.tourName);
+    const [openArtworksModal, setOpenArtworksModal] = useState(false);
+    const initialCheckboxes = tour.artworks.map(artwork => ({ artworkId: artwork.artworkId, checked: false }));
+    const [deleteArtworks, setDeleteArtworks] = useState(initialCheckboxes);
 
     const [
         editTourName
     ] = useUpdateTourMutation();
-    const [openArtworksModal, setOpenArtworksModal] = useState(false);
+
     const [
-        removeTour, {
-            isLoading,
-            isSuccess,
-            isError
-        }
+        removeTour
     ] = useDeleteTourMutation()
 
-    const handleClose = () => {
-        //@todo: create handlers for edit/delete/favorite
-        setAnchorEl(null);
+    const [
+        deleteArtworkFromTour
+    ] = useDeleteFromTourMutation();
+
+    const handleDropdown = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        setAnchorEl(event.currentTarget);
     };
 
-    const handleSave = (tourId: number | null, tourName: string | null) => {
+    const handleSaveEdit = (tourId: number | null, tourName: string | null) => {
         setModalOpen(false);
         setAnchorEl(null);
         editTourName({ tourName, tourId });
     };
 
-    const [
-        deleteArtworkFromTour
-    ] = useDeleteFromTourMutation();
+    const handleCloseEdit = () => {
+        setModalOpen(false);
+        setAnchorEl(null);
+        setTourName(tour.tourName);
+    }
+    const handleCheckboxes = (artworkId: string, index: number) => {
+        const updateArtworks = deleteArtworks.map((artwork, i) => i === index ? { artworkId, checked: !artwork.checked } : { artworkId, checked: artwork.checked });
+        setDeleteArtworks(updateArtworks);
+    }
+
+    const handleSaveDelete = () => {
+        const ids = deleteArtworks.map(art => {
+            if (art.checked) {
+                return art.artworkId;
+            }
+        });
+        deleteArtworkFromTour({ tourId: tour.tourId, artworkIds: ids });
+        setDeleteArtworks(initialCheckboxes);
+        setOpenArtworksModal(false);
+        setAnchorEl(null);
+    }
+    const handleCloseDelete = () => {
+        setDeleteArtworks(initialCheckboxes);
+        setOpenArtworksModal(false);
+        setAnchorEl(null);
+    }
+
     return (
         <>
             <IconButton aria-label="more actions" onClick={handleDropdown}>
@@ -216,7 +241,7 @@ const DropdownButton = (tour: TourType) => {
                 id="tour-menu"
                 anchorEl={anchorEl}
                 open={open}
-                onClose={handleClose}
+                onClose={() => setAnchorEl(null)}
             >
                 <MenuItem onClick={() => setModalOpen(true)}>
                     <ListItemIcon>
@@ -243,7 +268,7 @@ const DropdownButton = (tour: TourType) => {
                     </MenuItem>}
             </Menu>
 
-            <Dialog onClose={() => setModalOpen(false)} open={modalOpen}>
+            <Dialog onClose={() => handleCloseEdit()} open={modalOpen}>
                 <DialogTitle>Edit Tour Name</DialogTitle>
                 <DialogContent>
                     <FormControl component="fieldset">
@@ -256,22 +281,20 @@ const DropdownButton = (tour: TourType) => {
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setModalOpen(false)}>Cancel</Button>
+                    <Button onClick={() => handleCloseEdit()}>Cancel</Button>
                     <Button
-                        onClick={() => handleSave(tour.tourId, tourName)}
-                    >Save</Button>
+                        onClick={() => handleSaveEdit(tour.tourId, tourName)}>Save</Button>
                 </DialogActions>
             </Dialog>
-            <Dialog onClose={() => setOpenArtworksModal(false)} open={openArtworksModal}>
+            <Dialog onClose={() => handleCloseDelete()} open={openArtworksModal} >
                 <DialogTitle>Remove Artworks From Tour</DialogTitle>
                 <DialogContent>
                     <List>
-                        {tour.artworks.map((artwork) => {
+                        {tour.artworks.map((artwork, index) => {
+                            const checked = deleteArtworks[index].checked;
                             return (<ListItem
                                 secondaryAction={
-                                    <IconButton edge="end" aria-label="delete">
-                                        <DeleteIcon onClick={() => deleteArtworkFromTour({ tourId: tour.tourId, artworkId: artwork.artworkId })} />
-                                    </IconButton>
+                                    <Checkbox checked={checked} onChange={() => handleCheckboxes(artwork.artworkId, index)} />
                                 }
                             >
                                 <ListItemText
@@ -283,9 +306,12 @@ const DropdownButton = (tour: TourType) => {
                     </List>
                 </DialogContent>
                 <DialogActions>
-                    {/* <Button onClick={() => { setOpenArtworksModal(false);setAnchorEl(null);}}>Close</Button> */}
+                    <Button onClick={() => handleCloseDelete()}>Cancel</Button>
+                    <Button
+                        disabled={!deleteArtworks.reduce((sum, artwork) => sum && artwork.checked, false)}
+                        onClick={() => handleSaveDelete()}>Save</Button>
                 </DialogActions>
-            </Dialog>
+            </Dialog >
         </>
     );
 }
