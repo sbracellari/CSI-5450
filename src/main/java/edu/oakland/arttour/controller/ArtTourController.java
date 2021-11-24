@@ -253,13 +253,13 @@ public class ArtTourController {
   }
 
   @CrossOrigin
-  @PostMapping("tour/{tourId}/artwork/{artworkId}/removal")
+  @PostMapping("tour/{tourId}/artwork/removal")
   public void deleteFromTour(
-      HttpServletRequest request, @PathVariable int tourId, @PathVariable String artworkId)
+      HttpServletRequest request, @PathVariable int tourId, @RequestBody List<String> artworkIds)
       throws SoffitAuthException {
     String email =
         authorizer.getClaimFromJWT(request, "email").asString(); // just to check if token is valid
-    dao.deleteFromTour(tourId, artworkId);
+        artworkIds.stream().forEach(artworkId -> dao.deleteFromTour(tourId, artworkId));
   }
 
   @CrossOrigin

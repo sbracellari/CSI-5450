@@ -195,10 +195,11 @@ export const api = createApi({
             invalidatesTags: ['Tour']
         }),
         deleteFromTour: builder.mutation({
-            query: ({ tourId, artworkId }) => ({
-                url: `tour/${tourId}/artwork/${artworkId}/removal`,
+            query: ({ tourId, artworkIds }) => ({
+                url: `tour/${tourId}/artwork/removal`,
                 method: 'POST',
                 mode: 'cors',
+                body: artworkIds,
                 headers: headers
             }),
             invalidatesTags: ['Tour', 'Favorites']
