@@ -14,10 +14,11 @@ const headers = {
 export const api = createApi({
     reducerPath: 'api',
     baseQuery,
-    tagTypes: ['Tour', 'Public Tour'],
+    tagTypes: ['Artwork', 'Favorites', 'Tour', 'Public Tour'],
     endpoints: (builder) => ({
         getCollection: builder.query<Artwork[], void>({
-            query: () => 'collection'
+            query: () => 'collection',
+            providesTags: ['Artwork'],
         }),
         getPublicTours: builder.query<Tour[], void>({
             query: () => 'tours',
@@ -102,23 +103,24 @@ export const api = createApi({
                 mode: 'cors',
                 headers: headers
             }),
-            invalidatesTags: ['Tour', 'Public Tour']
+            invalidatesTags: ['Tour', 'Public Tour', 'Favorites']
         }),
-        getUserFavorites: builder.query<Favorite, string>({
+        getUserFavorites: builder.query({
             query: () => ({
-                url: `consumer/favorites`,
-                method: 'GET',
+                url: 'consumer/favorites',
                 mode: 'cors',
                 headers: headers
             }),
+            providesTags: ['Favorites']
         }),
         favoriteArtwork: builder.mutation({
             query: (artworkId: string) => ({
                 url: `consumer/favorites/artwork/${artworkId}`,
                 method: 'POST',
                 mode: 'cors',
-                headers: headers
+                headers: headers,
             }),
+            invalidatesTags: ['Favorites']
         }),
         favoriteCreator: builder.mutation({
             query: (creatorId: number) => ({
@@ -129,12 +131,14 @@ export const api = createApi({
             }),
         }),
         favoriteTour: builder.mutation({
-            query: (tourId: number) => ({
+            //@todo: how to avoid passing null
+            query: (tourId: number | null) => ({
                 url: `consumer/favorites/tour/${tourId}`,
                 method: 'POST',
                 mode: 'cors',
                 headers: headers
             }),
+            invalidatesTags: ['Favorites']
         }),
         deleteFavoriteArtwork: builder.mutation({
             query: (artworkId: string) => ({
@@ -143,6 +147,7 @@ export const api = createApi({
                 mode: 'cors',
                 headers: headers
             }),
+            invalidatesTags: ['Favorites']
         }),
         deleteFavoriteCreator: builder.mutation({
             query: (creatorId: number) => ({
@@ -153,12 +158,13 @@ export const api = createApi({
             }),
         }),
         deleteFavoriteTour: builder.mutation({
-            query: (tourId: number) => ({
+            query: (tourId: number | null) => ({
                 url: `consumer/favorites/tour/${tourId}/removal`,
                 method: 'POST',
                 mode: 'cors',
                 headers: headers
             }),
+            invalidatesTags: ['Favorites']
         }),
         getToursForUser: builder.query<Tour[], void>({
             query: () => ({
@@ -189,13 +195,14 @@ export const api = createApi({
             invalidatesTags: ['Tour']
         }),
         deleteFromTour: builder.mutation({
-            query: ({ tourId, artworkId }) => ({
-                url: `tour/${tourId}/artwork/${artworkId}/removal`,
+            query: ({ tourId, artworkIds }) => ({
+                url: `tour/${tourId}/artwork/removal`,
                 method: 'POST',
                 mode: 'cors',
+                body: artworkIds,
                 headers: headers
             }),
-            invalidatesTags: ['Tour']
+            invalidatesTags: ['Tour', 'Favorites']
         }),
         updateTour: builder.mutation({
             query: ({ tourName, tourId }) => ({
@@ -205,7 +212,7 @@ export const api = createApi({
                 body: tourName,
                 headers: headers
             }),
-            invalidatesTags: ['Tour', 'Public Tour']
+            invalidatesTags: ['Tour', 'Public Tour', 'Favorites']
         }),
         deleteUser: builder.mutation({
             query: (userEmail: string) => ({
@@ -219,29 +226,29 @@ export const api = createApi({
 })
 
 export const {
-    useGetCollectionQuery: getCollection,
-    useGetPublicToursQuery: getPublicTours,
-    useGetAllLocationsQuery: getAllLocations,
-    useGetToursForUserQuery: getToursForUser,
-    useGetUserFavoritesQuery: getUserFavorites,
-    useAddArtworkMutation: addArtwork,
-    useAddLocationMutation: addLocation,
-    useUpdateArtworkMutation: updateArtwork,
-    useAddToTourMutation: addToTour,
-    useCreateTourMutation: createTour,
-    useDeleteArtworkMutation: deleteArtwork,
-    useDeleteCreatorMutation: deleteCreator,
-    useDeleteFavoriteArtworkMutation: deleteFavoriteArtwork,
-    useDeleteFavoriteCreatorMutation: deleteFavoriteCreator,
-    useDeleteFavoriteTourMutation: deleteFavoriteTour,
-    useDeleteFromTourMutation: deleteFromTour,
-    useDeleteLocationMutation: deleteLocation,
-    useDeleteTourMutation: deleteTour,
-    useFavoriteArtworkMutation: favoriteArtwork,
-    useFavoriteCreatorMutation: favoriteCreator,
-    useFavoriteTourMutation: favoriteTour,
-    useUpdateCreatorMutation: updateCreator,
-    useUpdateLocationMutation: updateLocation,
-    useUpdateTourMutation: updateTour,
-    useDeleteUserMutation: deleteUser,
+    useGetCollectionQuery,
+    useGetPublicToursQuery,
+    useGetAllLocationsQuery,
+    useGetToursForUserQuery,
+    useGetUserFavoritesQuery,
+    useAddArtworkMutation,
+    useAddLocationMutation,
+    useUpdateArtworkMutation,
+    useAddToTourMutation,
+    useCreateTourMutation,
+    useDeleteArtworkMutation,
+    useDeleteCreatorMutation,
+    useDeleteFavoriteArtworkMutation,
+    useDeleteFavoriteCreatorMutation,
+    useDeleteFavoriteTourMutation,
+    useDeleteFromTourMutation,
+    useDeleteLocationMutation,
+    useDeleteTourMutation,
+    useFavoriteArtworkMutation,
+    useFavoriteCreatorMutation,
+    useFavoriteTourMutation,
+    useUpdateCreatorMutation,
+    useUpdateLocationMutation,
+    useUpdateTourMutation,
+    useDeleteUserMutation,
 } = api;

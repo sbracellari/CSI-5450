@@ -21,15 +21,15 @@ export interface Artwork {
 }
 
 export interface Creator {
-    creatorId: number| null,
-    fullName: string| null,
-    citedName: string| null,
-    role: string| null,
-    nationality: string| null,
-    birthDate: string| null,
-    deathDate: string| null,
-    birthPlace: string| null,
-    deathPlace: string| null,
+    creatorId: number | null,
+    fullName: string | null,
+    citedName: string | null,
+    role: string | null,
+    nationality: string | null,
+    birthDate: string | null,
+    deathDate: string | null,
+    birthPlace: string | null,
+    deathPlace: string | null,
 }
 
 export interface Location {
@@ -50,9 +50,9 @@ export interface ToursCollectionState {
     status: 'idle' | 'loading' | 'failed';
 }
 export interface Favorite {
-    creators: Creator[],
-    artworks: Artwork[],
-    tours: Tour[]
+    favoriteCreators: Creator[],
+    favoriteArtworks: Artwork[],
+    favoriteTours: Tour[]
 }
 
 export interface User {

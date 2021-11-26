@@ -1,21 +1,14 @@
 import { Artwork as ArtworkType } from "../../app/types";
 import {
     Box, Button, Card, CardActions, CardContent, CardMedia, Chip, IconButton, Typography, DialogContent,
-    DialogActions, FormHelperText
+    DialogActions, DialogTitle, Dialog, RadioGroup, FormLabel, FormControl, SnackbarOrigin, Snackbar, FormControlLabel, FormHelperText, Radio, Tooltip
 } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { Link, Redirect } from 'react-router-dom';
-import { useAppSelector } from "../../app/hooks";
-import DialogTitle from '@mui/material/DialogTitle';
-import Dialog from '@mui/material/Dialog';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { Redirect } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useState } from 'react';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import { addToTour, getToursForUser } from '../../services/api';
-
+import { useAddToTourMutation, useFavoriteArtworkMutation, useDeleteFavoriteArtworkMutation, useGetUserFavoritesQuery, useGetToursForUserQuery } from '../../services/api';
 interface ArtworkProps {
     artwork: ArtworkType;
 }
@@ -23,18 +16,15 @@ interface ArtworkProps {
 export function Artwork(props: ArtworkProps) {
     const { artwork } = props;
     const { isLoggedIn } = useAppSelector(state => state.auth);
-    const handleFavorite = (artworkId: string) => {
-        //@todo: check user artwork favorites and filter throwgh them 
-        console.log('handle favorites');
-    }
+    const dispatch = useAppDispatch();
 
     const [open, setOpen] = useState(false);
     const [tourId, setTourId] = useState(0);
-    const { data: tours } = getToursForUser();
+    const { data: tours } = useGetToursForUserQuery();
 
     const [
         addArtworkToTour
-    ] = addToTour()
+    ] = useAddToTourMutation()
 
     const handleSubmit = (tourId: number, artworkId: string) => {
         setOpen(false);
@@ -73,7 +63,6 @@ export function Artwork(props: ArtworkProps) {
                         <Typography variant="body2" color="text.secondary" component="div">
                             {artwork.creator.nationality}, {artwork.creator.birthDate} - {artwork.creator.deathDate}
                         </Typography>
-
                     </CardContent>
                     <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', pl: 1, pb: 1, gap: 2 }}>
                         {artwork.medium && <Chip color="info" label={artwork.medium} />}
@@ -81,13 +70,7 @@ export function Artwork(props: ArtworkProps) {
                     </Box>
                 </Box>
                 <CardActions>
-                    {isLoggedIn && <IconButton aria-label="add to favorites" onClick={() => handleFavorite(artwork.artworkId)}>
-                        <FavoriteIcon />
-                    </IconButton>}
-                    <Button size="small" aria-label="view details"
-                        component={Link} to={`/details?id=${artwork.artworkId}`}
-                        onClick={() => console.log('view detail')}
-                    >Details</Button>
+                    {isLoggedIn && FavoriteButton(artwork)}
                     <Button onClick={() => setOpen(true)} size="small" aria-label="add to tour">Add to tour</Button>
                 </CardActions>
             </Card>
@@ -122,3 +105,69 @@ export function Artwork(props: ArtworkProps) {
         </>
     )
 };
+
+export const FavoriteButton = (artwork: ArtworkType) => {
+
+    const [
+        addFavArtwork,
+        {
+            isSuccess: addedFavArtwork,
+            isError: errorAddingFavArtwork
+        }
+    ] = useFavoriteArtworkMutation();
+    const [
+        deleteFavArtwork,
+        {
+            isSuccess: deletedFavArtwork,
+            isError: errorDeletingFavArtwork
+        }
+    ] = useDeleteFavoriteArtworkMutation();
+    const [alert, setAlert] = useState(false);
+
+    const handleClose = () => {
+        setAlert(false);
+    };
+    const { data: favorites } = useGetUserFavoritesQuery({ skipToken: true });
+    let message;
+    const isFavorite = favorites?.favoriteArtworks.find((item: ArtworkType) => item.artworkId === artwork.artworkId);
+    if (addedFavArtwork) {
+        message = "Artwork added to favorites.";
+    }
+    if (errorAddingFavArtwork) {
+        message = "An error occured when adding a favorite an artwork.";
+    }
+    if (deletedFavArtwork) {
+        message = "Artwork deleted from favorites.";
+    }
+    if (errorDeletingFavArtwork) {
+        message = "An error occured when deleting an artwork from favorites.";
+    }
+    //{deleteFavArtwork(artwork.artworkId);setAlert(true);}
+    return (
+        <>
+            {isFavorite ? (
+                <Tooltip title='Unavorite artwork' placement='bottom'>
+                    <IconButton aria-label="add to favorites" onClick={() => deleteFavArtwork(artwork.artworkId)}>
+                        <FavoriteIcon color="error" />
+                    </IconButton>
+                </Tooltip>)
+                :
+                (<Tooltip title='Favorite artwork' placement='bottom'>
+                    <IconButton aria-label="add to favorites" onClick={() => addFavArtwork(artwork.artworkId)}>
+                        <FavoriteBorderIcon />
+                    </IconButton>
+                </Tooltip>
+                )}
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                }}
+                open={alert}
+                onClose={handleClose}
+                message={message}
+            />
+        </>
+    );
+
+}

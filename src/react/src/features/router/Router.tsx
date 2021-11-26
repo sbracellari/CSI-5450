@@ -8,6 +8,7 @@ import { Register } from '../auth/Register';
 import { Tours } from '../tour/Tours';
 import { TourStepper } from '../tour/TourStepper';
 import { Admin } from '../admin/Admin';
+import { Favorites } from '../favorites/Favorites';
 import { EditAccount } from '../auth/EditAccount';
 import { MobileDrawer } from '../MobileDrawer';
 
@@ -18,9 +19,9 @@ export function Router() {
                 <Route exact path={['/', '/login']} component={Login} />
                 <Route exact path='/register' component={Register} />
                 <Route>
-                    <Box sx={{display: 'flex', alignItems: 'center'}}>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <MobileDrawer />
-                        <Typography sx={{fontSize: 18, ml: 2}}><strong>YourTour - Carnegie Museum of Art</strong></Typography>
+                        <Typography sx={{ fontSize: 18, ml: 2 }}><strong>YourTour - Carnegie Museum of Art</strong></Typography>
                     </Box>
                     <Switch>
                         <Route exact path='/account' component={EditAccount} />
@@ -37,7 +38,7 @@ export function Router() {
                         <Route path="/my-tours/:tourId">
                             <TourStepper isPublic={false} />
                         </Route>
-                        <Route exact path="/favorites" />
+                        <Route  path="/favorites" component={Favorites}/>
                         <Route exact path="/admin" component={Admin} />
                         <Route path='/details' component={Detail} />
                     </Switch>

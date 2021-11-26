@@ -1,8 +1,8 @@
-import { createTour, getPublicTours, getToursForUser } from "../../services/api";
-import { 
-    Box, 
-    Grid, 
-    CircularProgress, 
+import { useCreateTourMutation, useGetPublicToursQuery, useGetToursForUserQuery } from "../../services/api";
+import {
+    Box,
+    Grid,
+    CircularProgress,
     Tooltip,
     Dialog,
     DialogTitle,
@@ -10,7 +10,7 @@ import {
     DialogActions,
     TextField,
     FormControl,
-    Button
+    Button,
 } from "@mui/material";
 import { Tour } from "./Tour";
 import { useAppSelector } from "../../app/hooks";
@@ -18,7 +18,7 @@ import { Tour as TourType } from "../../app/types";
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import { Redirect } from 'react-router-dom';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 
 const AddTour = () => {
@@ -27,7 +27,7 @@ const AddTour = () => {
     const [nameErr, setNameErr] = useState(false);
     const [
         createNewTour
-    ] = createTour();
+    ] = useCreateTourMutation();
 
     const handleTourCreate = () => {
         if (tourName === null || tourName.length === 0) {
@@ -40,11 +40,11 @@ const AddTour = () => {
     return (
         <>
             <Tooltip title='Create new tour' placement='left'>
-                <Fab 
-                    size='small' 
-                    color="primary" 
-                    aria-label="add" 
-                    sx={{position: 'fixed', right: 15, bottom: 15}}
+                <Fab
+                    size='small'
+                    color="primary"
+                    aria-label="add"
+                    sx={{ position: 'fixed', right: 15, bottom: 15 }}
                     onClick={() => setOpen(true)}
                 >
                     <AddIcon />
@@ -54,8 +54,8 @@ const AddTour = () => {
                 <DialogTitle>Create a new tour</DialogTitle>
                 <DialogContent>
                     <FormControl component="fieldset">
-                        <TextField 
-                            sx={{width: '300px'}}
+                        <TextField
+                            sx={{ width: '300px' }}
                             placeholder='Tour name'
                             onChange={e => setTourName(e.target.value)}
                             variant='standard'
@@ -70,8 +70,8 @@ const AddTour = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpen(false)}>Cancel</Button>
-                    <Button 
-                      onClick={() => handleTourCreate()}
+                    <Button
+                        onClick={() => handleTourCreate()}
                     >Save</Button>
                 </DialogActions>
             </Dialog>
@@ -82,13 +82,15 @@ const AddTour = () => {
 export function Tours(props: { isPublic: boolean }) {
     const { isPublic } = props;
     const { isLoggedIn } = useAppSelector(state => state.auth);
-    
+    const publicTours = useGetPublicToursQuery();
+    const personalTours = useGetToursForUserQuery();
+
     let tours;
     if (isPublic) {
-        tours = getPublicTours();
+        tours = publicTours;
     } else {
-        tours = getToursForUser();
-    }    
+        tours = personalTours;
+    }
 
     if (!isLoggedIn) {
         return <Redirect to='/login' />;
@@ -106,13 +108,13 @@ export function Tours(props: { isPublic: boolean }) {
                 An error occurred.
             </Box>);
     }
-    if(tours.data.length === 0) {
+    if (tours.data.length === 0) {
         return (
             <>
                 <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
                     No tours to display.
                 </Box>
-                {!isPublic && <AddTour /> }
+                {!isPublic && <AddTour />}
             </>
         )
     }
@@ -123,7 +125,7 @@ export function Tours(props: { isPublic: boolean }) {
                     return <Tour key={tour.tourId} tour={tour} isPublic={isPublic} />
                 })}
             </Grid >
-            {!isPublic && <AddTour /> }
+            {!isPublic && <AddTour />}
         </>
     )
 };
