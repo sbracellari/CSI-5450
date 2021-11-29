@@ -22,108 +22,92 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { logout } from './auth/authSlice';
 
 export function MobileDrawer() {
-    const dispatch = useAppDispatch();
-    const [open, setOpen] = useState(false);
-  
-    const list = () => (
-      <Box
-        sx={{ width: 'auto' }}
-        role="presentation"
-        onClick={() => setOpen(false)}
-        onKeyDown={() => setOpen(false)}
-      >
-        <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-      </Box>
-    );
-  
-    return (
-      <div >
-          <React.Fragment>
-            <IconButton onClick={() => setOpen(true)}>
-              <MenuIcon />
-            </IconButton>
-            <Drawer
-              anchor='left'
-              open={open}
-              onClose={() => setOpen(false)}
-            >
-              <Box
-                sx={{ width: '250px', height: '100%', bgcolor: '#fafafa', display: 'inline-grid'}}
-                role="presentation"
-                onClick={() => setOpen(false)}
-                onKeyDown={() => setOpen(false)}
-              >
-                <List>
-                  <ListItemButton component={Link} to='/collection'>
-                    <ListItemIcon>
-                      <CollectionsIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='Collection' />
-                  </ListItemButton>
-                  <ListItem>
-                    <ListItemIcon>
-                      <TourIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='Tours' />
-                  </ListItem>
-                  <List>
-                    <ListItemButton sx={{pl: 4}} component={Link} to='/public-tours'>
-                      <ListItemIcon>
-                        <PublicIcon />
-                      </ListItemIcon>
-                      <ListItemText primary='Public Tours' />
-                    </ListItemButton>
-                    <ListItemButton sx={{pl: 4}} component={Link} to='/my-tours' >
-                      <ListItemIcon>
-                        <PersonIcon />
-                      </ListItemIcon>
-                      <ListItemText primary='My Tours' />
-                    </ListItemButton>
-                  </List>
-                  <ListItemButton component={Link} to='/favorites'>
-                    <ListItemIcon>
-                      <FavoriteIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='Favorites' />
-                  </ListItemButton>
-                </List>
-                <List sx={{mt: 'auto', display: 'table-cell'}}>
-                  <ListItemButton component={Link} to='/account'>
+  const dispatch = useAppDispatch();
+  const [open, setOpen] = useState(false);
+  const { isLoggedIn, message, status, user } = useAppSelector(state => state.auth);
+
+  return (
+    <div >
+      <React.Fragment>
+        <IconButton onClick={() => setOpen(true)}>
+          <MenuIcon />
+        </IconButton>
+        <Drawer
+          anchor='left'
+          open={open}
+          onClose={() => setOpen(false)}
+        >
+          <Box
+            sx={{ width: '250px', height: '100%', bgcolor: '#fafafa', display: 'inline-grid' }}
+            role="presentation"
+            onClick={() => setOpen(false)}
+            onKeyDown={() => setOpen(false)}
+          >
+            <List>
+              <ListItemButton component={Link} to='/collection'>
+                <ListItemIcon>
+                  <CollectionsIcon />
+                </ListItemIcon>
+                <ListItemText primary='Collection' />
+              </ListItemButton>
+              <ListItem>
+                <ListItemIcon>
+                  <TourIcon />
+                </ListItemIcon>
+                <ListItemText primary='Tours' />
+              </ListItem>
+              <List>
+                <ListItemButton sx={{ pl: 4 }} component={Link} to='/public-tours'>
+                  <ListItemIcon>
+                    <PublicIcon />
+                  </ListItemIcon>
+                  <ListItemText primary='Public Tours' />
+                </ListItemButton>
+                {isLoggedIn &&
+                  <ListItemButton sx={{ pl: 4 }} component={Link} to='/my-tours' >
                     <ListItemIcon>
                       <PersonIcon />
                     </ListItemIcon>
-                    <ListItemText primary='My Account' />
+                    <ListItemText primary='My Tours' />
                   </ListItemButton>
-                  <ListItemButton onClick={() => dispatch(logout())} component={Link} to='/login'>
-                    <ListItemIcon>
-                      <LogoutIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='Logout' />
-                  </ListItemButton>
-                </List>
-              </Box>
-            </Drawer>
-          </React.Fragment>
-      </div>
-    );
-  }
+                }
+              </List>
+              {isLoggedIn &&
+                <ListItemButton component={Link} to='/favorites'>
+                  <ListItemIcon>
+                    <FavoriteIcon />
+                  </ListItemIcon>
+                  <ListItemText primary='Favorites' />
+                </ListItemButton>}
+            </List>
+            {isLoggedIn ?
+              (<List sx={{ mt: 'auto', display: 'table-cell' }}>
+                <ListItemButton component={Link} to='/account'>
+                  <ListItemIcon>
+                    <PersonIcon />
+                  </ListItemIcon>
+                  <ListItemText primary='My Account' />
+                </ListItemButton>
+                <ListItemButton onClick={() => dispatch(logout())} component={Link} to='/login'>
+                  <ListItemIcon>
+                    <LogoutIcon />
+                  </ListItemIcon>
+                  <ListItemText primary='Logout' />
+                </ListItemButton>
+              </List>) :
+              (<List sx={{ mt: 'auto', display: 'table-cell' }}>
+
+                <ListItemButton component={Link} to='/login'>
+                  <ListItemIcon>
+                    <PersonIcon />
+                  </ListItemIcon>
+                  <ListItemText primary='Login' />
+                </ListItemButton>
+              </List>)
+            }
+          </Box>
+        </Drawer>
+      </React.Fragment>
+    </div>
+  );
+}

@@ -4,10 +4,15 @@ import { Artwork } from "../collection/Artwork";
 import { Tour } from "../tour/Tour";
 import { Creator } from "../collection/Creator";
 import { Artwork as ArtworkType, Tour as TourType, Creator as CreatorType } from "../../app/types";
+import { Redirect } from "react-router-dom";
+import { useAppSelector } from "../../app/hooks";
 
 export function Favorites() {
     const { data, isError, isLoading, isFetching } = useGetUserFavoritesQuery({ skipToken: true });
-
+    const { isLoggedIn, isAdmin } = useAppSelector(state => state.auth);
+    if (!isLoggedIn) {
+        <Redirect to='/login' />;
+    }
     if (isFetching || isLoading) {
         return (
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -34,9 +39,9 @@ export function Favorites() {
             {favoriteArtworks.length !== 0 &&
                 <Grid container spacing={1} sx={{ display: 'flex', alignContent: 'center', flexDirection: "column", mb: 2 }}>
                     <Divider>
-                    <Typography gutterBottom variant="h6" component="div">
-                        Favorite Artworks
-                    </Typography>
+                        <Typography gutterBottom variant="h6" component="div">
+                            Favorite Artworks
+                        </Typography>
                     </Divider>
                     {favoriteArtworks.map((artwork: ArtworkType) => <Grid key={artwork.artworkId} item><Artwork artwork={artwork} /></Grid>)}
                 </Grid>
@@ -54,11 +59,14 @@ export function Favorites() {
             {favoriteTours.length !== 0 &&
                 <Grid container spacing={1} sx={{ display: 'flex', alignContent: 'center', flexDirection: "column", mb: 2 }}>
                     <Divider>
-                    <Typography gutterBottom variant="h6" component="div">
-                        Favorite Tours
-                    </Typography>
+                        <Typography gutterBottom variant="h6" component="div">
+                            Favorite Tours
+                        </Typography>
                     </Divider>
-                    {favoriteTours.map((tour: TourType) => <Grid key={tour.tourId} item><Tour tour={tour} isPublic={tour.email==="admin1@arttour.com"} /></Grid>)}
+                    {favoriteTours.map((tour: TourType) => {
+                        const isPublic = tour.email === 'admin2@arttour.com' || tour.email === 'admin1@arttour.com'
+                        return (<Grid key={tour.tourId} item><Tour tour={tour} isPublic={isPublic} /></Grid>)
+                    })}
                 </Grid>
             }
         </Box>);
