@@ -7,15 +7,22 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useState } from 'react';
+import green from '../../img/img1.jpg';
+import orange from '../../img/img2.jpg';
+import purple from '../../img/img3.jpg';
+
 import { useAddToTourMutation, useFavoriteArtworkMutation, useDeleteFavoriteArtworkMutation, useGetUserFavoritesQuery, useGetToursForUserQuery } from '../../services/api';
 interface ArtworkProps {
     artwork: ArtworkType;
 }
 
+
 export function Artwork(props: ArtworkProps) {
     const { artwork } = props;
     const { isLoggedIn } = useAppSelector(state => state.auth);
     const dispatch = useAppDispatch();
+
+    const images = [orange, purple, green];
 
     const [open, setOpen] = useState(false);
     const [tourId, setTourId] = useState(0);
@@ -42,8 +49,8 @@ export function Artwork(props: ArtworkProps) {
             <Card variant="elevation" sx={{ pb: 2, maxWidth: 400 }}>
                 <CardMedia
                     component="img"
-                    sx={{ width: 200 }}
-                    image="../../../public/logo512.png"
+                    sx={{ width: '100%', height: 175 }}
+                    image={images[Math.floor(Math.random() * 3)]}
                 />
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                     <CardContent >

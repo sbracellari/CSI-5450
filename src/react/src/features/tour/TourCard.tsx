@@ -2,6 +2,9 @@ import { Artwork } from "../../app/types";
 import { Box, Typography, Grid } from "@mui/material";
 import { FavoriteButton } from "../collection/Artwork";
 import { useAppSelector } from "../../app/hooks";
+import green from '../../img/img1.jpg';
+import orange from '../../img/img2.jpg';
+import purple from '../../img/img3.jpg';
 
 interface TourCardProps {
     artwork: Artwork;
@@ -12,6 +15,7 @@ interface TourCardProps {
 export function TourCard(props: TourCardProps) {
     const { artwork, isPublic, tourId } = props;
     const { isLoggedIn } = useAppSelector(state => state.auth);
+    const images = [orange, purple, green];
     const onView = artwork.location.physicalLocation === 'Not on View';
     const unknown = artwork.location.physicalLocation === 'Unknown';
     if (onView || unknown) {
@@ -23,6 +27,7 @@ export function TourCard(props: TourCardProps) {
             </Box>
         )
     }
+    
     return (
         <Grid>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -46,7 +51,7 @@ export function TourCard(props: TourCardProps) {
                         height: 200,
                         width: '100%'
                     }}
-                    src={"./art.png"}
+                    src={images[Math.floor(Math.random() * 3)]}
                 />
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                     <Typography variant="h6" color="text.primary" component="div"  >

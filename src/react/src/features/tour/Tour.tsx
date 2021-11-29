@@ -34,10 +34,15 @@ import { useUpdateTourMutation, useDeleteTourMutation, useFavoriteTourMutation, 
 import DeleteIcon from '@mui/icons-material/Delete';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import green from '../../img/img1.jpg';
+import orange from '../../img/img2.jpg';
+import purple from '../../img/img3.jpg';
 
 export function Tour(props: { tour: TourType; isPublic: boolean; }) {
     const { tour, isPublic } = props;
     const { isLoggedIn } = useAppSelector(state => state.auth);
+
+    const images = [orange, purple, green];
 
     const [activeStep, setActiveStep] = useState(0);
     const [disabled, setDisabled] = useState(true);
@@ -103,7 +108,7 @@ export function Tour(props: { tour: TourType; isPublic: boolean; }) {
                                                 height: 200,
                                                 width: '100%'
                                             }}
-                                            src={"./art.png"}
+                                            src={images[Math.floor(Math.random() * 3)]}
                                         />
                                         <Box sx={{ display: 'flex', justifyContent: 'center', float: 'right', mt: '-7%', mr: '5%' }}>
                                             <Fab component={Link}
