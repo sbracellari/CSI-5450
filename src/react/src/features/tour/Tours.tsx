@@ -20,6 +20,56 @@ import AddIcon from '@mui/icons-material/Add';
 import { Redirect } from 'react-router-dom';
 import { useState } from 'react';
 
+export function Tours(props: { isPublic: boolean }) {
+    const { isPublic } = props;
+    const { isLoggedIn } = useAppSelector(state => state.auth);
+    const publicTours = useGetPublicToursQuery();
+    const personalTours = useGetToursForUserQuery();
+
+    let tours;
+    if (isPublic) {
+        tours = publicTours;
+    } else {
+        tours = personalTours;
+    }
+
+    if (!isLoggedIn && !isPublic) {
+        return <Redirect to='/login' />;
+    }
+
+    if (tours.isFetching || tours.isLoading) {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <CircularProgress />
+            </Box>);
+    }
+    if (!tours.data || tours.isError) {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                An error occurred.
+            </Box>);
+    }
+    if (tours.data.length === 0) {
+        return (
+            <>
+                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                    No tours to display.
+                </Box>
+                {!isPublic && <AddTour />}
+            </>
+        )
+    }
+    return (
+        <>
+            <Grid container spacing={1} alignContent="center" flexDirection="column" >
+                {tours.data.map((tour: TourType, index: any) => {
+                    return <Tour key={tour.tourId} tour={tour} isPublic={isPublic} />
+                })}
+            </Grid >
+            {!isPublic && <AddTour />}
+        </>
+    )
+};
 
 const AddTour = () => {
     const [open, setOpen] = useState(false);
@@ -78,54 +128,3 @@ const AddTour = () => {
         </>
     )
 }
-
-export function Tours(props: { isPublic: boolean }) {
-    const { isPublic } = props;
-    const { isLoggedIn } = useAppSelector(state => state.auth);
-    const publicTours = useGetPublicToursQuery();
-    const personalTours = useGetToursForUserQuery();
-
-    let tours;
-    if (isPublic) {
-        tours = publicTours;
-    } else {
-        tours = personalTours;
-    }
-
-    if (!isLoggedIn) {
-        return <Redirect to='/login' />;
-    }
-
-    if (tours.isFetching || tours.isLoading) {
-        return (
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <CircularProgress />
-            </Box>);
-    }
-    if (!tours.data || tours.isError) {
-        return (
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-                An error occurred.
-            </Box>);
-    }
-    if (tours.data.length === 0) {
-        return (
-            <>
-                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-                    No tours to display.
-                </Box>
-                {!isPublic && <AddTour />}
-            </>
-        )
-    }
-    return (
-        <>
-            <Grid container spacing={1} alignContent="center" flexDirection="column" >
-                {tours.data.map((tour: TourType, index: any) => {
-                    return <Tour key={tour.tourId} tour={tour} isPublic={isPublic} />
-                })}
-            </Grid >
-            {!isPublic && <AddTour />}
-        </>
-    )
-};

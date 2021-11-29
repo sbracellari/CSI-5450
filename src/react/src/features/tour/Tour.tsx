@@ -1,4 +1,4 @@
-import { Artwork, Tour as TourType } from "../../app/types";
+import { Tour as TourType } from "../../app/types";
 import {
     Box,
     Button,
@@ -21,7 +21,6 @@ import {
     List,
     ListItem,
     Checkbox,
-    FormControlLabel,
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useState } from "react";
@@ -61,7 +60,7 @@ export function Tour(props: { tour: TourType; isPublic: boolean; }) {
             ? history.push(`/public-tours/${tour.tourId}`)
             : history.push(`/my-tours/${tour.tourId}`)
     };
-
+    console.log(tour.email)
     //@todo: need to fix some weird padding betwin the swipe and the text
     return (
         <Box sx={{ width: 400, mt: 2 }} >
@@ -308,7 +307,7 @@ const DropdownButton = (tour: TourType) => {
                 <DialogActions>
                     <Button onClick={() => handleCloseDelete()}>Cancel</Button>
                     <Button
-                        disabled={!deleteArtworks.reduce((sum, artwork) => sum && artwork.checked, false)}
+                        disabled={!deleteArtworks.some((artwork) => artwork.checked)}
                         onClick={() => handleSaveDelete()}>Save</Button>
                 </DialogActions>
             </Dialog >
