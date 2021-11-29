@@ -16,8 +16,10 @@ export const api = createApi({
     baseQuery,
     tagTypes: ['Artwork', 'Favorites', 'Tour', 'Public Tour'],
     endpoints: (builder) => ({
-        getCollection: builder.query<Artwork[], void>({
-            query: () => 'collection',
+        getCollection: builder.query<Artwork[], number>({
+            query: (offset: number) => ({
+                url: `collection?offset=${offset}`,
+            }),
             providesTags: ['Artwork'],
         }),
         getPublicTours: builder.query<Tour[], void>({
@@ -251,4 +253,5 @@ export const {
     useUpdateLocationMutation,
     useUpdateTourMutation,
     useDeleteUserMutation,
+    usePrefetch
 } = api;

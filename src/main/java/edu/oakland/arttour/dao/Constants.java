@@ -15,7 +15,10 @@ public class Constants {
                   + "     NATURAL JOIN artwork_has_creator ac    "
                   + "     NATURAL JOIN creator c                 "
                   + "     NATURAL JOIN location l                "
-                  + " LIMIT 50                                   ")
+                  + "  WHERE l.physical_location != 'Not on View'"
+                  + "  AND l.physical_location != 'Unknown'      "
+                  + " LIMIT 50                                   "
+                  + " OFFSET ?                                   ")
           .replaceAll("\\s+", " ");
 
   public static final String GET_ALL_LOCATIONS =
