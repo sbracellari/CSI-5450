@@ -190,7 +190,9 @@ public class ArtTourDAO {
   public String getTourName(int tourId) {
     return jdbcTemplate.queryForObject(Constants.GET_TOUR_NAME, String.class, tourId);
   }
-
+ public String getTourEmail(int tourId) {
+    return jdbcTemplate.queryForObject(Constants.GET_TOUR_EMAIL, String.class, tourId);
+  }
   public void deleteLocation(int locationId) {
     jdbcTemplate.update(Constants.DELETE_LOCATION, locationId);
   }

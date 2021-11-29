@@ -30,6 +30,13 @@ public class Constants {
           .replaceAll("\\s+", " ");
 
   ////////// queries //////////
+  public static final String GET_ALL_ClASSIFICATIONS =
+      new String(
+              " SELECT                                     "
+                  + "     classification                         "
+                  + " FROM                                       "
+                  + "     artwork                               ")
+          .replaceAll("\\s+", " ");
   public static final String GET_FILTERED_COLLECTION =
       // not sure if dynamically passing a column name will work.
       new String(
@@ -143,6 +150,15 @@ public class Constants {
       new String(
               " SELECT               "
                   + "     t.tour_name      "
+                  + " FROM                 "
+                  + "     tour t           "
+                  + " WHERE                "
+                  + "     t.tour_id = ?    ")
+          .replaceAll("\\s+", " ");
+public static final String GET_TOUR_EMAIL =
+      new String(
+              " SELECT               "
+                  + "     t.email      "
                   + " FROM                 "
                   + "     tour t           "
                   + " WHERE                "
