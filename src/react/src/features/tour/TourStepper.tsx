@@ -82,7 +82,9 @@ export function TourStepper(props: { isPublic: boolean }) {
                                         </Paper>
                                         {index === tour.artworks.length - 1 ?
                                             (<Button
-                                                component={Link} to={`/collection`}
+                                                variant="contained"
+                                                sx={{ mt: 1, mr: 1 }}
+                                                component={Link} to={isPublic ? '/public-tours' : 'my-tours'}
                                             >Finish</Button>) :
                                             (<Button
                                                 variant="contained"

@@ -10,19 +10,18 @@ if (userData === null) {
     user = null;
 } else {
     const userInfo = JSON.parse(userData);
-    user = { 
+    user = {
         email: userInfo.email,
-        fname: userInfo.fname, 
-        lname: userInfo.lname, 
-        password: userInfo.password, 
-        token: userInfo.token, 
+        fname: userInfo.fname,
+        lname: userInfo.lname,
+        password: userInfo.password,
+        token: userInfo.token,
     };
 }
 
 export const register = createAsyncThunk(
     'auth/register',
     async (user: RegisterUser) => {
-        // @todo: might need try catch block
         const response = await authService.register(user);
         return response;
     }
@@ -89,7 +88,7 @@ const authSlice = createSlice({
             .addCase(login.fulfilled, (state, action) => {
                 state.isLoggedIn = true;
                 state.status = 'idle';
-                state.message= '';
+                state.message = '';
                 state.user = action.payload;
                 console.log('log in successful', action.payload);
             })

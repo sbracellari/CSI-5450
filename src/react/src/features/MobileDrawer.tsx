@@ -24,10 +24,10 @@ import { logout } from './auth/authSlice';
 export function MobileDrawer() {
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
-  const { isLoggedIn, message, status, user } = useAppSelector(state => state.auth);
+  const { isLoggedIn } = useAppSelector(state => state.auth);
 
   return (
-    <div >
+    <div>
       <React.Fragment>
         <IconButton onClick={() => setOpen(true)}>
           <MenuIcon />

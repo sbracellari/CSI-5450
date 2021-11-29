@@ -15,14 +15,15 @@ export function Router() {
     return (
         <BrowserRouter basename='/'>
             <Switch>
-                <Route exact path='/login' component={Login} />
-                <Route exact path='/register' component={Register} />
+
                 <Route>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <MobileDrawer />
                         <Typography sx={{ fontSize: 18, ml: 2 }}><strong>YourTour - Carnegie Museum of Art</strong></Typography>
                     </Box>
                     <Switch>
+                        <Route exact path='/login' component={Login} />
+                        <Route exact path='/register' component={Register} />
                         <Route exact path='/account' component={EditAccount} />
                         <Route exact path="/">
                             <Redirect to="/collection" />
