@@ -7,7 +7,6 @@ import { register } from './authSlice';
 export function Register() {
     const dispatch = useAppDispatch();
     const { isLoggedIn, message, status } = useAppSelector(state => state.auth);
-
     const [fname, setFname] = useState('');
     const [lname, setLname] = useState('');
     const [password, setPassword] = useState('');

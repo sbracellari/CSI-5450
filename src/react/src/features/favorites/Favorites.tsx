@@ -9,7 +9,7 @@ import { useAppSelector } from "../../app/hooks";
 
 export function Favorites() {
     const { data, isError, isLoading, isFetching } = useGetUserFavoritesQuery({ skipToken: true });
-    const { isLoggedIn, isAdmin } = useAppSelector(state => state.auth);
+    const { isLoggedIn } = useAppSelector(state => state.auth);
     if (!isLoggedIn) {
         <Redirect to='/login' />;
     }

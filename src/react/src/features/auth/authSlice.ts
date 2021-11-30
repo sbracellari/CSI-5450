@@ -78,6 +78,7 @@ const authSlice = createSlice({
             .addCase(register.rejected, (state, action) => {
                 state.isLoggedIn = false;
                 state.status = 'failed';
+                state.message = action.error.message;
                 console.log('registration failed', action);
             })
             .addCase(login.pending, (state) => {
@@ -95,7 +96,7 @@ const authSlice = createSlice({
             .addCase(login.rejected, (state, action) => {
                 state.isLoggedIn = false;
                 state.status = 'failed';
-                state.message = 'Unable to login at this time.';
+                state.message = action.error.message;
                 console.log('log in failed', action);
             })
             .addCase(logout.pending, (state) => {
