@@ -84,7 +84,7 @@ export function TourStepper(props: { isPublic: boolean }) {
                                             (<Button
                                                 variant="contained"
                                                 sx={{ mt: 1, mr: 1 }}
-                                                component={Link} to={isPublic ? '/public-tours' : 'my-tours'}
+                                                component={Link} to={isPublic ? '/public-tours' : '/my-tours'}
                                             >Finish</Button>) :
                                             (<Button
                                                 variant="contained"
