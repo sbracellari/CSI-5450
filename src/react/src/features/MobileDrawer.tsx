@@ -44,12 +44,13 @@ export function MobileDrawer() {
             onKeyDown={() => setOpen(false)}
           >
             <List>
-              <ListItemButton component={Link} to='/collection'>
-                <ListItemIcon>
-                  <CollectionsIcon />
-                </ListItemIcon>
-                <ListItemText primary='Collection' />
-              </ListItemButton>
+              {isLoggedIn &&
+                <ListItemButton component={Link} to='/collection'>
+                  <ListItemIcon>
+                    <CollectionsIcon />
+                  </ListItemIcon>
+                  <ListItemText primary='Collection' />
+                </ListItemButton>}
               <ListItem>
                 <ListItemIcon>
                   <TourIcon />

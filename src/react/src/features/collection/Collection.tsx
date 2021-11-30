@@ -5,9 +5,11 @@ import { Artwork } from './Artwork';
 import { useGetCollectionQuery, usePrefetch } from '../../services/api';
 import { ArrowDownward } from "@mui/icons-material";
 import { Artwork as ArtworkType } from "../../app/types";
-
+import { useAppSelector } from "../../app/hooks";
+import { Redirect } from "react-router-dom";
 
 export function Collection() {
+  const { isLoggedIn } = useAppSelector(state => state.auth);
   const totalPages = 1200;
   const limit = 50;
   const [offset, setOffset] = useState(0);
@@ -30,8 +32,10 @@ export function Collection() {
     prefetchOffset(offset)
   }, [prefetchOffset, offset])
 
-
-  if (isLoading) {
+  if (!isLoggedIn) {
+    return <Redirect to='/login' />;
+  }
+  if (isLoading || isFetching) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <CircularProgress />
