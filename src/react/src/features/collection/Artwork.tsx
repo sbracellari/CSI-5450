@@ -72,8 +72,8 @@ export function Artwork(props: ArtworkProps) {
                         </Typography>
                     </CardContent>
                     <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', pl: 1, pb: 1, gap: 2 }}>
-                        {artwork.medium && <Chip color="info" label={artwork.medium} />}
-                        {artwork.classification && <Chip color="secondary" label={artwork.classification} />}
+                        {artwork.medium && <Chip color="info" label={artwork.medium} sx={{maxWidth: '98%'}} />}
+                        {artwork.classification && <Chip color="secondary" label={artwork.classification} sx={{maxWidth: '98%'}} />}
                     </Box>
                 </Box>
                 {isLoggedIn &&
