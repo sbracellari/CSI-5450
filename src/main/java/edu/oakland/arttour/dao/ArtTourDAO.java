@@ -49,14 +49,6 @@ public class ArtTourDAO {
     jdbcTemplate.update(Constants.ADD_ADMIN, email);
   }
 
-  // @todo: make params optional so we can filter with some of them not all
-  // public List<Artwork> getFilteredCollection()(String artistId, String
-  // classification, String medium) throws DataAccessException {
-  // return jdbcTemplate.query(
-  // return jdbcTemplate.query(Constants.GET_FILTERED_COLLECTION, new Object[]
-  // {artistId, classification, medium}, Artwork.mapper);
-  // }
-
   public List<Integer> getFavoriteTourIds(String email) throws DataAccessException {
     return jdbcTemplate.queryForList(Constants.GET_FAVORITE_TOUR_IDS, Integer.class, email);
   }

@@ -9,16 +9,16 @@ public class Constants {
   public static final String GET_COLLECTION =
       new String(
               " SELECT                                     "
-                  + "     *                                      "
-                  + " FROM                                       "
-                  + "     artwork a                              "
-                  + "     NATURAL JOIN artwork_has_creator ac    "
-                  + "     NATURAL JOIN creator c                 "
-                  + "     NATURAL JOIN location l                "
-                  + "  WHERE l.physical_location != 'Not on View'"
-                  + "  AND l.physical_location != 'Unknown'      "
-                  + " LIMIT 50                                   "
-                  + " OFFSET ?                                   ")
+                  + "     *                                         "
+                  + " FROM                                          "
+                  + "     artwork a                                 "
+                  + "     NATURAL JOIN artwork_has_creator ac       "
+                  + "     NATURAL JOIN creator c                    "
+                  + "     NATURAL JOIN location l                   "
+                  + " WHERE l.physical_location != 'Not on View'    "
+                  + " AND l.physical_location != 'Unknown'          "
+                  + " LIMIT 50                                      "
+                  + " OFFSET ?                                      ")
           .replaceAll("\\s+", " ");
 
   public static final String GET_ALL_LOCATIONS =
@@ -29,29 +29,15 @@ public class Constants {
                   + "     location                               ")
           .replaceAll("\\s+", " ");
 
-  ////////// queries //////////
-  public static final String GET_ALL_ClASSIFICATIONS =
-      new String(
-              " SELECT                                     "
-                  + "     classification                         "
-                  + " FROM                                       "
-                  + "     artwork                               ")
-          .replaceAll("\\s+", " ");
-  public static final String GET_FILTERED_COLLECTION =
-      // not sure if dynamically passing a column name will work.
-      new String(
-              " SELECT                                     "
-                  + "     *                                      "
-                  + " FROM                                       "
-                  + "     artwork a                              "
-                  + "     NATURAL JOIN artwork_has_creator ac    "
-                  + "     NATURAL JOIN creator c                 "
-                  + "     NATURAL JOIN location l                "
-                  + " WHERE                                      "
-                  + "     ? = ?                                  "
-                  + " LIMIT 500                                    ")
+    public static final String GET_ALL_ClASSIFICATIONS =
+        new String(
+              " SELECT                "
+                  + "     classification    "
+                  + " FROM                  "
+                  + "     artwork           ")
           .replaceAll("\\s+", " ");
 
+  ////////// queries //////////
   public static final String CHECK_ADMIN =
       new String(
               " SELECT                 "
