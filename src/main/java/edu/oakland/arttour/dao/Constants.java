@@ -15,7 +15,10 @@ public class Constants {
                   + "     NATURAL JOIN artwork_has_creator ac    "
                   + "     NATURAL JOIN creator c                 "
                   + "     NATURAL JOIN location l                "
-                  + " LIMIT 50                                   ")
+                  + "  WHERE l.physical_location != 'Not on View'"
+                  + "  AND l.physical_location != 'Unknown'      "
+                  + " LIMIT 50                                   "
+                  + " OFFSET ?                                   ")
           .replaceAll("\\s+", " ");
 
   public static final String GET_ALL_LOCATIONS =
@@ -27,6 +30,13 @@ public class Constants {
           .replaceAll("\\s+", " ");
 
   ////////// queries //////////
+  public static final String GET_ALL_ClASSIFICATIONS =
+      new String(
+              " SELECT                                     "
+                  + "     classification                         "
+                  + " FROM                                       "
+                  + "     artwork                               ")
+          .replaceAll("\\s+", " ");
   public static final String GET_FILTERED_COLLECTION =
       // not sure if dynamically passing a column name will work.
       new String(
@@ -140,6 +150,15 @@ public class Constants {
       new String(
               " SELECT               "
                   + "     t.tour_name      "
+                  + " FROM                 "
+                  + "     tour t           "
+                  + " WHERE                "
+                  + "     t.tour_id = ?    ")
+          .replaceAll("\\s+", " ");
+public static final String GET_TOUR_EMAIL =
+      new String(
+              " SELECT               "
+                  + "     t.email      "
                   + " FROM                 "
                   + "     tour t           "
                   + " WHERE                "

@@ -1,22 +1,28 @@
 import { Artwork as ArtworkType } from "../../app/types";
 import {
     Box, Button, Card, CardActions, CardContent, CardMedia, Chip, IconButton, Typography, DialogContent,
-    DialogActions, DialogTitle, Dialog, RadioGroup, FormLabel, FormControl, SnackbarOrigin, Snackbar, FormControlLabel, FormHelperText, Radio, Tooltip
+    DialogActions, DialogTitle, Dialog, RadioGroup, FormLabel, FormControl, Snackbar, FormControlLabel, FormHelperText, Radio, Tooltip
 } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { Redirect } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useState } from 'react';
+import green from '../../img/img1.jpg';
+import orange from '../../img/img2.jpg';
+import purple from '../../img/img3.jpg';
+
 import { useAddToTourMutation, useFavoriteArtworkMutation, useDeleteFavoriteArtworkMutation, useGetUserFavoritesQuery, useGetToursForUserQuery } from '../../services/api';
 interface ArtworkProps {
     artwork: ArtworkType;
 }
 
+
 export function Artwork(props: ArtworkProps) {
     const { artwork } = props;
     const { isLoggedIn } = useAppSelector(state => state.auth);
     const dispatch = useAppDispatch();
+
+    const images = [orange, purple, green];
 
     const [open, setOpen] = useState(false);
     const [tourId, setTourId] = useState(0);
@@ -37,42 +43,44 @@ export function Artwork(props: ArtworkProps) {
         const artwork = tour?.artworks.find(artwork => artwork.artworkId === artworkId);
         return artwork ? true : false;
     }
-    if (!isLoggedIn) {
-        return <Redirect to='/login' />;
-    }
 
     return (
         <>
             <Card variant="elevation" sx={{ pb: 2, maxWidth: 400 }}>
                 <CardMedia
                     component="img"
-                    sx={{ width: 200 }}
-                    image="../../../public/logo512.png"
+                    sx={{ width: '100%', height: 175 }}
+                    image={images[Math.floor(Math.random() * 3)]}
                 />
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                     <CardContent >
                         <Typography component="div" variant="h6" display='inline'>
-                            {`${artwork.title}, `}
+                            {artwork.title}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary" component="div" display='inline'>
-                            {artwork.creationDate}
-                        </Typography>
+                        {artwork.creationDate &&
+                            <Typography variant="body2" color="text.secondary" component="div" display='inline'>
+                                , {artwork.creationDate}
+                            </Typography>}
                         <Typography variant="subtitle1" component="div">
                             {artwork.creator.fullName}
                         </Typography>
                         <Typography variant="body2" color="text.secondary" component="div">
-                            {artwork.creator.nationality}, {artwork.creator.birthDate} - {artwork.creator.deathDate}
+                            {artwork.creator.nationality}
+                            {(artwork.creator.birthDate && artwork.creator.deathDate) ?
+                                `, ${artwork.creator.birthDate} - ${artwork.creator.deathDate}` :
+                                (artwork.creator.birthDate ? `, ${artwork.creator.birthDate}` : (artwork.creator.deathDate ? `, ${artwork.creator.deathDate}` : ''))}
                         </Typography>
                     </CardContent>
                     <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', pl: 1, pb: 1, gap: 2 }}>
-                        {artwork.medium && <Chip color="info" label={artwork.medium} />}
-                        {artwork.classification && <Chip color="secondary" label={artwork.classification} />}
+                        {artwork.medium && <Chip color="info" label={artwork.medium} sx={{maxWidth: '98%'}} />}
+                        {artwork.classification && <Chip color="secondary" label={artwork.classification} sx={{maxWidth: '98%'}} />}
                     </Box>
                 </Box>
-                <CardActions>
-                    {isLoggedIn && FavoriteButton(artwork)}
-                    <Button onClick={() => setOpen(true)} size="small" aria-label="add to tour">Add to tour</Button>
-                </CardActions>
+                {isLoggedIn &&
+                    <CardActions>
+                        {FavoriteButton(artwork)}
+                        <Button onClick={() => setOpen(true)} size="small" aria-label="add to tour">Add to tour</Button>
+                    </CardActions>}
             </Card>
 
             <Dialog onClose={() => setOpen(false)} open={open}>

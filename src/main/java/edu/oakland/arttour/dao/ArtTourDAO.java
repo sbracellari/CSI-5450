@@ -17,8 +17,8 @@ public class ArtTourDAO {
 
   @Autowired private JdbcTemplate jdbcTemplate;
 
-  public List<Artwork> getCollection() throws DataAccessException {
-    return jdbcTemplate.query(Constants.GET_COLLECTION, Artwork.mapper);
+  public List<Artwork> getCollection(int page) throws DataAccessException {
+    return jdbcTemplate.query(Constants.GET_COLLECTION, Artwork.mapper, page);
   }
 
   public void checkAdmin(String email) throws DataAccessException {
@@ -190,7 +190,9 @@ public class ArtTourDAO {
   public String getTourName(int tourId) {
     return jdbcTemplate.queryForObject(Constants.GET_TOUR_NAME, String.class, tourId);
   }
-
+ public String getTourEmail(int tourId) {
+    return jdbcTemplate.queryForObject(Constants.GET_TOUR_EMAIL, String.class, tourId);
+  }
   public void deleteLocation(int locationId) {
     jdbcTemplate.update(Constants.DELETE_LOCATION, locationId);
   }

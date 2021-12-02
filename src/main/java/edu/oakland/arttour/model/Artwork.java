@@ -38,7 +38,7 @@ public class Artwork {
         artwork.setItemDepth(rs.getDouble("item_depth"));
         artwork.setItemDiameter(rs.getDouble("item_diameter"));
         artwork.setProvenanceText(rs.getString("provenance_text"));
-        artwork.setProvenanceText(rs.getString("classification"));
+        artwork.setClassification(rs.getString("classification"));
         artwork.setCreator(Creator.mapper.mapRow(rs, rowNum));
         artwork.setLocation(Location.mapper.mapRow(rs, rowNum));
         return artwork;

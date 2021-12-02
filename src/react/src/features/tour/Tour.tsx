@@ -1,4 +1,4 @@
-import { Artwork, Tour as TourType } from "../../app/types";
+import { Tour as TourType } from "../../app/types";
 import {
     Box,
     Button,
@@ -21,7 +21,6 @@ import {
     List,
     ListItem,
     Checkbox,
-    FormControlLabel,
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useState } from "react";
@@ -35,10 +34,15 @@ import { useUpdateTourMutation, useDeleteTourMutation, useFavoriteTourMutation, 
 import DeleteIcon from '@mui/icons-material/Delete';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import green from '../../img/img1.jpg';
+import orange from '../../img/img2.jpg';
+import purple from '../../img/img3.jpg';
 
 export function Tour(props: { tour: TourType; isPublic: boolean; }) {
     const { tour, isPublic } = props;
     const { isLoggedIn } = useAppSelector(state => state.auth);
+
+    const images = [orange, purple, green];
 
     const [activeStep, setActiveStep] = useState(0);
     const [disabled, setDisabled] = useState(true);
@@ -61,7 +65,7 @@ export function Tour(props: { tour: TourType; isPublic: boolean; }) {
             ? history.push(`/public-tours/${tour.tourId}`)
             : history.push(`/my-tours/${tour.tourId}`)
     };
-
+    console.log(tour.email)
     //@todo: need to fix some weird padding betwin the swipe and the text
     return (
         <Box sx={{ width: 400, mt: 2 }} >
@@ -104,7 +108,7 @@ export function Tour(props: { tour: TourType; isPublic: boolean; }) {
                                                 height: 200,
                                                 width: '100%'
                                             }}
-                                            src={"./art.png"}
+                                            src={images[Math.floor(Math.random() * 3)]}
                                         />
                                         <Box sx={{ display: 'flex', justifyContent: 'center', float: 'right', mt: '-7%', mr: '5%' }}>
                                             <Fab component={Link}
@@ -308,7 +312,7 @@ const DropdownButton = (tour: TourType) => {
                 <DialogActions>
                     <Button onClick={() => handleCloseDelete()}>Cancel</Button>
                     <Button
-                        disabled={!deleteArtworks.reduce((sum, artwork) => sum && artwork.checked, false)}
+                        disabled={!deleteArtworks.some((artwork) => artwork.checked)}
                         onClick={() => handleSaveDelete()}>Save</Button>
                 </DialogActions>
             </Dialog >

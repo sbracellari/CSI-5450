@@ -7,7 +7,6 @@ import { register } from './authSlice';
 export function Register() {
     const dispatch = useAppDispatch();
     const { isLoggedIn, message, status } = useAppSelector(state => state.auth);
-
     const [fname, setFname] = useState('');
     const [lname, setLname] = useState('');
     const [password, setPassword] = useState('');
@@ -26,7 +25,7 @@ export function Register() {
     }
 
     return (
-        <Box sx={{height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+        <Box sx={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Box component="form" autoComplete="off" onSubmit={handleSubmit}
                 sx={{
                     display: 'flex',
@@ -35,7 +34,7 @@ export function Register() {
                     width: '100vh',
                     m: 2
                 }}>
-                <Typography sx={{fontSize: '1.3rem'}} component="h1" variant="h5">
+                <Typography sx={{ fontSize: '1.3rem' }} component="h1" variant="h5">
                     Sign up
                 </Typography>
                 <TextField
@@ -85,8 +84,8 @@ export function Register() {
                     Sign Up
                 </Button>
                 {status === "failed" && message && <Alert severity="error">{message}</Alert>}
-            
-                <Typography 
+
+                <Typography
                     sx={{
                         position: 'absolute',
                         bottom: 0,
@@ -95,10 +94,10 @@ export function Register() {
                     }}
                 >
                     Already have an account? {" "}
-                  <Link to="/">
-                    Sign in
-                  </Link>
-               </Typography>
+                    <Link to="/login">
+                        Sign in
+                    </Link>
+                </Typography>
             </Box>
         </Box>
     )

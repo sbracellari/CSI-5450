@@ -256,7 +256,7 @@ public class ArtTourService {
             tourId -> {
               Tour tour = new Tour();
               tour.setTourId(tourId);
-              tour.setEmail(email);
+              tour.setEmail(dao.getTourEmail(tourId));
               tour.setTourName(dao.getTourName(tourId));
               List<Artwork> artworks = new ArrayList<Artwork>();
               List<String> artworkIds = dao.getArtworkIds(tourId);
