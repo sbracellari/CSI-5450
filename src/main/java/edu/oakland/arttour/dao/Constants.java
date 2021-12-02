@@ -29,8 +29,8 @@ public class Constants {
                   + "     location                               ")
           .replaceAll("\\s+", " ");
 
-    public static final String GET_ALL_ClASSIFICATIONS =
-        new String(
+  public static final String GET_ALL_ClASSIFICATIONS =
+      new String(
               " SELECT                "
                   + "     classification    "
                   + " FROM                  "
@@ -141,7 +141,7 @@ public class Constants {
                   + " WHERE                "
                   + "     t.tour_id = ?    ")
           .replaceAll("\\s+", " ");
-public static final String GET_TOUR_EMAIL =
+  public static final String GET_TOUR_EMAIL =
       new String(
               " SELECT               "
                   + "     t.email      "
