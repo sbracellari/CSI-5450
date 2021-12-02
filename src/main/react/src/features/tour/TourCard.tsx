@@ -13,7 +13,7 @@ interface TourCardProps {
 }
 
 export function TourCard(props: TourCardProps) {
-    const { artwork, isPublic, tourId } = props;
+    const { artwork } = props;
     const { isLoggedIn } = useAppSelector(state => state.auth);
     const images = [orange, purple, green];
     const onView = artwork.location.physicalLocation === 'Not on View';

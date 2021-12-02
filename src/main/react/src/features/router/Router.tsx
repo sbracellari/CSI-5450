@@ -1,12 +1,10 @@
 import { Box, Typography } from '@mui/material';
 import { Collection } from '../collection/Collection';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
-import { Detail } from '../collection/Detail';
 import { Login } from '../auth/Login';
 import { Register } from '../auth/Register';
 import { Tours } from '../tour/Tours';
 import { TourStepper } from '../tour/TourStepper';
-import { Admin } from '../admin/Admin';
 import { Favorites } from '../favorites/Favorites';
 import { EditAccount } from '../auth/EditAccount';
 import { MobileDrawer } from '../MobileDrawer';
@@ -42,8 +40,6 @@ export function Router() {
                             <TourStepper isPublic={false} />
                         </Route>
                         <Route path="/favorites" component={Favorites} />
-                        <Route exact path="/admin" component={Admin} />
-                        <Route path='/details' component={Detail} />
                     </Switch>
                 </Route>
             </Switch>

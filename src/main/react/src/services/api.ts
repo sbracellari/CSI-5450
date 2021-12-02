@@ -1,16 +1,9 @@
-import { Artwork, Favorite, Tour, Location, Creator, User, UpdateUser } from './../app/types';
+import { Artwork, Tour, Location, Creator } from './../app/types';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import auth from "./auth";
 
 //@todo: export API in a config
 const API_URL = "http://localhost:8080/v1/";
 const baseQuery = fetchBaseQuery({ baseUrl: API_URL });
-
-// const headers = {
-//     Authorization: 'Bearer ' + auth.authHeader().token,
-//     Accept: 'application/json',
-//     'Content-Type': 'application/json'
-// };
 
 export const api = createApi({
     reducerPath: 'api',

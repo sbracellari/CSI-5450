@@ -5,7 +5,7 @@ import {
 } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppSelector } from "../../app/hooks";
 import { useState } from 'react';
 import green from '../../img/img1.jpg';
 import orange from '../../img/img2.jpg';
@@ -20,7 +20,6 @@ interface ArtworkProps {
 export function Artwork(props: ArtworkProps) {
     const { artwork } = props;
     const { isLoggedIn } = useAppSelector(state => state.auth);
-    const dispatch = useAppDispatch();
 
     const images = [orange, purple, green];
 

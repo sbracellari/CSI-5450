@@ -1,5 +1,5 @@
 import { useGetUserFavoritesQuery } from "../../services/api";
-import { Box, CircularProgress, Typography, Grid, Chip, Divider } from "@mui/material";
+import { Box, CircularProgress, Typography, Grid, Divider } from "@mui/material";
 import { Artwork } from "../collection/Artwork";
 import { Tour } from "../tour/Tour";
 import { Creator } from "../collection/Creator";

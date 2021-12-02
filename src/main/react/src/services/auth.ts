@@ -28,7 +28,7 @@ const register = (user: RegisterUser) => {
             localStorage.setItem('user', JSON.stringify(usr));
             return response.data;
         } else {
-            throw 'Email already exists.';
+            throw new Error('Email already exists.');
         }
     });
 }
@@ -47,7 +47,7 @@ const login = (user: LoginUser) => {
             localStorage.setItem('user', JSON.stringify(usr));
             return response.data;
         } else {
-            throw 'Incorrect email or password.';
+            throw new Error('Incorrect email or password.');
         }
     });
 }
