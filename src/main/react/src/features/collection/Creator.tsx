@@ -9,8 +9,7 @@ export function Creator(props: { creator: CreatorType }) {
     const { creator } = props;
     const { isLoggedIn } = useAppSelector(state => state.auth);
     const handleFavorite = (artworkId: number | null) => {
-        //@todo: check user artwork favorites and filter throwgh them 
-        console.log('handle favorites');
+        //@todo: check user artwork favorites and filter through them 
     }
 
     return (

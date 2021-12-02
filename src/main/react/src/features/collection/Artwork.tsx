@@ -149,7 +149,6 @@ export const FavoriteButton = (artwork: ArtworkType) => {
     if (errorDeletingFavArtwork) {
         message = "An error occured when deleting an artwork from favorites.";
     }
-    //{deleteFavArtwork(artwork.artworkId);setAlert(true);}
     return (
         <>
             {isFavorite ? (
