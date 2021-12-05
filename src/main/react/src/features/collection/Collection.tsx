@@ -14,7 +14,7 @@ export function Collection() {
   const limit = 50;
   const [offset, setOffset] = useState(0);
   const [page, setPage] = useState(1);
-  const { data, isError, isFetching, isLoading, isSuccess } = useGetCollectionQuery(offset);
+  const { data, isError, isFetching, isLoading } = useGetCollectionQuery(offset);
   const prefetchOffset = usePrefetch('getCollection');
   const [collection, setCollection] = useState<ArtworkType[] | undefined>(data || []);
 

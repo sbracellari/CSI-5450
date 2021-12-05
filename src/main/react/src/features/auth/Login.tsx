@@ -11,7 +11,7 @@ export function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     //@todo: add validation and error handling
-    //@todo: add remember me and fogot password?
+    //@todo: add remember me and forgot password?
     const handleInput = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>, setState: React.Dispatch<React.SetStateAction<string>>) => setState(event.target.value);
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -72,7 +72,7 @@ export function Login() {
 
                 <Typography
                     sx={{
-                        position: 'absolute', // not particularly a fan of this
+                        position: 'absolute',
                         bottom: 0,
                         fontSize: '0.9rem',
                         margin: '1.3rem'

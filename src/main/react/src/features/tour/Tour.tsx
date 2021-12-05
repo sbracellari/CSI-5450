@@ -22,7 +22,7 @@ import {
     ListItem,
     Checkbox,
 } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppSelector } from "../../app/hooks";
 import { useState } from "react";
 import SwipeableViews from 'react-swipeable-views';
 import { KeyboardArrowLeft, KeyboardArrowRight, RoomOutlined, MoreVert, PhotoLibraryOutlined } from "@mui/icons-material";
@@ -45,7 +45,6 @@ export function Tour(props: { tour: TourType; isPublic: boolean; }) {
     const images = [orange, purple, green];
 
     const [activeStep, setActiveStep] = useState(0);
-    const [disabled, setDisabled] = useState(true);
     const maxSteps = tour.artworks.length;
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -65,8 +64,7 @@ export function Tour(props: { tour: TourType; isPublic: boolean; }) {
             ? history.push(`/public-tours/${tour.tourId}`)
             : history.push(`/my-tours/${tour.tourId}`)
     };
-    console.log(tour.email)
-    //@todo: need to fix some weird padding betwin the swipe and the text
+
     return (
         <Box sx={{ width: 400, mt: 2 }} >
             <Paper
@@ -118,7 +116,7 @@ export function Tour(props: { tour: TourType; isPublic: boolean; }) {
                                                         ? `/public-tours/${tour.tourId}`
                                                         : `/my-tours/${tour.tourId}`
                                                 }
-                                                onClick={() => handleRouting()/*dispatch(view(artwork))*/}
+                                                onClick={() => handleRouting()}
                                                 size='small'
                                             >
                                                 <PlayArrowIcon sx={{ color: 'white' }} />
@@ -178,7 +176,6 @@ export function Tour(props: { tour: TourType; isPublic: boolean; }) {
 };
 
 const DropdownButton = (tour: TourType) => {
-    const dispatch = useAppDispatch()
     const [anchorEl, setAnchorEl] = useState<null | HTMLButtonElement>(null);
     const open = Boolean(anchorEl);
     const [modalOpen, setModalOpen] = useState(false);
@@ -220,7 +217,7 @@ const DropdownButton = (tour: TourType) => {
     }
 
     const handleSaveDelete = () => {
-        const ids = deleteArtworks.map(art => {
+        const ids = deleteArtworks.forEach(art => {
             if (art.checked) {
                 return art.artworkId;
             }

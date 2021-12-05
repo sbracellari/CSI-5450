@@ -1,5 +1,5 @@
 import authService from '../../services/auth';
-import { User, UserState, LoginUser, RegisterUser, UpdateUser } from '../../app/types';
+import { UserState, LoginUser, RegisterUser, UpdateUser } from '../../app/types';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 const token = localStorage.getItem('token');
